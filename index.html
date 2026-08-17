@@ -296,10 +296,10 @@
   #stageIllustration.show{display:flex;}
   
   .milestone-polaroid{
-    background:#fff; padding:8px 8px 16px 8px; border:2.5px solid var(--ink-line);
+    background:#fff; padding:8px 8px 8px 8px; border:2.5px solid var(--ink-line);
     border-radius:14px 16px 14px 16px; box-shadow:0 14px 30px rgba(122,74,99,0.22), var(--sticker);
     transition:transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, opacity 0.4s ease;
-    width:155px; height:205px; display:flex; flex-direction:column; align-items:center;
+    width:160px; height:210px; display:flex; flex-direction:column; align-items:center;
     position:relative; cursor:pointer; transform-style:preserve-3d;
     animation:polaroidFlyIn 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
     will-change:transform;
@@ -331,7 +331,7 @@
   
   /* Khung chứa ảnh toàn vẹn không bị cắt người */
   .milestone-polaroid .polaroid-img-wrap{
-    width:100%; flex:1; background:#fdf7fa; border-radius:8px;
+    width:100%; height:100%; flex:1; background:#fdf7fa; border-radius:8px;
     border:1.2px solid rgba(122,74,99,0.15); overflow:hidden;
     display:flex; align-items:center; justify-content:center;
     position:relative; transform:translateZ(8px);
@@ -340,11 +340,6 @@
   .milestone-polaroid img{
     width:100%; height:100%; object-fit:contain; display:block;
     transition:opacity 0.4s ease, transform 0.4s ease;
-  }
-  .milestone-polaroid-caption{
-    margin-top:6px; font-family:'Baloo 2', cursive; font-size:12px; font-weight:700;
-    color:var(--rose-deep); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    max-width:100%; transform:translateZ(12px);
   }
   @keyframes polaroidFlyIn{
     0%{ transform:translateY(50px) scale(0.6) rotate(14deg); opacity:0; }
@@ -376,7 +371,7 @@
   .photo{
     flex:0 0 160px; height:210px; background:#fff; border:3px solid var(--ink-line);
     border-radius:16px; scroll-snap-align:center;
-    display:flex; flex-direction:column; align-items:center; padding:8px 8px 14px 8px;
+    display:flex; flex-direction:column; align-items:center; padding:8px;
     box-shadow:0 14px 26px rgba(122,74,99,0.2), var(--sticker);
     transition:transform .22s cubic-bezier(0.2,0.8,0.2,1), box-shadow .25s ease;
     cursor:pointer; position:relative; transform-style:preserve-3d;
@@ -396,7 +391,7 @@
   }
   
   .photo .photo-img-container{
-    width:100%; flex:1; background:#fef8fb; border-radius:10px;
+    width:100%; height:100%; flex:1; background:#fef8fb; border-radius:10px;
     border:1.2px solid rgba(122,74,99,0.15); overflow:hidden;
     display:flex; align-items:center; justify-content:center;
     transform:translateZ(8px);
@@ -404,10 +399,6 @@
   }
   .photo img{
     width:100%; height:100%; object-fit:contain; display:block;
-  }
-  .photo .photo-caption{
-    margin-top:6px; font-family:'Baloo 2', cursive; font-size:12px; font-weight:700;
-    color:var(--rose-deep); text-align:center; transform:translateZ(10px);
   }
   
   .album-controls{
@@ -1115,8 +1106,6 @@ function setMilestone(s, milestoneIndex=0){
     (milestoneIndex * 3 + 2) % allPhotos.length
   ];
   
-  const labels = ['Kỷ niệm ✨', `${s.year} 💕`, 'Thanh xuân 🌸'];
-  
   illustEl.innerHTML = currentIndices.map((pIdx, i) => {
     const src = allPhotos[pIdx];
     return `
@@ -1125,7 +1114,6 @@ function setMilestone(s, milestoneIndex=0){
         <div class="polaroid-img-wrap">
           <img id="polaroidImg_${i}" src="${src}" alt="Ảnh kỷ niệm">
         </div>
-        <div class="milestone-polaroid-caption" id="polaroidCaption_${i}">${labels[i]}</div>
       </div>
     `;
   }).join('');
@@ -1172,7 +1160,7 @@ function setAlbum(){
   if(illustEl){ illustEl.classList.remove('show'); illustEl.innerHTML=''; }
   if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   
-  $('label').textContent='Kỷ niệm thanh xuân'; $('badge').style.display='none';
+  $('label').textContent='Kỷ niệm'; $('badge').style.display='none';
   $('emoji').style.display='block'; $('emoji').textContent='📸';
   $('title').textContent='Album kỷ niệm'; $('desc').textContent='Vuốt hoặc bấm để xem những khoảnh khắc đáng yêu của Ngọc Hà 💕';
   
@@ -1185,7 +1173,6 @@ function setAlbum(){
       <div class="photo-img-container">
         <img src="${p}" onerror="this.src='images/girl1.png'" alt="Ảnh kỷ niệm ${i+1}">
       </div>
-      <div class="photo-caption">Ảnh #${i+1} 🌸</div>
     </div>
   `).join('');
   
