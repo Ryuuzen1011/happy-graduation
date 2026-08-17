@@ -1,0 +1,1979 @@
+/* ==========================================================================
+   PINK PUPPY GRADUATION THEME - STYLESHEET
+   Aesthetic, Cute Pink, Interactive 3D Book, Smooth Animations & Polish
+   ========================================================================== */
+
+:root {
+  --primary-pink: #FF69B4;
+  --soft-pink: #FFB6C1;
+  --blush-pink: #FFE4E1;
+  --pastel-pink: #FFF0F5;
+  --deep-pink: #E04D74;
+  --rose-gold: #C97D8A;
+  --gold-accent: #E5A93C;
+  --gold-light: #FFF4D2;
+  --text-dark: #4A3E3D;
+  --text-muted: #7E6E6C;
+  --white: #FFFFFF;
+  --bg-gradient: linear-gradient(135deg, #FFF5F7 0%, #FFE9EC 50%, #FFF0F5 100%);
+  --card-shadow: 0 10px 30px rgba(224, 77, 116, 0.12);
+  --hover-shadow: 0 15px 35px rgba(224, 77, 116, 0.22);
+  --border-radius-lg: 24px;
+  --border-radius-md: 16px;
+  --border-radius-sm: 10px;
+  --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ==========================================================================
+   FALLING SAKURA CANVAS (HOA ANH ĐÀO RƠI LIÊN TỤC)
+   ========================================================================== */
+.sakura-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   FLOATING BACKGROUND PARTICLES (PAW PRINTS, SAKURA PETALS, HEARTS)
+   ========================================================================== */
+.floating-bg-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.floating-item {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.35;
+  animation: floatUpward linear infinite;
+  filter: drop-shadow(0 2px 4px rgba(255, 105, 180, 0.3));
+}
+
+@keyframes floatUpward {
+  0% {
+    transform: translateY(105vh) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-10vh) rotate(360deg) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   INTRO ENVELOPE MODAL (GIFT OPENING)
+   ========================================================================== */
+.envelope-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(74, 62, 61, 0.75);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.7s;
+}
+
+.envelope-overlay.hide-envelope {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.intro-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cute-puppy-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.intro-puppy-gif {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  border: 3px solid var(--primary-pink);
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+}
+
+.speech-bubble {
+  background: var(--white);
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--deep-pink);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.speech-bubble::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 8px 6px 0;
+  border-style: solid;
+  border-color: transparent var(--white) transparent transparent;
+}
+
+.envelope-container {
+  width: 340px;
+  height: 230px;
+  background: linear-gradient(135deg, #FFC0CB, #FFAEC9);
+  border-radius: 18px;
+  position: relative;
+  box-shadow: 0 25px 50px rgba(155, 29, 64, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  transition: var(--transition-smooth);
+}
+
+.envelope-container:hover {
+  transform: scale(1.04) translateY(-4px);
+  box-shadow: 0 30px 60px rgba(155, 29, 64, 0.45);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 170px solid transparent;
+  border-right: 170px solid transparent;
+  border-top: 120px solid #FF9EAA;
+  transform-origin: top;
+  transition: transform 0.5s ease;
+  z-index: 3;
+}
+
+.envelope-body {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 4;
+}
+
+.wax-seal {
+  width: 86px;
+  height: 86px;
+  background: linear-gradient(135deg, #FFD700, #E5A93C, #C2871E);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #520B1C;
+  box-shadow: 0 8px 25px rgba(229, 169, 60, 0.7), inset 0 2px 6px rgba(255, 255, 255, 0.6);
+  border: 3px dashed #FFF;
+  cursor: pointer;
+  animation: pulseSeal 1.8s infinite;
+  transition: var(--transition-smooth);
+}
+
+.wax-seal:hover {
+  transform: scale(1.12) rotate(6deg);
+}
+
+.seal-icon {
+  font-size: 1.8rem;
+}
+
+.seal-text {
+  font-family: 'Comfortaa', cursive;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+@keyframes pulseSeal {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); box-shadow: 0 8px 25px rgba(224, 77, 116, 0.8); }
+}
+
+.open-instruction {
+  color: var(--white);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* ==========================================================================
+   TOP FLOATING NAV CONTROLS
+   ========================================================================== */
+.top-nav-bar {
+  position: sticky;
+  top: 15px;
+  margin: 0 auto;
+  max-width: 1100px;
+  width: 92%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 182, 193, 0.5);
+  border-radius: 50px;
+  padding: 10px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  box-shadow: 0 8px 25px rgba(255, 105, 180, 0.15);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  font-size: 1.4rem;
+}
+
+.brand-text {
+  font-family: 'Comfortaa', cursive;
+  font-weight: 700;
+  color: var(--deep-pink);
+  font-size: 1.1rem;
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-btn {
+  background: var(--pastel-pink);
+  border: 1px solid var(--soft-pink);
+  color: var(--deep-pink);
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+.nav-btn:hover {
+  background: var(--primary-pink);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================================================
+   MAIN WRAPPER & SECTIONS
+   ========================================================================== */
+.main-wrapper {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.section-sub {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary-pink);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.section-title {
+  font-family: 'Comfortaa', cursive;
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.section-caption {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-top: 6px;
+}
+
+.cute-divider {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  letter-spacing: 8px;
+  opacity: 0.75;
+}
+
+/* ==========================================================================
+   HERO SECTION: GRADUATE PORTRAIT & HONOR DEGREE
+   ========================================================================== */
+.hero-section {
+  margin-bottom: 60px;
+}
+
+.hero-container {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 35px;
+  align-items: center;
+}
+
+/* Portrait Column */
+.graduate-card-col {
+  display: flex;
+  justify-content: center;
+}
+
+.portrait-outer-frame {
+  background: var(--white);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  box-shadow: var(--card-shadow);
+  border: 3px solid #FFE4E8;
+  position: relative;
+  text-align: center;
+  width: 100%;
+  max-width: 380px;
+  transition: var(--transition-smooth);
+}
+
+.portrait-outer-frame:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--hover-shadow);
+}
+
+.puppy-ears-decor {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.8rem;
+  margin-bottom: -10px;
+  padding: 0 20px;
+}
+
+.ear-crown {
+  font-size: 2rem;
+  animation: crownWiggle 2s infinite ease-in-out;
+}
+
+@keyframes crownWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+.portrait-img-box {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 15px auto 20px;
+  border-radius: 50%;
+  padding: 8px;
+  background: linear-gradient(135deg, var(--primary-pink), var(--gold-accent), var(--soft-pink));
+  box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
+}
+
+.grad-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--white);
+}
+
+.grad-badge-ribbon {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #FF6B81, #E04D74);
+  color: var(--white);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(224, 77, 116, 0.4);
+}
+
+.grad-name {
+  font-family: 'Comfortaa', cursive;
+  font-size: 1.6rem;
+  color: var(--deep-pink);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.grad-nickname {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.university-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--pastel-pink);
+  color: var(--deep-pink);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.major-text {
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+/* Certificate Column */
+.honor-certificate-box {
+  background: 
+    radial-gradient(circle at 50% 50%, #FFFDF9 0%, #FFF4F7 100%);
+  border: 4px double #E5A93C;
+  border-radius: var(--border-radius-lg);
+  padding: 40px 35px;
+  position: relative;
+  box-shadow: 
+    0 20px 40px rgba(224, 77, 116, 0.15),
+    inset 0 0 30px rgba(229, 169, 60, 0.1);
+  overflow: hidden;
+}
+
+.cert-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18rem;
+  opacity: 0.035;
+  pointer-events: none;
+}
+
+.cert-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.cert-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #C2871E;
+  letter-spacing: 3px;
+}
+
+.cert-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.1rem;
+  color: #9B1D40;
+  margin-top: 5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.gold-line {
+  width: 140px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #FFD700, #E5A93C, transparent);
+  margin: 12px auto 0;
+}
+
+.cert-body {
+  text-align: center;
+}
+
+.cert-statement {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.cert-recipient-name {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.8rem;
+  color: #D8335D;
+  margin: 10px 0;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(216, 51, 93, 0.15);
+}
+
+.cert-desc {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+}
+
+.cert-quote-box {
+  background: rgba(255, 240, 245, 0.85);
+  border-left: 4px solid #FF6080;
+  padding: 14px 22px;
+  border-radius: 10px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+  color: #4A3E3D;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.02);
+}
+
+.quote-icon {
+  color: #FF6080;
+  font-size: 0.95rem;
+}
+
+.cert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px dashed #FFCCD5;
+  padding-top: 20px;
+}
+
+.cert-seal-badge {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD700, #E5A93C);
+  padding: 3px;
+  box-shadow: 0 6px 15px rgba(229, 169, 60, 0.4);
+}
+
+.seal-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px dashed var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--white);
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.cert-sign {
+  text-align: right;
+}
+
+.sign-label {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.sign-name {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.6rem;
+  color: #9B1D40;
+  font-weight: 700;
+}
+
+/* Hero Actions */
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px 18px;
+  border-radius: 30px;
+  border: none;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+}
+
+.pink-action-btn {
+  background: var(--pastel-pink);
+  color: var(--deep-pink);
+  border: 1px solid var(--soft-pink);
+}
+
+.pink-action-btn:hover {
+  background: var(--primary-pink);
+  color: var(--white);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+}
+
+.gold-action-btn {
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+  color: var(--white);
+}
+
+.gold-action-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+}
+
+.heart-action-btn {
+  background: #FFF0F5;
+  color: #E04D74;
+  border: 1px solid #FFCCD5;
+}
+
+.heart-action-btn:hover {
+  background: #E04D74;
+  color: var(--white);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(224, 77, 116, 0.35);
+}
+
+/* ==========================================================================
+   LETTER SECTION (HEARTFELT MESSAGE)
+   ========================================================================== */
+.letter-section {
+  margin-bottom: 70px;
+}
+
+.letter-card {
+  background: var(--white);
+  border-radius: var(--border-radius-lg);
+  padding: 40px;
+  box-shadow: var(--card-shadow);
+  position: relative;
+  border: 2px solid #FFE4E8;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.letter-dog-decor {
+  position: absolute;
+}
+
+.letter-dog-decor.top-left {
+  top: -25px;
+  left: 20px;
+}
+
+.letter-dog-decor.bottom-right {
+  bottom: -20px;
+  right: 20px;
+}
+
+.corner-dog-gif {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid #FFB6C1;
+  background: var(--white);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.letter-inner {
+  padding: 10px 15px;
+}
+
+.letter-title {
+  font-family: 'Comfortaa', cursive;
+  font-size: 1.5rem;
+  color: var(--deep-pink);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.letter-paragraphs p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 16px;
+  color: var(--text-dark);
+  text-align: justify;
+}
+
+.letter-signature-box {
+  margin-top: 30px;
+  text-align: right;
+  border-top: 1px dashed #FFCCD5;
+  padding-top: 18px;
+}
+
+.signature-note {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: italic;
+  display: block;
+}
+
+.signature-text {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.6rem;
+  color: var(--deep-pink);
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   PHOTO FRAMES & MEMORY GALLERY (ĐA DẠNG CÁC KIỂU KHUNG HÌNH)
+   ========================================================================== */
+.gallery-section {
+  margin-bottom: 80px;
+}
+
+.polaroid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 35px;
+  margin-top: 25px;
+}
+
+.photo-frame-card {
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.photo-frame-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  z-index: 5;
+}
+
+/* 1. KHUNG POLAROID WASHI TAPE */
+.frame-polaroid {
+  background: var(--white);
+  padding: 15px 15px 25px;
+  border-radius: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+.frame-polaroid .washi-tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 24px;
+  background: rgba(255, 182, 193, 0.85);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-left: 2px dashed rgba(255,255,255,0.7);
+  border-right: 2px dashed rgba(255,255,255,0.7);
+  z-index: 2;
+}
+
+/* 2. KHUNG TAI CÚN XINH (PUPPY FRAME) */
+.frame-puppy {
+  background: #FFF0F5;
+  border: 3px solid #FFB6C1;
+  border-radius: 28px;
+  padding: 20px 16px;
+  box-shadow: 0 10px 25px rgba(255, 105, 180, 0.15);
+}
+.frame-puppy .frame-ears {
+  position: absolute;
+  top: -16px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 25px;
+  font-size: 1.6rem;
+  z-index: 2;
+}
+
+/* 3. KHUNG TRÁI TIM LẤP LÁNH (HEART FRAME) */
+.frame-heart {
+  background: linear-gradient(135deg, #FFE4E8, #FFF5F7);
+  border: 3px dashed #FF69B4;
+  border-radius: 24px;
+  padding: 18px 16px;
+  box-shadow: 0 10px 25px rgba(255, 105, 180, 0.2);
+}
+.frame-heart .frame-heart-badge {
+  position: absolute;
+  top: -14px;
+  right: 15px;
+  background: #FF69B4;
+  color: #FFF;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 15px;
+  box-shadow: 0 3px 8px rgba(255, 105, 180, 0.4);
+}
+
+/* 4. KHUNG BÌA TẠP CHÍ TỐT NGHIỆP (MAGAZINE FRAME) */
+.frame-magazine {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 16px 16px 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid var(--deep-pink);
+}
+.frame-magazine .mag-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: var(--deep-pink);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #FFCCD5;
+  padding-bottom: 4px;
+}
+
+/* 5. KHUNG VÀNG HỒNG HOÀNG GIA (ROSE GOLD FRAME) */
+.frame-rosegold {
+  background: #FFFBFB;
+  border: 5px double var(--rose-gold);
+  border-radius: 16px;
+  padding: 18px 15px;
+  box-shadow: 0 10px 25px rgba(201, 125, 138, 0.25);
+}
+.frame-rosegold .corner-rose {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  font-size: 1.4rem;
+}
+
+/* 6. KHUNG CUỘN PHIM VINTAGE (FILM STRIP) */
+.frame-film {
+  background: #2D2424;
+  color: #FFF;
+  border-radius: 10px;
+  padding: 22px 14px 18px;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+.frame-film .film-sprockets {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  right: 12px;
+  height: 8px;
+  background: radial-gradient(circle, #FFF 40%, transparent 45%);
+  background-size: 16px 8px;
+}
+.frame-film .polaroid-title {
+  color: #FFE4E8;
+}
+.frame-film .polaroid-desc {
+  color: #D3C5C5;
+}
+
+/* Base Image wrapper inside all frames */
+.frame-img-wrapper {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 8px;
+  position: relative;
+}
+
+.frame-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.photo-frame-card:hover .frame-img {
+  transform: scale(1.08);
+}
+
+.frame-dog-sticker {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  background: var(--white);
+}
+
+.polaroid-caption {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.polaroid-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary-pink);
+  background: var(--pastel-pink);
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-bottom: 6px;
+}
+
+.polaroid-title {
+  font-family: 'Comfortaa', cursive;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.polaroid-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   THE BIG INTERACTIVE BOOK OF WISHES — PREMIUM LEATHER 3D EDITION 📖✨
+   ========================================================================== */
+.book-section {
+  margin-bottom: 100px;
+  padding: 0 10px;
+}
+
+.book-outer-container {
+  max-width: 900px;
+  margin: 0 auto;
+  perspective: 2200px;
+}
+
+.book-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.book-3d {
+  width: 100%;
+  aspect-ratio: 5 / 3.2;
+  max-height: 560px;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* ==========================================================================
+   BACK COVER (BÌA SAU — NỀN ĐẾ)
+   ========================================================================== */
+.book-back-base {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(160deg, #7A1A34 0%, #5C1226 40%, #3E0A18 100%);
+  border-radius: 6px 16px 16px 6px;
+  box-shadow:
+    0 40px 80px -20px rgba(62, 10, 24, 0.55),
+    0 18px 36px -12px rgba(0, 0, 0, 0.3),
+    inset 0 -2px 6px rgba(255, 255, 255, 0.08);
+  z-index: 1;
+}
+
+/* — Spine — */
+.book-spine-decor {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: -28px;
+  width: 28px;
+  background:
+    linear-gradient(90deg, #3E0A18 0%, #5C1226 30%, #7A1A34 50%, #5C1226 70%, #3E0A18 100%);
+  border-radius: 10px 0 0 10px;
+  box-shadow:
+    inset -3px 0 8px rgba(0, 0, 0, 0.5),
+    inset 3px 0 6px rgba(255, 255, 255, 0.06);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3;
+}
+
+.spine-gold-emboss {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color: #D4A942;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 4px;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.7), 0 0 6px rgba(212, 169, 66, 0.3);
+}
+
+/* — Page-block edges — */
+.book-pages-edge.right-edge {
+  position: absolute;
+  right: -10px; top: 10px; bottom: 10px;
+  width: 10px;
+  background: repeating-linear-gradient(180deg,
+    #FDF8EF 0px, #F0E4CF 1px, #E6D9C0 2px, #FDF8EF 3px);
+  border-radius: 0 3px 3px 0;
+  box-shadow: 2px 0 4px rgba(0,0,0,0.15), inset 1px 0 2px rgba(0,0,0,0.12);
+}
+
+.book-pages-edge.bottom-edge {
+  position: absolute;
+  bottom: -8px; left: 8px; right: -4px;
+  height: 8px;
+  background: repeating-linear-gradient(90deg,
+    #FDF8EF 0px, #F0E4CF 1px, #E6D9C0 2px, #FDF8EF 3px);
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.18);
+}
+
+/* ==========================================================================
+   SPREAD INNER (TRANG ĐÔI BÊN TRONG)
+   ========================================================================== */
+.book-spread-inner {
+  position: relative;
+  width: 100%; height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 12px 1fr;
+  background: #F9F3EB;
+  border-radius: 4px 12px 12px 4px;
+  border: none;
+  outline: 5px solid #5C1226;
+  outline-offset: -5px;
+  z-index: 2;
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.05);
+}
+
+/* — Individual page — */
+.book-page {
+  padding: 28px 24px;
+  position: relative;
+  display: flex; flex-direction: column; justify-content: space-between;
+  background:
+    url("data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #FDF8EF 0%, #F7F0E4 100%);
+  cursor: pointer; user-select: none;
+  transition: background-color 0.25s;
+}
+
+.book-page:hover { background-color: #FFFBF3; }
+
+.book-page.page-left {
+  box-shadow: inset -20px 0 30px -10px rgba(0,0,0,0.06);
+  border-right: 1px solid rgba(0,0,0,0.04);
+}
+.book-page.page-right {
+  box-shadow: inset 20px 0 30px -10px rgba(0,0,0,0.06);
+  border-left: 1px solid rgba(0,0,0,0.04);
+}
+
+.page-vintage-border {
+  position: absolute; inset: 14px;
+  border: 1px solid rgba(180, 155, 130, 0.2);
+  pointer-events: none; border-radius: 4px;
+}
+
+.page-corner-decor {
+  position: absolute; font-size: 1rem; opacity: 0.18;
+  pointer-events: none;
+}
+.page-corner-decor.top-left  { top: 18px; left: 18px; }
+.page-corner-decor.top-right { top: 18px; right: 18px; }
+
+/* — Spine crease — */
+.book-spine-crease {
+  background: linear-gradient(90deg,
+    rgba(0,0,0,0.14) 0%, rgba(0,0,0,0.02) 40%,
+    rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.14) 100%);
+  position: relative;
+}
+
+.spine-stitch {
+  position: absolute; left: 50%; top: 0; bottom: 0;
+  transform: translateX(-50%);
+  width: 1px;
+  background: repeating-linear-gradient(180deg,
+    #9B6B5A 0px, #9B6B5A 6px, transparent 6px, transparent 14px);
+  opacity: 0.3;
+}
+
+.spine-ribbon-marker {
+  position: absolute;
+  top: -5px; left: 50%; transform: translateX(-50%);
+  width: 10px; height: 115%;
+  background: linear-gradient(180deg, #D4A942 0%, #C2871E 60%, transparent 100%);
+  opacity: 0.45; pointer-events: none;
+  border-radius: 0 0 3px 3px;
+}
+
+/* ==========================================================================
+   FRONT COVER 3D HARDCOVER FLAP (BÌA TRƯỚC XOAY MỞ)
+   ========================================================================== */
+.book-front-cover {
+  position: absolute; inset: 0;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+  will-change: transform;
+}
+
+.book-3d.is-open .book-front-cover {
+  transform: rotateY(-178deg);
+  pointer-events: none;
+}
+
+.cover-face {
+  position: absolute; inset: 0;
+  border-radius: 6px 16px 16px 6px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* — Outside — */
+.cover-front-face {
+  background:
+    radial-gradient(ellipse at 40% 25%, rgba(255,200,210,0.25) 0%, transparent 55%),
+    linear-gradient(155deg, #E85580 0%, #C43060 30%, #8B1A3A 65%, #5C1226 100%);
+  padding: 30px 40px;
+  display: flex;
+  box-shadow:
+    0 35px 70px -15px rgba(92, 18, 38, 0.5),
+    0 15px 30px -8px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 0 60px rgba(0,0,0,0.3);
+  border-left: 24px solid #3E0A18;
+}
+
+/* — Inside — */
+.cover-back-face {
+  background:
+    url("data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),
+    linear-gradient(135deg, #FDF8EF, #F7F0E4);
+  transform: rotateY(180deg);
+  outline: 5px solid #5C1226;
+  outline-offset: -5px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 30px;
+}
+
+.inside-cover-box {
+  border: 1.5px solid rgba(180, 155, 130, 0.3);
+  border-radius: 8px; padding: 28px;
+  text-align: center;
+  background: rgba(255,255,255,0.6);
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.inside-star { font-size: 1.3rem; }
+.inside-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem; color: #7A1A34;
+  margin: 10px 0 8px; letter-spacing: 0.5px;
+}
+.inside-desc {
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem; line-height: 1.55; color: #5A4A47;
+}
+.inside-signature { margin-top: 18px; }
+.inside-puppy-gif {
+  width: 55px; height: 55px;
+  border-radius: 50%; border: 2px solid #E5CDCD;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+.inside-signature p {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.15rem; color: #7A1A34; font-weight: 700;
+  margin-top: 6px;
+}
+
+/* — Ribbon — */
+.ribbon-bookmark-dangle {
+  position: absolute; top: -12px; right: 55px;
+  width: 22px; height: 80px;
+  background: linear-gradient(180deg, #D4A942, #B8892A);
+  box-shadow: 1px 3px 8px rgba(0,0,0,0.3);
+  z-index: 12; border-radius: 2px 2px 0 0;
+}
+.ribbon-tail {
+  position: absolute; bottom: -10px; left: 0;
+  width: 0; height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-top: 11px solid #B8892A;
+}
+
+/* — Gold corner brackets — */
+.metal-corner {
+  position: absolute;
+  width: 36px; height: 36px;
+  border: 2px solid rgba(212, 169, 66, 0.7);
+  z-index: 5; pointer-events: none;
+}
+.metal-corner.top-left     { top: 18px; left: 18px; border-right: none; border-bottom: none; border-radius: 6px 0 0 0; }
+.metal-corner.top-right    { top: 18px; right: 18px; border-left: none; border-bottom: none; border-radius: 0 12px 0 0; }
+.metal-corner.bottom-left  { bottom: 18px; left: 18px; border-right: none; border-top: none; border-radius: 0 0 0 6px; }
+.metal-corner.bottom-right { bottom: 18px; right: 18px; border-left: none; border-top: none; border-radius: 0 0 12px 0; }
+
+/* — Cover content — */
+.book-cover-content {
+  flex: 1; display: flex; justify-content: center; align-items: center;
+}
+
+.cover-gold-border {
+  border: 2px solid rgba(212, 169, 66, 0.5);
+  border-radius: 12px;
+  padding: 28px 24px;
+  width: 100%; max-width: 520px;
+  text-align: center; color: #FFF;
+  background: rgba(62, 10, 24, 0.2);
+  backdrop-filter: blur(2px);
+  box-shadow: inset 0 0 30px rgba(212, 169, 66, 0.08);
+}
+
+.cover-filigree { color: #D4A942; font-size: 1rem; letter-spacing: 5px; opacity: 0.65; }
+.cover-filigree.top  { margin-bottom: 6px; }
+.cover-filigree.bottom { margin: 12px 0 16px; }
+
+.cover-vintage-tag {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem; letter-spacing: 3px;
+  color: rgba(212, 169, 66, 0.8); font-weight: 600;
+}
+
+.cover-dog-badge {
+  width: 90px; height: 90px;
+  margin: 8px auto; border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, #D4A942, #F5E6B8, #C2871E);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+.cover-dog-img {
+  width: 100%; height: 100%;
+  border-radius: 50%; object-fit: cover;
+  border: 2px solid #3E0A18;
+}
+
+.cover-main-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem; letter-spacing: 3px;
+  color: #FFFDF0;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5), 0 0 15px rgba(212, 169, 66, 0.35);
+  font-weight: 700; margin-top: 4px;
+}
+
+.cover-sub-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.15rem; letter-spacing: 1px;
+  color: #FFCCD5; margin-top: 2px;
+}
+
+.cover-ribbon {
+  display: inline-block;
+  background: linear-gradient(135deg, #D4A942, #E5A93C);
+  color: #3E0A18; font-weight: 700; font-size: 0.8rem;
+  padding: 6px 18px; border-radius: 20px;
+  margin: 12px 0 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+  letter-spacing: 0.5px;
+}
+
+.cover-footer-text {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.85rem; color: rgba(255,240,245,0.85);
+  line-height: 1.4;
+}
+
+.open-book-btn {
+  background: linear-gradient(135deg, #FFFDF7, #FFE8EE);
+  color: #7A1A34;
+  border: 1.5px solid #D4A942;
+  padding: 12px 28px; border-radius: 35px;
+  font-family: 'Comfortaa', cursive;
+  font-size: 1rem; font-weight: 700;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3), 0 0 12px rgba(212, 169, 66, 0.3);
+  transition: var(--transition-smooth);
+  margin-top: 5px;
+}
+
+.open-book-btn:hover {
+  transform: translateY(-3px) scale(1.04);
+  background: #FFF5D6;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(212, 169, 66, 0.55);
+}
+
+/* ==========================================================================
+   FLIPPING LEAF (HIỆU ỨNG TRANG LẬT 3D)
+   ========================================================================== */
+.flipping-leaf {
+  position: absolute;
+  top: 5px; right: 5px;
+  width: calc(50% - 9px);
+  height: calc(100% - 10px);
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  z-index: 8; opacity: 0; pointer-events: none;
+  will-change: transform;
+}
+
+.leaf-face {
+  position: absolute; inset: 0;
+  padding: 22px 18px;
+  background:
+    url("data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #FDF8EF 0%, #F7F0E4 100%);
+  border-radius: 0 10px 10px 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.leaf-front { z-index: 2; }
+.leaf-back  { transform: rotateY(180deg); border-radius: 10px 0 0 10px; z-index: 1; }
+
+.flipping-leaf.flip-forward {
+  opacity: 1;
+  animation: turnForward 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes turnForward {
+  0%   { transform: rotateY(0deg); filter: brightness(1); }
+  40%  { filter: brightness(0.96); }
+  100% { transform: rotateY(-180deg); filter: brightness(1); }
+}
+
+.flipping-leaf.flip-backward {
+  opacity: 1;
+  animation: turnBackward 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes turnBackward {
+  0%   { transform: rotateY(-180deg); filter: brightness(1); }
+  40%  { filter: brightness(0.96); }
+  100% { transform: rotateY(0deg); filter: brightness(1); }
+}
+
+/* ==========================================================================
+   WISH PAGE CARDS (NỘI DUNG TỪNG TRANG LỜI CHÚC)
+   ========================================================================== */
+.wish-page-card {
+  height: 100%; display: flex; flex-direction: column;
+  gap: 10px;
+}
+
+.wish-card-header {
+  display: flex; align-items: center; gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(180, 155, 130, 0.2);
+}
+
+.wish-avatar {
+  width: 50px; height: 50px;
+  border-radius: 50%; object-fit: cover;
+  border: 2.5px solid #E5CDCD;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.wish-meta { flex: 1; }
+
+.wish-author-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 700; color: #7A1A34;
+  line-height: 1.2;
+}
+
+.wish-badge {
+  display: inline-block;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.7rem; font-weight: 700;
+  background: #FFF0F2; color: #C43060;
+  padding: 2px 8px; border-radius: 10px;
+  margin-top: 3px; border: 1px solid #FFD5DE;
+}
+
+.wish-dog-sticker {
+  font-size: 1.6rem;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+}
+
+.wish-body-text {
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem; line-height: 1.65;
+  color: #4A3E3D; flex: 1;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 6px;
+  border-left: 2.5px solid #E5A5B5;
+}
+
+.wish-page-date {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.75rem; color: #B09E99;
+  text-align: right;
+}
+
+.page-footer-decor { text-align: center; padding-top: 4px; }
+
+.page-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem; color: #B09E99;
+  font-weight: 600; letter-spacing: 1.5px;
+}
+
+/* Empty page */
+.empty-page-wrapper {
+  height: 100%; display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center; color: #B09E99; padding: 20px;
+}
+.empty-dog-icon { font-size: 2.2rem; margin-bottom: 8px; }
+
+/* ==========================================================================
+   BOOK CONTROLS BAR
+   ========================================================================== */
+.book-controls {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; margin-top: 20px; flex-wrap: wrap;
+}
+
+.book-ctrl-btn {
+  background: #FFF; border: 1.5px solid #E5CDCD;
+  color: #7A1A34; padding: 9px 20px; border-radius: 25px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700; font-size: 0.85rem;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: var(--transition-smooth);
+}
+
+.book-ctrl-btn:hover:not(:disabled) {
+  background: #7A1A34; color: #FFF;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(122, 26, 52, 0.3);
+}
+
+.book-ctrl-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.add-wish-btn {
+  background: linear-gradient(135deg, #C43060, #8B1A3A);
+  color: #FFF; border: none;
+  box-shadow: 0 4px 14px rgba(139, 26, 58, 0.3);
+}
+.add-wish-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 20px rgba(139, 26, 58, 0.45);
+}
+
+.book-page-indicator {
+  font-weight: 700; color: #7A1A34;
+  background: #FFF5F7; border: 1px solid #FFD5DE;
+  padding: 8px 16px; border-radius: 20px;
+  font-size: 0.85rem;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.gold-icon { color: #D4A942; }
+
+/* ==========================================================================
+   FLOATING REACTIONS BAR
+   ========================================================================== */
+.floating-reactions-bar {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  display: flex;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 40px;
+  box-shadow: 0 10px 30px rgba(255, 105, 180, 0.25);
+  border: 1px solid #FFCCD5;
+  z-index: 90;
+}
+
+.reaction-bubble-btn {
+  background: var(--pastel-pink);
+  border: 1px solid var(--soft-pink);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--deep-pink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: var(--transition-smooth);
+}
+
+.reaction-bubble-btn:hover {
+  transform: scale(1.2) translateY(-4px);
+  background: var(--primary-pink);
+  color: var(--white);
+}
+
+.react-cnt {
+  font-size: 0.75rem;
+}
+
+/* Pop particle effect */
+.pop-reaction-particle {
+  position: fixed;
+  pointer-events: none;
+  font-size: 2rem;
+  animation: popFlyUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  z-index: 1000;
+}
+
+@keyframes popFlyUp {
+  0% { transform: translate(0, 0) scale(0.5); opacity: 1; }
+  100% { transform: translate(var(--tx, 0px), -150px) scale(1.4); opacity: 0; }
+}
+
+/* ==========================================================================
+   MODAL DIALOG (ADD NEW WISH)
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(74, 62, 61, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition-smooth);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-card {
+  background: var(--white);
+  border-radius: var(--border-radius-lg);
+  width: 90%;
+  max-width: 500px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.close-modal-btn:hover {
+  color: var(--deep-pink);
+  transform: rotate(90deg);
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-dog-icon {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.modal-header h3 {
+  font-family: 'Comfortaa', cursive;
+  font-size: 1.4rem;
+  color: var(--deep-pink);
+}
+
+.modal-header p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.new-wish-form .form-group {
+  margin-bottom: 16px;
+}
+
+.new-wish-form label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+.new-wish-form input,
+.new-wish-form textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--border-radius-sm);
+  border: 1.5px solid #FFCCD5;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.new-wish-form input:focus,
+.new-wish-form textarea:focus {
+  border-color: var(--primary-pink);
+  box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2);
+}
+
+.sticker-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sticker-choice {
+  font-size: 1.5rem;
+  padding: 6px 10px;
+  background: var(--pastel-pink);
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition-smooth);
+}
+
+.sticker-choice:hover {
+  transform: scale(1.15);
+}
+
+.sticker-choice.selected {
+  border-color: var(--primary-pink);
+  background: #FFE4E8;
+  transform: scale(1.15);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  background: #F0F0F0;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #FF6B81, #E04D74);
+  color: var(--white);
+  border: none;
+  padding: 10px 22px;
+  border-radius: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(224, 77, 116, 0.35);
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(224, 77, 116, 0.5);
+}
+
+/* ==========================================================================
+   LIGHTBOX OVERLAY
+   ========================================================================== */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition-smooth);
+}
+
+.lightbox-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-content {
+  background: var(--white);
+  padding: 20px;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-dark);
+  cursor: pointer;
+}
+
+#lightboxImg {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.lightbox-caption {
+  margin-top: 15px;
+}
+
+#lightboxTitle {
+  font-family: 'Comfortaa', cursive;
+  font-size: 1.2rem;
+  color: var(--deep-pink);
+}
+
+#lightboxDesc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 5px;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.app-footer {
+  margin-top: 80px;
+  background: var(--white);
+  border-top: 2px dashed #FFCCD5;
+  padding: 40px 20px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-puppy {
+  margin-bottom: 12px;
+}
+
+.footer-dog-img {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-pink);
+}
+
+.footer-main-text {
+  font-family: 'Comfortaa', cursive;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--deep-pink);
+  margin-bottom: 6px;
+}
+
+.footer-sub-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 992px) {
+  .hero-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .graduate-card-col {
+    order: 1;
+  }
+
+  .honor-degree-col {
+    order: 2;
+  }
+
+  .book-spread-inner {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto 1fr;
+  }
+
+  .book-3d {
+    aspect-ratio: auto;
+    min-height: 480px;
+  }
+
+  .book-page.page-left {
+    border-right: none;
+    box-shadow: inset 0 -15px 25px -10px rgba(0,0,0,0.05);
+  }
+
+  .book-page.page-right {
+    box-shadow: inset 0 15px 25px -10px rgba(0,0,0,0.05);
+  }
+}
+
+@media (max-width: 600px) {
+  .top-nav-bar {
+    padding: 8px 14px;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .nav-btn .btn-label {
+    font-size: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+  }
+
+  .honor-certificate-box {
+    padding: 20px 15px;
+  }
+
+  .cert-recipient-name {
+    font-size: 1.9rem;
+  }
+
+  .letter-card {
+    padding: 25px 15px;
+  }
+
+  .letter-dog-decor {
+    display: none;
+  }
+
+  .floating-reactions-bar {
+    bottom: 15px;
+    right: 15px;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .reaction-bubble-btn {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+  }
+
+  .book-spine-decor { left: -18px; width: 18px; }
+  .book-pages-edge.right-edge { width: 6px; right: -6px; }
+  .book-pages-edge.bottom-edge { height: 5px; bottom: -5px; }
+  .cover-main-title { font-size: 1.6rem; letter-spacing: 1.5px; }
+  .cover-sub-title { font-size: 0.95rem; }
+  .cover-front-face { padding: 18px 20px; border-left: 16px solid #3E0A18; }
+  .cover-gold-border { padding: 18px 14px; }
+  .cover-dog-badge { width: 65px; height: 65px; }
+  .book-page { padding: 18px 14px; }
+  .wish-body-text { font-size: 1.1rem; }
+  .book-ctrl-btn { padding: 7px 14px; font-size: 0.8rem; }
+  .book-controls { gap: 8px; }
+}

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chúc mừng tốt nghiệp — Nguyễn Ngọc Hà 🎓</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap');
+  :root{ --rose:#f45d99; --rose-deep:#d63b7a; --ink:#6b3a52; --ink-soft:#9b6f83;
+    --ink-line:#7a4a63; --sticker:3px 4px 0 rgba(122,74,99,.22); }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{ font-family:'Quicksand','Segoe UI',system-ui,-apple-system,'Noto Sans',sans-serif; color:var(--ink);
+    background:
+      radial-gradient(circle at 20% 24%, rgba(255,255,255,.55) 0 2px, transparent 3px) 0 0/28px 28px,
+      linear-gradient(180deg,#fff9f4 0%,#ffeef6 46%,#ffe1ee 100%);
+    overflow:hidden; }
+  h1,#title,#bookView h2,.btn{ font-family:'Baloo 2','Quicksand','Segoe UI',sans-serif; }
+  canvas.fx{position:fixed; inset:0; width:100%; height:100%; pointer-events:none}
+  #petals{z-index:2}
+  #confetti{z-index:45}
+
+  /* ===== World ===== */
+  #world{position:fixed; inset:0; z-index:5}
+  #scenery{position:absolute; bottom:120px; left:0; width:220%; height:70px; display:flex;
+    align-items:flex-end; gap:70px; padding-left:40px; font-size:34px; opacity:.9}
+  #world.moving #scenery{animation:sceneryMove 9s linear infinite}
+  #road{position:absolute; bottom:0; left:0; right:0; height:130px;
+    background:linear-gradient(180deg,#ffd8e6,#ffc2da); border-top:4px dashed var(--ink-line)}
+  #road:before{content:''; position:absolute; top:48px; left:0; right:0; height:6px;
+    background:repeating-linear-gradient(90deg,#fff 0 30px,transparent 30px 70px); opacity:.75}
+  #world.moving #road:before{animation:roadDash 1.1s linear infinite}
+
+  /* ===== Characters ===== */
+  #girl{position:fixed; bottom:118px; left:20%; height:268px; z-index:14;
+    transition:left 1.6s cubic-bezier(.42,0,.35,1), height .5s ease}
+  #girl.grad{height:308px}
+  #girl img,#dog img,#crowd img,#arch img{height:100%; display:block;
+    filter:drop-shadow(0 10px 10px rgba(214,59,122,.2))}
+  .walkbob{animation:bob .42s ease-in-out infinite alternate}
+  #dog{position:fixed; bottom:120px; left:12%; height:110px; z-index:14;
+    transition:left 1.6s cubic-bezier(.42,0,.35,1)}
+  #dog img{transition:none}
+
+  /* ===== Party (arch + crowd + text) ===== */
+  #party{position:fixed; bottom:0; right:0; width:min(720px,66vw); height:100%; z-index:12;
+    transform:translateX(115%); opacity:0; pointer-events:none;
+    transition:transform 1.7s cubic-bezier(.3,.7,.3,1), opacity .7s ease}
+  #party.show{transform:translateX(0); opacity:1}
+  #arch{position:absolute; bottom:150px; left:50%; transform:translateX(-50%); height:424px; z-index:1}
+  #crowd{position:absolute; bottom:118px; left:50%; transform:translateX(-50%); height:300px; z-index:2}
+  #archText{position:absolute; bottom:392px; left:50%; transform:translateX(-50%); z-index:3;
+    background:#fff; padding:8px 24px; white-space:nowrap;
+    border-radius:16px 22px 15px 20px/20px 15px 22px 16px;
+    font-weight:800; color:var(--rose-deep); font-size:clamp(18px,2.4vw,28px);
+    box-shadow:var(--sticker); border:3px solid var(--ink-line)}
+  #giftBook{position:fixed; bottom:190px; left:60%; height:66px; z-index:15; opacity:0;
+    transition:left 1.4s cubic-bezier(.4,0,.4,1), bottom 1.4s ease, opacity .4s ease;
+    font-size:52px; filter:drop-shadow(0 8px 10px rgba(214,59,122,.3))}
+
+  /* ===== Stage text ===== */
+  #stage{position:fixed; top:0; left:0; right:0; z-index:18; padding:66px 24px 0;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    pointer-events:none; transition:opacity .35s ease}
+  #stage.fade{opacity:0}
+  .year-badge{display:inline-block; background:#fff; color:var(--rose-deep); font-weight:700;
+    padding:6px 18px; border:2.5px solid var(--ink-line);
+    border-radius:14px 18px 13px 17px/17px 13px 18px 14px; font-size:15px; margin-bottom:14px;
+    box-shadow:var(--sticker)}
+  #emoji{font-size:60px; line-height:1; margin-bottom:8px; filter:drop-shadow(0 8px 14px rgba(214,59,122,.25))}
+  #label{font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--rose);
+    font-weight:700; margin-bottom:10px}
+  #title{font-size:clamp(26px,5vw,48px); color:var(--rose-deep); line-height:1.15; margin-bottom:12px;
+    text-shadow:0 3px 0 rgba(255,255,255,.6)}
+  #desc{font-size:clamp(15px,2.3vw,20px); color:var(--ink-soft); max-width:560px; line-height:1.6}
+  #album{display:none; grid-template-columns:repeat(3,1fr); gap:14px; max-width:520px; margin-top:12px; pointer-events:auto}
+  #album.on{display:grid}
+  .photo{aspect-ratio:1/1; background:#fff; border:3px dashed var(--ink-line);
+    border-radius:16px 20px 14px 22px/20px 14px 22px 16px;
+    display:flex; align-items:center; justify-content:center; color:var(--ink-soft); font-size:13px;
+    text-align:center; padding:8px; overflow:hidden; box-shadow:var(--sticker)}
+  .photo img{width:100%;height:100%;object-fit:cover}
+
+  /* ===== HUD ===== */
+  .btn{cursor:pointer; font-weight:700; color:var(--ink); border:3px solid var(--ink-line);
+    border-radius:16px 20px 15px 22px/22px 15px 20px 16px; box-shadow:var(--sticker);
+    transition:transform .12s ease, box-shadow .12s ease}
+  .btn:hover{transform:translate(-1px,-2px) rotate(-1deg); box-shadow:5px 7px 0 rgba(122,74,99,.22)}
+  .btn:active{transform:translate(2px,3px); box-shadow:1px 1px 0 rgba(122,74,99,.22)}
+  .btn-primary{background:#ff8fbb; color:#fff; font-size:18px; padding:14px 32px;
+    text-shadow:0 1.5px 0 rgba(122,74,99,.28)}
+  .btn-ghost{background:#fff; color:var(--rose-deep); font-size:16px; padding:12px 26px}
+  .btn-ghost:disabled{opacity:.4; cursor:default}
+  .btn-ghost:disabled:hover{transform:none; box-shadow:var(--sticker)}
+  .nav{position:fixed; bottom:32px; left:50%; transform:translateX(-50%); z-index:30; display:flex; gap:12px}
+  #music{position:fixed; top:16px; right:16px; z-index:50; background:#fff;
+    color:var(--rose-deep); padding:9px 16px; font-size:14px}
+  #dots{position:fixed; top:18px; left:50%; transform:translateX(-50%); z-index:50; display:flex; gap:8px}
+  #dots .dot{width:11px; height:11px; border-radius:50%; background:#fff; border:2px solid var(--ink-line)}
+  #dots .dot.on{background:var(--rose); transform:scale(1.25)}
+
+  /* ===== Reading book ===== */
+  #bookView{position:fixed; inset:0; z-index:25; display:none; flex-direction:column;
+    align-items:center; justify-content:center; padding:24px}
+  #bookView.on{display:flex}
+  #bookView h2{color:var(--rose-deep); font-size:clamp(20px,3vw,30px); margin-bottom:16px; text-align:center}
+  .rbook{width:min(760px,92vw); height:min(460px,64vh); display:flex; background:#fff;
+    border:4px solid var(--ink-line); border-radius:20px 24px 18px 26px/26px 18px 24px 20px;
+    box-shadow:6px 8px 0 rgba(122,74,99,.22); overflow:hidden; perspective:1800px}
+  .rleft{flex:1; background:linear-gradient(160deg,#fff0f6,#ffe3ef); border-right:2px solid #ffdcea;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:14px}
+  .avatar{width:96px; height:96px; border-radius:50%; background:#fff; display:flex; align-items:center;
+    justify-content:center; font-size:46px; box-shadow:0 8px 18px rgba(214,59,122,.2)}
+  .rleft .pname{font-weight:800; color:var(--rose-deep); font-size:20px; text-align:center}
+  .rleft .pnum{font-size:13px; color:var(--ink-soft); letter-spacing:1px}
+  .rright{flex:1; padding:34px 30px; display:flex; flex-direction:column; justify-content:center;
+    transform-origin:left center; transition:transform .26s ease; backface-visibility:hidden}
+  .rright .quote{font-size:clamp(15px,2.2vw,19px); line-height:1.7; color:var(--ink)}
+  .rright .sign{margin-top:18px; text-align:right; color:var(--rose); font-weight:700}
+  .rright .cover-title{font-size:28px; font-weight:800; color:var(--rose-deep); text-align:center}
+  .rright .cover-sub{margin-top:12px; text-align:center; color:var(--ink-soft)}
+  @media(max-width:560px){ .rbook{height:60vh} .rleft{flex:0 0 40%} }
+
+  /* hide world while reading */
+  body.reading #world, body.reading #stage, body.reading #girl, body.reading #dog,
+  body.reading #party, body.reading #giftBook{ display:none !important }
+
+  /* ===== Hand-drawn sky ===== */
+  #sky{position:fixed; inset:0; z-index:3; pointer-events:none}
+  #sun{position:absolute; top:30px; left:46px; width:84px; filter:drop-shadow(2px 3px 0 rgba(122,74,99,.14))}
+  #sun svg{width:100%; height:auto; animation:spin 34s linear infinite; transform-origin:50% 50%}
+  .cloud{position:absolute; filter:drop-shadow(2px 4px 0 rgba(122,74,99,.10)); animation:drift 16s ease-in-out infinite}
+  .cloud svg{width:100%; height:auto; display:block}
+
+  @keyframes bob{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+  @keyframes roadDash{from{background-position:0 0}to{background-position:-100px 0}}
+  @keyframes sceneryMove{from{transform:translateX(0)}to{transform:translateX(-45%)}}
+  @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(26px,-10px)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){ .walkbob,.cloud,#sun svg{animation:none} }
+</style>
+</head>
+<body>
+<canvas id="petals" class="fx"></canvas>
+<canvas id="confetti" class="fx"></canvas>
+
+<div id="sky">
+  <div id="sun"><svg viewBox="0 0 90 90"><g stroke="#7a4a63" stroke-width="3.2" stroke-linecap="round"><line x1="45" y1="4" x2="45" y2="16"/><line x1="45" y1="74" x2="45" y2="86"/><line x1="4" y1="45" x2="16" y2="45"/><line x1="74" y1="45" x2="86" y2="45"/><line x1="15" y1="15" x2="24" y2="24"/><line x1="66" y1="66" x2="75" y2="75"/><line x1="75" y1="15" x2="66" y2="24"/><line x1="24" y1="66" x2="15" y2="75"/></g><circle cx="45" cy="45" r="18" fill="#ffe08a" stroke="#7a4a63" stroke-width="3.2"/></svg></div>
+  <div class="cloud" style="top:13%; left:5%; width:150px; animation-delay:0s"><svg viewBox="0 0 130 70"><path d="M35 60 C15 60 10 38 28 34 C26 16 52 10 58 26 C66 12 92 16 90 34 C112 32 116 58 96 60 Z" fill="#fff" stroke="#7a4a63" stroke-width="3" stroke-linejoin="round"/></svg></div>
+  <div class="cloud" style="top:16%; right:6%; width:120px; animation-delay:2.5s"><svg viewBox="0 0 130 70"><path d="M35 60 C15 60 10 38 28 34 C26 16 52 10 58 26 C66 12 92 16 90 34 C112 32 116 58 96 60 Z" fill="#fff" stroke="#7a4a63" stroke-width="3" stroke-linejoin="round"/></svg></div>
+  <div class="cloud" style="top:31%; left:13%; width:96px; animation-delay:4s"><svg viewBox="0 0 130 70"><path d="M35 60 C15 60 10 38 28 34 C26 16 52 10 58 26 C66 12 92 16 90 34 C112 32 116 58 96 60 Z" fill="#fff" stroke="#7a4a63" stroke-width="3" stroke-linejoin="round"/></svg></div>
+</div>
+
+<div id="dots"></div>
+<button id="music" class="btn">🎵 Bật nhạc</button>
+
+<div id="world">
+  <div id="scenery"></div>
+  <div id="road"></div>
+</div>
+
+<div id="party">
+  <div id="arch"><img src="images/arch.png" alt=""></div>
+  <div id="archText">Happy Graduation! 🎓</div>
+  <div id="crowd"><img id="crowdImg" src="images/crowd1.png" alt=""></div>
+</div>
+
+<div id="dog"><img id="dogImg" src="images/dog1.png" alt=""></div>
+<div id="girl"><img id="girlImg" src="images/girl1.png" alt=""></div>
+<div id="giftBook">📕</div>
+
+<div id="stage">
+  <div id="label"></div>
+  <div id="badge" class="year-badge" style="display:none"></div>
+  <div id="emoji"></div>
+  <h1 id="title"></h1>
+  <p id="desc"></p>
+  <div id="album"></div>
+</div>
+
+<div id="bookView">
+  <h2 id="bookTitle">Sổ tay lời chúc 💕</h2>
+  <div class="rbook">
+    <div class="rleft">
+      <div class="avatar" id="pAvatar">🌸</div>
+      <div class="pname" id="pName"></div>
+      <div class="pnum" id="pNum"></div>
+    </div>
+    <div class="rright" id="rRight"></div>
+  </div>
+</div>
+
+<div class="nav">
+  <button id="prevBtn" class="btn btn-ghost">← Quay lại</button>
+  <button id="nextBtn" class="btn btn-primary">Bắt đầu ✧</button>
+</div>
+
+<script>
+/* ================= NỘI DUNG CÓ THỂ CHỈNH SỬA ================= */
+const CONFIG = {
+  friendName: "Nguyễn Ngọc Hà",
+  major: "Tài chính ngân hàng",
+  milestones: [
+    { emoji:"🎒", year:"Năm nhất", title:"Ngày đầu bước vào đại học", desc:"Cô sinh viên Tài chính ngân hàng năm nhất rụt rè, háo hức với giảng đường mới và những người bạn mới." },
+    { emoji:"📚", year:"Những năm tháng", title:"Thanh xuân trên giảng đường", desc:"Bao đêm ôn thi, bao lần chạy deadline, bao kỷ niệm bên bạn bè — tất cả đã tạo nên một hành trình tuyệt vời." },
+    { emoji:"🎓", year:"Ngày tốt nghiệp", title:"Khoảnh khắc vinh quang", desc:"Hôm nay, Ngọc Hà chính thức trở thành Cử nhân Tài chính ngân hàng. Chúc mừng cậu! 🎉" }
+  ],
+  showAlbum: true,
+  photos: [ "photos/1.jpg", "photos/2.jpg", "photos/3.jpg", "photos/4.jpg", "photos/5.jpg", "photos/6.jpg" ],
+  messages: [
+    // Thêm lời chúc theo mẫu bên dưới:
+    // { name:"Tên người gửi", emoji:"💞", text:"Nội dung lời chúc..." },
+  ]
+};
+/* =============================================================== */
+
+const $ = id => document.getElementById(id);
+const world=$('world'), girl=$('girl'), girlImg=$('girlImg'), dog=$('dog'), dogImg=$('dogImg');
+const party=$('party'), crowdImg=$('crowdImg'), gift=$('giftBook'), stage=$('stage'), album=$('album');
+const nextBtn=$('nextBtn'), prevBtn=$('prevBtn');
+
+/* Hoán đổi khung hình liên tục để tạo hoạt ảnh (chạy/đi/vỗ tay) */
+function frameCycler(imgEl, frames, ms){ let t=null, f=0; return on=>{ if(on){ if(t) return; t=setInterval(()=>{ f=(f+1)%frames.length; imgEl.src=frames[f]; }, ms); } else { if(t){ clearInterval(t); t=null; } f=0; imgEl.src=frames[0]; } }; }
+const dogRun    = frameCycler(dogImg,   ['images/dog1.png','images/dog2.png','images/dog3.png'], 110);
+const girlRun   = frameCycler(girlImg,  ['images/girl1.png','images/girl2.png','images/girl3.png'], 150);
+const gownRun   = frameCycler(girlImg,  ['images/gown1.png','images/gown2.png','images/gown3.png'], 150);
+const crowdClap = frameCycler(crowdImg, ['images/crowd1.png','images/crowd2.png','images/crowd3.png'], 700);
+
+$('scenery').innerHTML = Array.from({length:24},()=>['🌷','🌸','🌼','🌿'][Math.floor(Math.random()*4)]).join('');
+
+const stops = CONFIG.milestones.map(m=>({type:'milestone',...m}));
+if(CONFIG.showAlbum) stops.push({type:'album'});
+const N = stops.length;
+
+const pages = [{cover:true, emoji:'🎓', title:'Sổ tay lời chúc',
+    sub:'Dành tặng '+CONFIG.friendName+' — lật từng trang để đọc nhé ❤'}]
+  .concat(CONFIG.messages.map(m=>({name:m.name, emoji:m.emoji||'💌', text:m.text})))
+  .concat([{closing:true, emoji:'🎉', title:'Chúc bạn luôn hạnh phúc!', sub:'Chặng đường mới đang chờ bạn phía trước 🌸'}]);
+
+const dotsN = 1 + N + 2;
+const dotsEl=$('dots');
+for(let i=0;i<dotsN;i++){ const d=document.createElement('div'); d.className='dot'; dotsEl.appendChild(d); }
+const dotEls=[...dotsEl.children];
+function setDot(i){ dotEls.forEach((d,k)=>d.classList.toggle('on',k===i)); }
+
+let phase='intro', si=0, pageIndex=0;
+function fadeStage(fn){ stage.classList.add('fade'); setTimeout(()=>{ fn(); stage.classList.remove('fade'); },320); }
+
+function setMilestone(s){
+  album.classList.remove('on'); album.innerHTML='';
+  $('label').textContent='Happy Graduation';
+  $('badge').style.display='inline-block'; $('badge').textContent=s.year;
+  $('emoji').style.display='block'; $('emoji').textContent=s.emoji;
+  $('title').textContent=s.title; $('desc').textContent=s.desc;
+}
+function setAlbum(){
+  $('label').textContent='Kỷ niệm'; $('badge').style.display='none';
+  $('emoji').style.display='block'; $('emoji').textContent='📸';
+  $('title').textContent='Album kỷ niệm'; $('desc').textContent='Những khoảnh khắc không thể nào quên.';
+  if (!CONFIG.photos || CONFIG.photos.length === 0) {
+    album.innerHTML = Array.from({length: 6}, (_, i) => `<div class="photo">📷<br>Ảnh ${i+1}</div>`).join('');
+  } else {
+    album.innerHTML = CONFIG.photos.map((p,i)=> p ? `<div class="photo"><img src="${p}" onerror="this.closest('.photo').textContent='📷 Ảnh '+(${i}+1)"></div>` : `<div class="photo">📷<br>Ảnh ${i+1}</div>`).join('');
+  }
+  album.classList.add('on');
+}
+function updateNav(){
+  prevBtn.style.display='inline-block'; nextBtn.style.display='inline-block'; prevBtn.disabled=false;
+  if(phase==='intro'){ nextBtn.textContent='Bắt đầu ✧'; prevBtn.disabled=true; }
+  else if(phase==='journey'){ nextBtn.textContent='Đi tiếp →'; prevBtn.textContent='← Quay lại'; }
+  else if(phase==='celebrate'){ nextBtn.textContent='Đi tiếp →'; prevBtn.textContent='← Quay lại'; }
+  else if(phase==='handover'){ nextBtn.textContent='Mở sách 📖'; prevBtn.textContent='← Quay lại'; }
+  else if(phase==='book'){
+    prevBtn.textContent = pageIndex===0 ? '← Ra ngoài' : '‹ Trang trước';
+    nextBtn.textContent = pageIndex>=pages.length-1 ? '↺ Đọc lại' : 'Trang sau ›';
+  }
+}
+
+function enterIntro(){
+  phase='intro'; document.body.classList.remove('reading'); world.classList.remove('moving');
+  girl.classList.remove('grad'); gownRun(false); girl.style.left='20%'; girl.classList.remove('walkbob'); girlRun(false);
+  dog.style.left='13%'; dog.classList.remove('walkbob'); dogRun(false);
+  party.classList.remove('show'); crowdClap(false); gift.style.opacity=0;
+  $('label').textContent='Happy Graduation'; $('badge').style.display='none';
+  $('emoji').style.display='block'; $('emoji').textContent='🌸';
+  $('title').innerHTML='Chúc mừng tốt nghiệp<br>'+CONFIG.friendName+' 🎓';
+  $('desc').textContent='Cùng nhìn lại hành trình đại học tuyệt vời của cậu, và xem điều bất ngờ ở cuối con đường nhé!';
+  album.classList.remove('on'); setDot(0); updateNav();
+}
+function enterJourney(i){
+  phase='journey'; si=i; document.body.classList.remove('reading'); world.classList.add('moving');
+  girl.classList.remove('grad'); gownRun(false); girlImg.src='images/girl1.png'; girl.style.left='20%'; girl.classList.add('walkbob'); girlRun(true);
+  dog.style.left='11%'; dog.classList.add('walkbob'); dogRun(true);
+  party.classList.remove('show'); crowdClap(false); gift.style.opacity=0;
+  fadeStage(()=>{ const s=stops[i]; s.type==='album'?setAlbum():setMilestone(s); });
+  setDot(1+i); updateNav();
+}
+function enterCelebrate(){
+  phase='celebrate'; document.body.classList.remove('reading');
+  world.classList.add('moving');
+  party.classList.add('show'); crowdClap(true);
+  gift.style.opacity=0;
+  girlRun(false); girl.classList.add('grad'); girlImg.src='images/gown1.png';
+  girl.classList.add('walkbob'); gownRun(true);
+  dog.classList.add('walkbob'); dogRun(true);
+  girl.style.left='20%'; dog.style.left='11%';
+  requestAnimationFrame(()=>{ girl.style.left='44%'; dog.style.left='34%'; });
+  fadeStage(()=>{
+    album.classList.remove('on'); $('badge').style.display='none';
+    $('label').textContent='Chúc mừng'; $('emoji').style.display='none';
+    $('title').textContent='🎉 Chúc mừng tốt nghiệp! 🎉';
+    $('desc').textContent='Mọi người đang đứng đó, vỗ tay chúc mừng '+CONFIG.friendName+'!';
+  });
+  setTimeout(()=>{
+    world.classList.remove('moving');
+    girl.classList.remove('walkbob'); gownRun(false);
+    dog.classList.remove('walkbob'); dogRun(false);
+  }, 2100);
+  burst(); setTimeout(burst,1000); setDot(1+N); updateNav();
+}
+function enterHandover(){
+  phase='handover'; document.body.classList.remove('reading'); world.classList.remove('moving');
+  party.classList.add('show'); crowdClap(true);
+  girl.classList.add('grad'); girl.style.left='44%'; girl.classList.remove('walkbob'); gownRun(false);
+  dog.style.left='34%'; dog.classList.remove('walkbob'); dogRun(false);
+  gift.style.transition='none'; gift.style.left='64%'; gift.style.bottom='210px'; gift.style.opacity='0';
+  requestAnimationFrame(()=>{ gift.style.opacity='1'; requestAnimationFrame(()=>{
+    gift.style.transition='left 1.4s cubic-bezier(.4,0,.4,1), bottom 1.4s ease';
+    gift.style.left='49%'; gift.style.bottom='205px'; }); });
+  fadeStage(()=>{
+    $('label').textContent='Món quà đặc biệt'; $('badge').style.display='none';
+    $('emoji').style.display='block'; $('emoji').textContent='💝';
+    $('title').textContent='Một món quà nhỏ';
+    $('desc').textContent='Mọi người cùng trao tặng '+CONFIG.friendName+' quyển sách lời chúc. Bấm "Mở sách" để đọc nhé.';
+  });
+  setDot(1+N); updateNav();
+}
+function enterBook(){
+  phase='book'; document.body.classList.add('reading'); pageIndex=0;
+  dogRun(false); girlRun(false); crowdClap(false); $('bookView').classList.add('on'); renderPage(); setDot(dotsN-1); updateNav(); burst();
+}
+
+function renderPage(){
+  const p=pages[pageIndex]; const right=$('rRight');
+  right.style.transform='rotateY(-90deg)';
+  setTimeout(()=>{
+    $('pAvatar').textContent=p.emoji||'💌';
+    $('pName').textContent = (p.cover||p.closing) ? '' : p.name;
+    const totalMsgs = CONFIG.messages.length;
+    $('pNum').textContent = (p.cover||p.closing) ? '' : (totalMsgs > 0 ? `Lời chúc ${pageIndex} / ${totalMsgs}` : 'Lời chúc');
+    if(p.cover||p.closing){ right.innerHTML='<div class="cover-title">'+p.title+'</div><div class="cover-sub">'+p.sub+'</div>'; }
+    else { right.innerHTML='<div class="quote">"'+p.text+'"</div><div class="sign">— '+p.name+'</div>'; }
+    right.style.transform='rotateY(90deg)';
+    requestAnimationFrame(()=>{ right.style.transform='rotateY(0deg)'; });
+  },260);
+}
+
+nextBtn.addEventListener('click',()=>{
+  if(phase==='intro') enterJourney(0);
+  else if(phase==='journey'){ if(si<N-1) enterJourney(si+1); else enterCelebrate(); }
+  else if(phase==='celebrate') enterHandover();
+  else if(phase==='handover') enterBook();
+  else if(phase==='book'){ if(pageIndex<pages.length-1){ pageIndex++; } else { pageIndex=0; } renderPage(); updateNav(); }
+});
+prevBtn.addEventListener('click',()=>{
+  if(phase==='journey'){ if(si>0) enterJourney(si-1); else enterIntro(); }
+  else if(phase==='celebrate') enterJourney(N-1);
+  else if(phase==='handover') enterCelebrate();
+  else if(phase==='book'){ if(pageIndex>0){ pageIndex--; renderPage(); updateNav(); } else { $('bookView').classList.remove('on'); enterHandover(); } }
+});
+
+enterIntro();
+
+/* ===== Petals ===== */
+const pc=$('petals'), px=pc.getContext('2d'); let pw,ph,petals;
+function rp(){ pw=pc.width=innerWidth; ph=pc.height=innerHeight; } rp(); addEventListener('resize',rp);
+function Petal(){ this.reset(); this.y=Math.random()*ph; }
+Petal.prototype.reset=function(){ this.x=Math.random()*pw; this.y=-20; this.s=6+Math.random()*8; this.vy=1+Math.random()*1.5; this.vx=-.6+Math.random()*1.2; this.a=Math.random()*6.28; this.va=-.05+Math.random()*.1; this.o=.55+Math.random()*.4; };
+Petal.prototype.step=function(){ this.y+=this.vy; this.x+=this.vx+Math.sin(this.y/40)*.5; this.a+=this.va; if(this.y>ph+20) this.reset(); };
+Petal.prototype.draw=function(){ px.save(); px.translate(this.x,this.y); px.rotate(this.a); px.globalAlpha=this.o; px.fillStyle='#ff9ec2'; px.beginPath(); px.ellipse(0,0,this.s,this.s*.6,0,0,6.28); px.fill(); px.restore(); };
+petals=Array.from({length:34},()=>new Petal());
+(function loop(){ px.clearRect(0,0,pw,ph); petals.forEach(p=>{p.step();p.draw();}); requestAnimationFrame(loop); })();
+
+/* ===== Confetti ===== */
+const cc=$('confetti'), cx=cc.getContext('2d');
+function rc(){ cc.width=innerWidth; cc.height=innerHeight; } rc(); addEventListener('resize',rc);
+let conf=[];
+function burst(){ const cols=['#f45d99','#ff9ec2','#e6b84f','#8ad0ff','#a6e3a1','#fff'];
+  for(let i=0;i<130;i++){ conf.push({x:innerWidth/2,y:innerHeight*.32, vx:-6+Math.random()*12, vy:-8-Math.random()*8, g:.28, s:6+Math.random()*7, c:cols[i%cols.length], a:1, r:Math.random()*6, vr:-.3+Math.random()*.6}); } }
+(function cloop(){ cx.clearRect(0,0,cc.width,cc.height); conf.forEach(p=>{ p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.a-=.008; p.r+=p.vr; cx.save(); cx.globalAlpha=Math.max(0,p.a); cx.translate(p.x,p.y); cx.rotate(p.r); cx.fillStyle=p.c; cx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6); cx.restore(); }); conf=conf.filter(p=>p.a>0 && p.y<cc.height+30); requestAnimationFrame(cloop); })();
+
+/* ===== Music ===== */
+let actx, playing=false, mtimer, mi=0; const mbtn=$('music');
+const melody=[523.25,587.33,659.25,783.99,659.25,587.33,523.25,440,493.88,523.25,587.33,523.25];
+function note(f){ const o=actx.createOscillator(), g=actx.createGain(); o.type='sine'; o.frequency.value=f; o.connect(g); g.connect(actx.destination); const t=actx.currentTime; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.18,t+.05); g.gain.exponentialRampToValueAtTime(.001,t+.9); o.start(t); o.stop(t+.95); }
+mbtn.addEventListener('click',()=>{ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)();
+  if(playing){ playing=false; clearInterval(mtimer); mbtn.textContent='🎵 Bật nhạc'; }
+  else { playing=true; mbtn.textContent='🔇 Tắt nhạc'; if(actx.state==='suspended')actx.resume(); note(melody[mi=0]); mtimer=setInterval(()=>{ mi=(mi+1)%melody.length; note(melody[mi]); },620); } });
+</script>
+</body>
+</html>
