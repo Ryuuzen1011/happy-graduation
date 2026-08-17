@@ -48,9 +48,9 @@
     opacity:0.6;
   }
   
-  /* Distant Pastel Hills */
+  /* Distant Pastel Hills (Tầng đồi xa trôi êm ái) */
   #distantHills{
-    position:absolute; bottom:125px; left:0; width:200%; height:85px;
+    position:absolute; bottom:125px; left:0; width:240%; height:85px;
     background:
       radial-gradient(ellipse 260px 70px at 15% 100%, #ffd4e5 98%, transparent 100%),
       radial-gradient(ellipse 340px 85px at 45% 100%, #ffe2ee 98%, transparent 100%),
@@ -58,20 +58,22 @@
       radial-gradient(ellipse 320px 80px at 105% 100%, #ffe2ee 98%, transparent 100%);
     opacity:0.55; z-index:2; pointer-events:none;
   }
-  #world.moving #distantHills{animation:hillsDrift 24s linear infinite}
+  #world.moving #distantHills{animation:hillsDrift 28s linear infinite}
   
+  /* Hàng hoa cỏ trôi đồng bộ theo nhịp bước chân */
   #scenery{position:absolute; bottom:120px; left:0; width:max-content; height:70px; display:flex;
     align-items:flex-end; white-space:nowrap; opacity:.95; will-change:transform; z-index:3;}
   .scenery-track{display:inline-flex; align-items:flex-end; gap:60px; padding-right:60px; font-size:34px;}
-  #world.moving #scenery{animation:sceneryLoop 18s linear infinite}
+  #world.moving #scenery{animation:sceneryLoop 12s linear infinite}
   
+  /* Mặt đường và vạch kẻ trắng trôi khớp với bước tiếp đất */
   #road{position:absolute; bottom:0; left:0; right:0; height:130px; z-index:4;
     background:linear-gradient(180deg,#ffd8e6,#ffb8d4 70%,#f09dbf 100%); 
     border-top:4px dashed var(--ink-line);
     box-shadow:inset 0 10px 20px rgba(214,59,122,0.12);}
   #road:before{content:''; position:absolute; top:48px; left:0; right:0; height:6px;
     background:repeating-linear-gradient(90deg,#fff 0 30px,transparent 30px 70px); opacity:.85}
-  #world.moving #road:before{animation:roadDash 2.4s linear infinite}
+  #world.moving #road:before{animation:roadDash 1.32s linear infinite}
 
   /* ===== Characters ===== */
   #girl{position:fixed; bottom:118px; left:20%; height:268px; z-index:14; cursor:pointer;
@@ -90,6 +92,16 @@
     transform-origin: 50% 90%; will-change: transform;}
   #dog.jump{animation:dogHop 0.5s ease;}
   #girl.cheer{animation:girlCheer 0.6s ease;}
+
+  /* Dấu chân 🐾 & bụi hồng bay lên theo từng bước chân */
+  .paw{position:fixed; z-index:13; pointer-events:none; animation:pawFade .85s ease-out forwards;
+    filter:drop-shadow(0 2px 4px rgba(214,59,122,0.25));}
+  .paw.dust{width:10px; height:10px; border-radius:50%;
+    background:radial-gradient(circle,#ffb3d1 0%,rgba(255,179,209,0) 75%);}
+  @keyframes pawFade{
+    0%{transform:translateY(0) scale(.6); opacity:.9}
+    100%{transform:translateY(-26px) scale(1.2); opacity:0}
+  }
 
   /* Floating Popups (Barks, Hearts, Cap toss) */
   .pop-tag{
@@ -841,22 +853,43 @@ function playPageSound(){
   } catch(e){}
 }
 
-/* Hoán đổi khung hình liên tục */
-function frameCycler(imgEl, frames, ms){ 
+/* Dấu chân 🐾 / bụi hồng rơi theo từng bước chân */
+function spawnPaw(targetEl, isDog=false){
+  if(phase === 'book') return;
+  const el = document.createElement('div');
+  el.className = 'paw' + (isDog ? '' : ' dust');
+  if(isDog){ el.textContent = '🐾'; el.style.fontSize = '14px'; }
+  const rect = targetEl.getBoundingClientRect();
+  const groundOffset = isDog ? 16 : 8;
+  el.style.left = (rect.left + rect.width * (isDog ? 0.35 : 0.45) + (Math.random() * 16 - 8)) + 'px';
+  el.style.top  = (rect.bottom - groundOffset + (Math.random() * 4 - 2)) + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 850);
+}
+
+/* Hoán đổi khung hình liên tục và kích hoạt hiệu ứng bước chân */
+function frameCycler(imgEl, frames, ms, isDog=false){ 
   let t=null, f=0; 
   return on=>{ 
     if(on){ 
       if(t) return; 
-      t=setInterval(()=>{ f=(f+1)%frames.length; imgEl.src=frames[f]; }, ms); 
+      t=setInterval(()=>{ 
+        f=(f+1)%frames.length; 
+        imgEl.src=frames[f];
+        // Rơi dấu chân ở một số frame tiếp đất
+        if(f === 0 || f === 3) {
+          spawnPaw(imgEl.parentElement, isDog);
+        }
+      }, ms); 
     } else { 
       if(t){ clearInterval(t); t=null; } 
       f=0; imgEl.src=frames[0]; 
     } 
   }; 
 }
-const dogRun    = frameCycler(dogImg,   ['images/dog1.png','images/dog2.png','images/dog3.png'], 110);
-const girlRun   = frameCycler(girlImg,  ['images/girl1.png','images/girl2.png','images/girl3.png','images/girl4.png','images/girl5.png','images/girl6.png'], 110);
-const gownRun   = frameCycler(girlImg,  ['images/gown1.png','images/gown2.png','images/gown3.png'], 150);
+const dogRun    = frameCycler(dogImg,   ['images/dog1.png','images/dog2.png','images/dog3.png'], 110, true);
+const girlRun   = frameCycler(girlImg,  ['images/girl1.png','images/girl2.png','images/girl3.png','images/girl4.png','images/girl5.png','images/girl6.png'], 110, false);
+const gownRun   = frameCycler(girlImg,  ['images/gown1.png','images/gown2.png','images/gown3.png'], 150, false);
 const crowdClap = frameCycler(crowdImg, ['images/crowd1.png','images/crowd2.png','images/crowd3.png'], 700);
 
 /* Hand-drawn Vector Flowers (Hoa cỏ vẽ tay phong cách nét vẽ đồng bộ với nhân vật) */
@@ -1075,16 +1108,23 @@ function enterCelebrate(){
     dog.classList.remove('walkbob'); dogRun(false);
     girl.style.left = window.innerWidth <= 680 ? '48%' : '53%';
     girl.style.opacity = '0';
+    
+    /* 🎆 Pháo đại bác bắn chéo 2 bên vòm cổng chào rực rỡ */
+    burstCannon(window.innerWidth * 0.12, window.innerHeight * 0.75);
+    burstCannon(window.innerWidth * 0.88, window.innerHeight * 0.75);
+    playBeep(587.33, 'sine', 0.2, 0.12);
+    setTimeout(() => {
+      burstCannon(window.innerWidth * 0.18, window.innerHeight * 0.65);
+      burstCannon(window.innerWidth * 0.82, window.innerHeight * 0.65);
+      burst();
+    }, 450);
+
     setTimeout(()=>{
       world.classList.remove('moving');
       girl.classList.remove('walkbob'); gownRun(false);
     }, 1000);
   }, 2100);
   
-  /* Mega Confetti Cannon Blast */
-  burstCannon(window.innerWidth * 0.15, window.innerHeight * 0.7);
-  burstCannon(window.innerWidth * 0.85, window.innerHeight * 0.7);
-  setTimeout(() => burst(), 600);
   setDot(1+N); updateNav();
 }
 
@@ -1389,30 +1429,33 @@ Petal.prototype.draw=function(){ px.save(); px.translate(this.x,this.y); px.rota
 petals=Array.from({length:32},()=>new Petal());
 (function loop(){ px.clearRect(0,0,pw,ph); petals.forEach(p=>{p.step();p.draw();}); requestAnimationFrame(loop); })();
 
-/* ===== Confetti Cannon System ===== */
+/* ===== Confetti Cannon System (Pháo đại bác bắn chéo 2 bên vòm cổng chào) ===== */
 const cc=$('confetti'), cx=cc.getContext('2d');
 function rc(){ cc.width=innerWidth; cc.height=innerHeight; } rc(); addEventListener('resize',rc);
 let conf=[];
-const cols=['#f45d99','#ff9ec2','#e6b84f','#8ad0ff','#a6e3a1','#fff'];
+const cols=['#f45d99','#ff9ec2','#e6b84f','#ffd700','#8ad0ff','#a6e3a1','#fff','#ff6b81'];
 
 function burst(){ 
-  for(let i=0;i<100;i++){ 
+  for(let i=0;i<120;i++){ 
     conf.push({
-      x:innerWidth/2, y:innerHeight*.35, 
-      vx:-6+Math.random()*12, vy:-8-Math.random()*8, 
-      g:.28, s:6+Math.random()*7, c:cols[i%cols.length], a:1, r:Math.random()*6, vr:-.3+Math.random()*.6
+      x:innerWidth/2, y:innerHeight*.32, 
+      vx:-8+Math.random()*16, vy:-9-Math.random()*9, 
+      g:.30, s:6+Math.random()*8, c:cols[i%cols.length], a:1, r:Math.random()*6, vr:-.35+Math.random()*.7
     }); 
   } 
 }
 
 function burstCannon(x, y){
-  for(let i=0; i<80; i++){
-    const angle = (x < innerWidth/2) ? (-Math.PI/3 + (Math.random()-0.5)*0.6) : (-2*Math.PI/3 + (Math.random()-0.5)*0.6);
-    const speed = 10 + Math.random()*12;
+  for(let i=0; i<90; i++){
+    // Bắn chéo hướng lên vào trung tâm vòm cổng chào
+    const isLeft = (x < innerWidth/2);
+    const baseAngle = isLeft ? (-Math.PI/3) : (-2*Math.PI/3);
+    const angle = baseAngle + (Math.random() - 0.5) * 0.7;
+    const speed = 12 + Math.random()*15;
     conf.push({
       x: x, y: y,
       vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-      g: 0.32, s: 7+Math.random()*8, c: cols[i%cols.length], a: 1, r: Math.random()*6, vr: -.3+Math.random()*.6
+      g: 0.32, s: 7+Math.random()*9, c: cols[i%cols.length], a: 1, r: Math.random()*6, vr: -.35+Math.random()*.7
     });
   }
 }
