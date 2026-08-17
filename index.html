@@ -202,10 +202,11 @@
     .year-badge{font-size:11.5px; padding:3px 12px; margin-bottom:4px;}
     
     /* 3D Airplane Banner on Mobile */
-    #stageIllustration{margin-top:4px; max-width:98vw;}
+    #stageIllustration{margin-top:4px; width:100%;}
     .sky-plane-banner-wrap{transform:scale(0.85); transform-origin:center top;}
-    .sky-airplane{width:56px; height:40px;}
-    .plane-tow-rope{width:24px; margin-left:-4px; margin-right:-2px;}
+    .sky-airplane-leader{right:-64px; top:-16px;}
+    .sky-airplane{width:56px; height:38px;}
+    .plane-tow-rope{width:22px; height:16px;}
     .plane-banner-body{gap:6px; padding:6px 8px; border-radius:12px;}
     .banner-tail{left:-16px; width:16px; height:22px;}
     .milestone-polaroid{width:82px; height:116px; padding:4px; border-width:2px; border-radius:8px;}
@@ -291,40 +292,24 @@
     .rright .quote{font-size:13px;}
   }
   
-  /* ===== Airplane Sky Banner Trailer (Máy bay kéo Banner 3 khung ảnh căn giữa hoàn hảo) ===== */
+  /* ===== Airplane Sky Banner Trailer (Dải Banner 3 ảnh Căn Giữa 100% Tuyệt Đối) ===== */
   #stageIllustration{
     margin-top:14px; display:none; pointer-events:auto;
     perspective:1400px; justify-content:center; align-items:center;
-    width:100%;
+    width:100%; position:relative;
   }
   #stageIllustration.show{display:flex;}
   
   .sky-plane-banner-wrap{
-    display:flex; align-items:center; justify-content:center; position:relative;
+    display:flex; align-items:center; justify-content:center;
+    position:relative; transform-style:preserve-3d;
     animation:planeFlyIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    transform-style:preserve-3d;
   }
   
-  /* Chiếc máy bay cánh quạt hướng mũi bay về phía trước (Bên phải) */
-  .sky-airplane{
-    width:100px; height:68px; flex-shrink:0; position:relative; z-index:10;
-    filter:drop-shadow(0 10px 18px rgba(122,74,99,0.25));
-    animation:planeHover 2.6s ease-in-out infinite;
-    transform-origin:center;
-  }
-  .sky-airplane svg{width:100%; height:100%; display:block;}
-  .plane-propeller{animation:spinPropeller 0.12s linear infinite; transform-origin:82px 28px;}
-  
-  /* Dây cáp kéo nối đuôi máy bay vào đầu dải banner */
-  .plane-tow-rope{
-    width:46px; height:20px; position:relative; margin-left:-6px; margin-right:-6px;
-    z-index:8; flex-shrink:0;
-  }
-  .plane-tow-rope svg{width:100%; height:100%; overflow:visible;}
-  
-  /* Dải Banner lụa chứa 3 khung ảnh căn giữa chính xác */
+  /* Dải Banner lụa chứa 3 khung ảnh NẰM ĐÚNG CHÍNH GIỮA MÀN HÌNH */
   .plane-banner-body{
-    display:flex; align-items:center; gap:14px; padding:10px 14px;
+    display:flex; align-items:center; justify-content:center;
+    gap:14px; padding:10px 14px;
     background:rgba(255, 255, 255, 0.95);
     border:2.5px solid var(--ink-line);
     border-radius:18px;
@@ -333,6 +318,29 @@
     animation:bannerWave 3.5s ease-in-out infinite;
     backdrop-filter:blur(6px);
   }
+  
+  /* Chiếc máy bay cánh quạt vintage bay phía trên góc phải kéo dải banner */
+  .sky-airplane-leader{
+    position:absolute; right:-110px; top:-25px;
+    display:flex; align-items:center; pointer-events:none;
+    z-index:12;
+  }
+  
+  .sky-airplane{
+    width:95px; height:64px; flex-shrink:0; position:relative;
+    filter:drop-shadow(0 10px 18px rgba(122,74,99,0.25));
+    animation:planeHover 2.6s ease-in-out infinite;
+    transform-origin:center;
+  }
+  .sky-airplane svg{width:100%; height:100%; display:block;}
+  .plane-propeller{animation:spinPropeller 0.12s linear infinite; transform-origin:82px 28px;}
+  
+  /* Dây cáp kéo nối góc banner lên máy bay */
+  .plane-tow-rope{
+    width:42px; height:24px; position:relative; margin-right:-4px;
+    flex-shrink:0; transform:rotate(-8deg);
+  }
+  .plane-tow-rope svg{width:100%; height:100%; overflow:visible;}
   
   /* Đuôi ruy băng bay phấp phới ở cuối dải banner */
   .banner-tail{
@@ -1178,41 +1186,41 @@ function setMilestone(s, milestoneIndex=0){
   
   illustEl.innerHTML = `
     <div class="sky-plane-banner-wrap">
-      <!-- Dải Banner bồng bềnh chứa 3 khung ảnh (ở phía sau) -->
+      <!-- Dải Banner lụa chứa 3 khung ảnh ĐẶT CHÍNH GIỮA MÀN HÌNH -->
       <div class="plane-banner-body">
         <!-- Đuôi ruy băng bay phấp phới ở đuôi banner -->
         <svg class="banner-tail" viewBox="0 0 24 32">
           <path d="M0 4 L18 0 L10 16 L20 32 L0 26 Z" fill="#ffb8d4" stroke="#7a4a63" stroke-width="2"/>
         </svg>
         ${polaroidCardsHTML}
-      </div>
-
-      <!-- Dây cáp kéo -->
-      <div class="plane-tow-rope">
-        <svg viewBox="0 0 46 20">
-          <path d="M0 10 Q23 17 46 10" fill="none" stroke="#7a4a63" stroke-width="2.2" stroke-dasharray="3 3"/>
-        </svg>
-      </div>
-
-      <!-- Chiếc máy bay cánh quạt vintage bay phía trước dẫn đầu -->
-      <div class="sky-airplane">
-        <svg viewBox="0 0 100 65">
-          <!-- Cánh quạt quay tít phía trước bên phải -->
-          <g class="plane-propeller">
-            <ellipse cx="82" cy="28" rx="3.5" ry="18" fill="#ffe08a" stroke="#7a4a63" stroke-width="2"/>
-            <circle cx="82" cy="28" r="4.5" fill="#f45d99" stroke="#7a4a63" stroke-width="2"/>
-          </g>
-          <!-- Thân máy bay hướng về phía trước bên phải -->
-          <path d="M12 28 C25 24 55 18 82 24 C86 25 88 28 84 32 C68 44 32 42 12 36 Z" fill="#ffb8d4" stroke="#7a4a63" stroke-width="2.5" stroke-linejoin="round"/>
-          <!-- Buồng lái kính tròn -->
-          <path d="M52 20 C54 13 66 14 70 21 Z" fill="#e0f4ff" stroke="#7a4a63" stroke-width="2"/>
-          <!-- Cánh máy bay trên -->
-          <path d="M38 28 L58 4 L72 6 L48 28 Z" fill="#ff85a2" stroke="#7a4a63" stroke-width="2.5" stroke-linejoin="round"/>
-          <!-- Cánh đuôi đứng -->
-          <path d="M12 28 L4 10 L16 10 L22 28 Z" fill="#ff6584" stroke="#7a4a63" stroke-width="2.5" stroke-linejoin="round"/>
-          <!-- Họa tiết trái tim trên thân -->
-          <text x="36" y="36" font-size="11" fill="#7a4a63">💖</text>
-        </svg>
+        
+        <!-- Chiếc máy bay và dây cáp bay dẫn đầu kéo banner ở góc phải -->
+        <div class="sky-airplane-leader">
+          <div class="plane-tow-rope">
+            <svg viewBox="0 0 42 24">
+              <path d="M0 18 Q21 8 42 12" fill="none" stroke="#7a4a63" stroke-width="2.2" stroke-dasharray="3 3"/>
+            </svg>
+          </div>
+          <div class="sky-airplane">
+            <svg viewBox="0 0 100 65">
+              <!-- Cánh quạt quay tít phía trước bên phải -->
+              <g class="plane-propeller">
+                <ellipse cx="82" cy="28" rx="3.5" ry="18" fill="#ffe08a" stroke="#7a4a63" stroke-width="2"/>
+                <circle cx="82" cy="28" r="4.5" fill="#f45d99" stroke="#7a4a63" stroke-width="2"/>
+              </g>
+              <!-- Thân máy bay hướng về phía trước bên phải -->
+              <path d="M12 28 C25 24 55 18 82 24 C86 25 88 28 84 32 C68 44 32 42 12 36 Z" fill="#ffb8d4" stroke="#7a4a63" stroke-width="2.5" stroke-linejoin="round"/>
+              <!-- Buồng lái kính tròn -->
+              <path d="M52 20 C54 13 66 14 70 21 Z" fill="#e0f4ff" stroke="#7a4a63" stroke-width="2"/>
+              <!-- Cánh máy bay trên -->
+              <path d="M38 28 L58 4 L72 6 L48 28 Z" fill="#ff85a2" stroke="#7a4a63" stroke-width="2.5" stroke-linejoin="round"/>
+              <!-- Cánh đuôi đứng -->
+              <path d="M12 28 L4 10 L16 10 L22 28 Z" fill="#ff6584" stroke="#7a4a63" stroke-width="2.5" stroke-linejoin="round"/>
+              <!-- Họa tiết trái tim trên thân -->
+              <text x="36" y="36" font-size="11" fill="#7a4a63">💖</text>
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   `;
@@ -1259,9 +1267,9 @@ function setAlbum(){
   if(illustEl){ illustEl.classList.remove('show'); illustEl.innerHTML=''; }
   if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   
-  $('label').textContent=''; $('badge').style.display='none';
-  $('emoji').style.display='none';
-  $('title').textContent=''; $('desc').textContent='';
+  $('label').textContent='Kỷ niệm thanh xuân'; $('badge').style.display='none';
+  $('emoji').style.display='block'; $('emoji').textContent='📸';
+  $('title').textContent='Album kỷ niệm'; $('desc').textContent='Vuốt hoặc bấm để xem những khoảnh khắc đáng yêu của Ngọc Hà 💕';
   
   const allPhotos = (CONFIG.photos && CONFIG.photos.length > 0) 
     ? CONFIG.photos 
