@@ -203,9 +203,8 @@
     
     /* 3D Polaroid & Album on Mobile */
     #stageIllustration{margin-top:8px; gap:6px; max-width:94vw;}
-    .milestone-polaroid{width:98px; height:138px; padding:5px 5px 10px 5px; border-width:2px;}
-    .milestone-polaroid::before{width:32px; height:12px; top:-6px;}
-    .milestone-polaroid-caption{font-size:10px; margin-top:3px;}
+    .milestone-polaroid{width:110px; height:158px; padding:6px; border-width:2.5px;}
+    .milestone-polaroid::before{width:34px; height:12px; top:-6px;}
     
     #album{grid-template-columns:repeat(3,1fr); gap:5px; max-width:300px; margin-top:8px;}
     .photo{font-size:10px; padding:3px;}
@@ -296,10 +295,10 @@
   #stageIllustration.show{display:flex;}
   
   .milestone-polaroid{
-    background:#fff; padding:8px 8px 8px 8px; border:2.5px solid var(--ink-line);
-    border-radius:14px 16px 14px 16px; box-shadow:0 14px 30px rgba(122,74,99,0.22), var(--sticker);
+    background:#fff; padding:10px; border:3px solid var(--ink-line);
+    border-radius:16px 18px 16px 18px; box-shadow:0 18px 36px rgba(122,74,99,0.22), var(--sticker);
     transition:transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, opacity 0.4s ease;
-    width:160px; height:210px; display:flex; flex-direction:column; align-items:center;
+    width:200px; height:265px; display:flex; flex-direction:column; align-items:center;
     position:relative; cursor:pointer; transform-style:preserve-3d;
     animation:polaroidFlyIn 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
     will-change:transform;
@@ -1086,10 +1085,11 @@ function setMilestone(s, milestoneIndex=0){
   album.classList.remove('on'); album.innerHTML='';
   if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   
-  $('label').textContent='Happy Graduation';
-  $('badge').style.display='inline-block'; $('badge').textContent=s.year;
-  $('emoji').style.display='block'; $('emoji').textContent=s.emoji;
-  $('title').textContent=s.title; $('desc').textContent=s.desc;
+  // Xóa toàn bộ chữ ở trên sân khấu để tập trung 100% vào khung ảnh
+  $('label').textContent='';
+  $('badge').style.display='none'; $('badge').textContent='';
+  $('emoji').style.display='none'; $('emoji').textContent='';
+  $('title').textContent=''; $('desc').textContent='';
   
   const illustEl = $('stageIllustration');
   if(!illustEl) return;
@@ -1160,9 +1160,9 @@ function setAlbum(){
   if(illustEl){ illustEl.classList.remove('show'); illustEl.innerHTML=''; }
   if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   
-  $('label').textContent='Kỷ niệm'; $('badge').style.display='none';
-  $('emoji').style.display='block'; $('emoji').textContent='📸';
-  $('title').textContent='Album kỷ niệm'; $('desc').textContent='Vuốt hoặc bấm để xem những khoảnh khắc đáng yêu của Ngọc Hà 💕';
+  $('label').textContent=''; $('badge').style.display='none';
+  $('emoji').style.display='none';
+  $('title').textContent=''; $('desc').textContent='';
   
   const allPhotos = (CONFIG.photos && CONFIG.photos.length > 0) 
     ? CONFIG.photos 
