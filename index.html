@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chúc mừng tốt nghiệp — Nguyễn Ngọc Hà 🎓</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap');
+  :root{ 
+    --rose:#f45d99; --rose-deep:#d63b7a; --ink:#6b3a52; --ink-soft:#9b6f83;
+    --ink-line:#7a4a63; --sticker:3px 4px 0 rgba(122,74,99,.22); 
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent;}
+  html,body{height:100%; width:100%; overflow:hidden;}
+  body{ 
+    font-family:'Quicksand','Segoe UI',system-ui,-apple-system,'Noto Sans',sans-serif; color:var(--ink);
+    background:
+      radial-gradient(circle at 20% 24%, rgba(255,255,255,.55) 0 2px, transparent 3px) 0 0/28px 28px,
+      linear-gradient(180deg,#fff9f4 0%,#ffeef6 46%,#ffe1ee 100%);
+    user-select: none; -webkit-user-select: none;
+  }
+  h1,#title,#bookView h2,.btn{ font-family:'Baloo 2','Quicksand','Segoe UI',sans-serif; }
+  canvas.fx{position:fixed; inset:0; width:100%; height:100%; pointer-events:none}
+  #petals{z-index:2}
+  #interactiveCanvas{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:40}
+  #confetti{z-index:45}
+
+  /* ===== World & Multi-layered Parallax Background ===== */
+  #world{position:fixed; inset:0; z-index:5}
+  
+  /* Distant City Skyline (Dãy nhà cao tầng thành phố pastel hiện đại trôi parallax) */
+  #citySkyline{
+    position:absolute; bottom:126px; left:0; width:200%; height:135px;
+    opacity:0.45; z-index:1; pointer-events:none; display:flex; align-items:flex-end;
+  }
+  #world.moving #citySkyline{animation:cityDrift 36s linear infinite}
+  .skyline-track{display:flex; align-items:flex-end; gap:16px; padding-right:16px;}
+  .building{
+    background:linear-gradient(180deg, #fcd5e5 0%, #f7bed6 100%);
+    border:2px solid rgba(122,74,99,0.3); border-bottom:none;
+    border-radius:6px 6px 0 0; position:relative;
+    box-shadow:inset 0 0 10px rgba(255,255,255,0.6);
+  }
+  .building::after{
+    content:''; position:absolute; inset:8px 6px 0 6px;
+    background:repeating-linear-gradient(180deg, #fff 0 4px, transparent 4px 12px),
+               repeating-linear-gradient(90deg, #fff 0 5px, transparent 5px 12px);
+    opacity:0.6;
+  }
+  
+  /* Distant Pastel Hills */
+  #distantHills{
+    position:absolute; bottom:125px; left:0; width:200%; height:85px;
+    background:
+      radial-gradient(ellipse 260px 70px at 15% 100%, #ffd4e5 98%, transparent 100%),
+      radial-gradient(ellipse 340px 85px at 45% 100%, #ffe2ee 98%, transparent 100%),
+      radial-gradient(ellipse 280px 75px at 75% 100%, #ffd4e5 98%, transparent 100%),
+      radial-gradient(ellipse 320px 80px at 105% 100%, #ffe2ee 98%, transparent 100%);
+    opacity:0.55; z-index:2; pointer-events:none;
+  }
+  #world.moving #distantHills{animation:hillsDrift 24s linear infinite}
+  
+  #scenery{position:absolute; bottom:120px; left:0; width:max-content; height:70px; display:flex;
+    align-items:flex-end; white-space:nowrap; opacity:.95; will-change:transform; z-index:3;}
+  .scenery-track{display:inline-flex; align-items:flex-end; gap:60px; padding-right:60px; font-size:34px;}
+  #world.moving #scenery{animation:sceneryLoop 18s linear infinite}
+  
+  #road{position:absolute; bottom:0; left:0; right:0; height:130px; z-index:4;
+    background:linear-gradient(180deg,#ffd8e6,#ffb8d4 70%,#f09dbf 100%); 
+    border-top:4px dashed var(--ink-line);
+    box-shadow:inset 0 10px 20px rgba(214,59,122,0.12);}
+  #road:before{content:''; position:absolute; top:48px; left:0; right:0; height:6px;
+    background:repeating-linear-gradient(90deg,#fff 0 30px,transparent 30px 70px); opacity:.85}
+  #world.moving #road:before{animation:roadDash 2.4s linear infinite}
+
+  /* ===== Characters ===== */
+  #girl{position:fixed; bottom:118px; left:20%; height:268px; z-index:14; cursor:pointer;
+    transition:left 1.6s cubic-bezier(.42,0,.35,1), height .5s ease, opacity .9s ease; touch-action: manipulation;
+    transform-origin: 50% 90%; will-change: transform;}
+  #girl.grad{height:308px}
+  #girl img,#dog img,#crowd img,#arch img{height:100%; display:block;
+    filter:drop-shadow(0 10px 10px rgba(214,59,122,.2)); transition: transform 0.2s ease;}
+  
+  /* Natural walk cycles (Bước đi nhún nhẹ nhàng, khớp chuẩn với 6 khung hình sprite) */
+  #girl.walkbob{animation:girlStep .66s linear infinite}
+  #dog.walkbob{animation:dogTrot .33s ease-in-out infinite alternate}
+  
+  #dog{position:fixed; bottom:120px; left:12%; height:110px; z-index:14; cursor:pointer;
+    transition:left 1.6s cubic-bezier(.42,0,.35,1); touch-action: manipulation;
+    transform-origin: 50% 90%; will-change: transform;}
+  #dog.jump{animation:dogHop 0.5s ease;}
+  #girl.cheer{animation:girlCheer 0.6s ease;}
+
+  /* Floating Popups (Barks, Hearts, Cap toss) */
+  .pop-tag{
+    position:absolute; font-family:'Baloo 2', cursive; font-weight:800;
+    pointer-events:none; z-index:35; animation:floatFade 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    white-space:nowrap; text-shadow:0 2px 8px rgba(255,255,255,0.8);
+  }
+  @keyframes floatFade{
+    0%{ transform:translateY(0) scale(0.6); opacity:0; }
+    30%{ transform:translateY(-20px) scale(1.1); opacity:1; }
+    100%{ transform:translateY(-65px) scale(1); opacity:0; }
+  }
+
+  /* ===== Party (arch + crowd + text + University Campus) ===== */
+  #party{position:fixed; bottom:0; right:0; width:min(720px,66vw); height:100%; z-index:12;
+    transform:translateX(115%); opacity:0; pointer-events:none;
+    transition:transform 1.7s cubic-bezier(.3,.7,.3,1), opacity .7s ease}
+  #party.show{transform:translateX(0); opacity:1}
+  
+  /* University Campus Building (Tòa nhà trường đại học ở hậu cảnh) */
+  #campusBuilding{
+    position:absolute; bottom:128px; left:50%; transform:translateX(-50%);
+    width:360px; height:220px; z-index:0; pointer-events:none;
+    background:linear-gradient(180deg, #fff0f6 0%, #fbd5e5 100%);
+    border:3px solid var(--ink-line); border-bottom:none;
+    border-radius:14px 14px 0 0; box-shadow:0 10px 25px rgba(214,59,122,0.15);
+  }
+  .campus-windows{
+    position:absolute; inset:20px 18px 10px 18px; display:grid; grid-template-columns:repeat(5, 1fr); gap:12px;
+  }
+  .c-win{
+    background:#fff; border:2px solid var(--ink-line); border-radius:8px 8px 0 0;
+    box-shadow:inset 0 0 4px rgba(214,59,122,0.2);
+  }
+  
+  #arch{position:absolute; bottom:145px; left:50%; transform:translateX(-50%); height:424px; z-index:1}
+  #crowd{position:absolute; bottom:118px; left:50%; transform:translateX(-50%); height:300px; z-index:2}
+  #archText{position:absolute; bottom:405px; left:50%; transform:translateX(-50%); z-index:3;
+    background:#fff; padding:7px 22px; white-space:nowrap;
+    border-radius:16px 22px 15px 20px/20px 15px 22px 16px;
+    font-weight:800; color:var(--rose-deep); font-size:clamp(16px,2.2vw,24px);
+    box-shadow:var(--sticker); border:3px solid var(--ink-line)}
+  #giftBook{position:fixed; bottom:190px; left:60%; height:66px; z-index:15; opacity:0; cursor:pointer;
+    transition:left 1.4s cubic-bezier(.4,0,.4,1), bottom 1.4s ease, opacity .4s ease, transform .2s ease;
+    font-size:52px; filter:drop-shadow(0 8px 10px rgba(214,59,122,.3))}
+  #giftBook:hover{transform:scale(1.2) rotate(-8deg);}
+
+  /* ===== Stage text & Floating 3D Milestone Cards ===== */
+  #stage{position:fixed; top:0; left:0; right:0; z-index:18; padding:52px 20px 0;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    pointer-events:none; transition:opacity .35s ease}
+  #stage.fade{opacity:0}
+  .year-badge{display:inline-block; background:#fff; color:var(--rose-deep); font-weight:700;
+    padding:6px 18px; border:2.5px solid var(--ink-line);
+    border-radius:14px 18px 13px 17px/17px 13px 18px 14px; font-size:14px; margin-bottom:10px;
+    box-shadow:var(--sticker)}
+  #emoji{font-size:46px; line-height:1; margin-bottom:6px; filter:drop-shadow(0 8px 14px rgba(214,59,122,.25))}
+  #label{font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--rose);
+    font-weight:700; margin-bottom:8px}
+  #title{font-size:clamp(22px,4.2vw,40px); color:var(--rose-deep); line-height:1.35; margin-bottom:10px;
+    text-shadow:0 3px 0 rgba(255,255,255,.6)}
+  #desc{font-size:clamp(14.5px,2vw,17.5px); color:var(--ink-soft); max-width:540px; line-height:1.65}
+  
+  /* Floating 3D Milestone Polaroid Frame (Khung ảnh 3D bay vào ở mỗi phân đoạn) */
+  #stageIllustration{
+    margin-top:16px; display:none; pointer-events:auto;
+    perspective:1000px; animation:polaroidFlyIn 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+  }
+  #stageIllustration.show{display:flex; justify-content:center;}
+  .milestone-polaroid{
+    background:#fff; padding:10px 10px 24px 10px; border:3px solid var(--ink-line);
+    border-radius:14px 18px 12px 16px; box-shadow:0 15px 30px rgba(122,74,99,0.2), var(--sticker);
+    transform:rotate(-3deg); transition:transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    max-width:210px; position:relative; cursor:pointer;
+  }
+  .milestone-polaroid:hover{
+    transform:scale(1.08) rotate(1deg) translateY(-6px);
+    box-shadow:0 22px 36px rgba(122,74,99,0.28), 6px 8px 0 rgba(122,74,99,.24);
+  }
+  .milestone-polaroid::before{
+    content:''; position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+    width:50px; height:18px; background:rgba(255,224,138,0.7);
+    border:1px dashed rgba(122,74,99,0.3); border-radius:2px; box-shadow:0 2px 4px rgba(0,0,0,0.06);
+  }
+  .milestone-polaroid img{
+    width:100%; height:130px; object-fit:cover; border-radius:8px;
+    border:1.5px solid rgba(122,74,99,0.15); display:block;
+  }
+  .milestone-polaroid-caption{
+    margin-top:8px; font-family:'Baloo 2', cursive; font-size:13px; font-weight:700;
+    color:var(--rose-deep); text-align:center;
+  }
+  @keyframes polaroidFlyIn{
+    0%{ transform:translateY(40px) scale(0.7) rotate(12deg); opacity:0; }
+    100%{ transform:translateY(0) scale(1) rotate(-3deg); opacity:1; }
+  }
+
+  /* ===== 3D Dynamic Photo Album Gallery ===== */
+  #album{display:none; grid-template-columns:repeat(3,1fr); gap:14px; max-width:540px; margin-top:14px; pointer-events:auto; perspective:1200px;}
+  #album.on{display:grid}
+  .photo{
+    aspect-ratio:1/1; background:#fff; border:3px solid var(--ink-line);
+    border-radius:14px 18px 14px 18px/18px 14px 18px 14px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--ink-soft); font-size:13px;
+    text-align:center; padding:6px; overflow:hidden; box-shadow:0 12px 24px rgba(122,74,99,0.15), var(--sticker);
+    transition:transform .3s cubic-bezier(0.2,0.8,0.2,1), box-shadow .3s ease; cursor:pointer; position:relative;
+    transform-style:preserve-3d;
+  }
+  .photo:nth-child(1){transform:rotate(-3deg) translateZ(10px);}
+  .photo:nth-child(2){transform:rotate(2deg) translateZ(15px);}
+  .photo:nth-child(3){transform:rotate(-2deg) translateZ(5px);}
+  .photo:nth-child(4){transform:rotate(3deg) translateZ(12px);}
+  .photo:nth-child(5){transform:rotate(-1deg) translateZ(8px);}
+  .photo:nth-child(6){transform:rotate(2.5deg) translateZ(14px);}
+  
+  .photo:hover{
+    transform:scale(1.14) rotate(0deg) translateZ(30px) translateY(-8px) !important;
+    box-shadow:0 24px 40px rgba(122,74,99,0.32), 6px 8px 0 rgba(122,74,99,.25);
+    z-index:20;
+  }
+  .photo::before{
+    content:'📌'; position:absolute; top:-2px; left:50%; transform:translateX(-50%);
+    font-size:14px; z-index:5; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+  }
+  .photo img{width:100%; height:100%; object-fit:cover; border-radius:8px;}
+
+  /* ===== HUD ===== */
+  .btn{cursor:pointer; font-weight:700; color:var(--ink); border:3px solid var(--ink-line);
+    border-radius:16px 20px 15px 22px/22px 15px 20px 16px; box-shadow:var(--sticker);
+    transition:transform .12s ease, box-shadow .12s ease; touch-action: manipulation;}
+  .btn:hover{transform:translate(-1px,-2px) rotate(-1deg); box-shadow:5px 7px 0 rgba(122,74,99,.22)}
+  .btn:active{transform:translate(2px,3px); box-shadow:1px 1px 0 rgba(122,74,99,.22)}
+  .btn-primary{background:#ff8fbb; color:#fff; font-size:17px; padding:12px 28px;
+    text-shadow:0 1.5px 0 rgba(122,74,99,.28)}
+  .btn-ghost{background:#fff; color:var(--rose-deep); font-size:15px; padding:10px 22px}
+  .btn-ghost:disabled{opacity:.4; cursor:default}
+  .btn-ghost:disabled:hover{transform:none; box-shadow:var(--sticker)}
+  .nav{position:fixed; bottom:28px; left:50%; transform:translateX(-50%); z-index:30; display:flex; gap:12px; width:max-content}
+  
+  #music{position:fixed; top:14px; right:14px; z-index:50; background:#fff;
+    color:var(--rose-deep); padding:8px 14px; font-size:13px}
+  #dots{position:fixed; top:16px; left:50%; transform:translateX(-50%); z-index:50; display:flex; gap:8px}
+  #dots .dot{width:10px; height:10px; border-radius:50%; background:#fff; border:2px solid var(--ink-line); transition:transform .2s ease, background .2s ease}
+  #dots .dot.on{background:var(--rose); transform:scale(1.3)}
+
+  /* ===== Reading book (Enhanced 3D Book with Spine Crease & Shadow) ===== */
+  #bookView{position:fixed; inset:0; z-index:25; display:none; flex-direction:column;
+    align-items:center; justify-content:center; padding:20px; perspective:2200px;}
+  #bookView.on{display:flex}
+  #bookView h2{color:var(--rose-deep); font-size:clamp(20px,3vw,30px); margin-bottom:16px; text-align:center; filter:drop-shadow(0 2px 4px rgba(214,59,122,0.2))}
+  
+  .book-3d-wrapper{
+    position:relative; width:min(780px,94vw); height:min(460px,64vh);
+    transform-style:preserve-3d; transition:transform 0.4s cubic-bezier(0.2,0.8,0.2,1);
+  }
+  
+  /* Hardcover Outer Shell & Leather Spine */
+  .rbook-hardcover{
+    position:absolute; inset:-8px -12px -12px -8px;
+    background:linear-gradient(135deg, #a63660 0%, #7d1f42 50%, #540e29 100%);
+    border-radius:14px 22px 22px 14px;
+    box-shadow:0 35px 70px -15px rgba(84, 14, 41, 0.6), 0 15px 30px rgba(0,0,0,0.3);
+    z-index:1; transform-style:preserve-3d;
+  }
+  .rbook-spine{
+    position:absolute; top:0; bottom:0; left:-18px; width:22px;
+    background:linear-gradient(90deg, #3d091c, #691635 40%, #8a224a 60%, #3d091c 100%);
+    border-radius:10px 0 0 10px; box-shadow:inset -2px 0 6px rgba(0,0,0,0.6);
+  }
+  .rbook-pages-stack{
+    position:absolute; right:-6px; top:8px; bottom:8px; width:10px;
+    background:repeating-linear-gradient(180deg, #fff 0px, #f5ebd7 2px, #e8dac0 3px, #fff 4px);
+    border-radius:0 4px 4px 0; box-shadow:inset 1px 0 3px rgba(0,0,0,0.2);
+  }
+  
+  .rbook{
+    position:relative; width:100%; height:100%; display:flex; background:#fdf9f3;
+    border-radius:6px 14px 14px 6px; overflow:hidden; z-index:2;
+    box-shadow:inset 0 0 40px rgba(107, 58, 82, 0.08); transform-style:preserve-3d;
+  }
+  
+  /* Central Depth Spine Crease (Rãnh mở sách 3D chân thực) */
+  .rbook::before{
+    content:''; position:absolute; top:0; bottom:0; left:50%; width:16px; transform:translateX(-50%);
+    background:linear-gradient(90deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.02) 40%, rgba(0,0,0,0.02) 60%, rgba(0,0,0,0.12) 100%);
+    z-index:10; pointer-events:none;
+  }
+  
+  .rleft{
+    flex:1; 
+    background:radial-gradient(circle at 10% 50%, rgba(0,0,0,0.06) 0%, transparent 80%), linear-gradient(160deg,#fff4f8,#fcf0f5);
+    border-right:1px solid rgba(122,74,99,0.15);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:14px;
+    position:relative; box-shadow:inset -15px 0 25px rgba(0,0,0,0.04);
+    cursor:pointer; transition:background 0.3s ease;
+  }
+  .rleft:hover{background:linear-gradient(160deg,#fff0f6,#fbe5ee);}
+  .rleft:hover::before{
+    content:'‹ Lật về trước'; position:absolute; bottom:14px; left:16px;
+    font-size:12px; font-weight:700; color:var(--rose); background:rgba(255,255,255,0.9);
+    padding:3px 10px; border-radius:12px; border:1px solid rgba(214,59,122,0.2);
+    box-shadow:0 2px 6px rgba(0,0,0,0.08); z-index:15; pointer-events:none;
+  }
+  .rleft::after{
+    content:''; position:absolute; top:12px; bottom:12px; right:12px; left:12px;
+    border:1px dashed rgba(214,59,122,0.2); border-radius:6px; pointer-events:none;
+  }
+  
+  .avatar{width:96px; height:96px; border-radius:50%; background:#fff; display:flex; align-items:center;
+    justify-content:center; font-size:46px; box-shadow:0 8px 18px rgba(214,59,122,.2); border:3.5px solid #fff;}
+  .rleft .pname{font-weight:800; color:var(--rose-deep); font-size:20px; text-align:center}
+  .rleft .pnum{font-size:13px; color:var(--ink-soft); letter-spacing:1px}
+  
+  /* Right Page */
+  .rright{
+    flex:1.15; padding:34px 30px; display:flex; flex-direction:column; justify-content:center;
+    transform-origin:left center; 
+    transition:transform .4s cubic-bezier(0.25, 1, 0.35, 1), filter .4s ease, box-shadow .4s ease; 
+    backface-visibility:hidden; background:linear-gradient(180deg, #fffdfa 0%, #faf3eb 100%);
+    position:relative; box-shadow:inset 15px 0 25px rgba(0,0,0,0.04);
+    cursor:pointer;
+  }
+  .rright:hover{transform:rotateY(-4deg);}
+  .rright:hover::before{
+    content: attr(data-hint); position:absolute; bottom:14px; right:48px;
+    font-size:12px; font-weight:700; color:var(--rose-deep); background:rgba(255,255,255,0.9);
+    padding:3px 10px; border-radius:12px; border:1px solid rgba(214,59,122,0.25);
+    box-shadow:0 2px 6px rgba(0,0,0,0.08); z-index:15; pointer-events:none;
+  }
+  
+  .page-curl-corner{
+    position:absolute; bottom:0; right:0; width:34px; height:34px;
+    background:linear-gradient(135deg, transparent 50%, #f0dec5 51%, #fffdfa 100%);
+    border-radius:0 0 14px 0;
+    transition:width 0.25s ease, height 0.25s ease;
+    z-index:12; pointer-events:none;
+  }
+  .rright:hover .page-curl-corner{width:48px; height:48px;}
+  
+  .rright .quote{font-size:clamp(15px,2.2vw,19px); line-height:1.7; color:var(--ink); font-style:italic;}
+  .rright .sign{margin-top:18px; text-align:right; color:var(--rose-deep); font-weight:800; font-size:16px;}
+  .rright .cover-title{font-size:clamp(24px,3.4vw,32px); font-weight:800; color:var(--rose-deep); text-align:center}
+  .rright .cover-sub{margin-top:12px; text-align:center; color:var(--ink-soft); font-size:15px;}
+  
+  .close-book-action-btn{
+    margin-top:16px; background:#ff8fbb; color:#fff;
+    border:2.5px solid var(--ink-line); border-radius:16px; padding:8px 22px; font-family:'Baloo 2', cursive;
+    font-weight:800; font-size:15px; cursor:pointer; box-shadow:var(--sticker);
+    transition:transform 0.15s ease; align-self:center;
+  }
+  .close-book-action-btn:hover{transform:translate(-1px,-2px);}
+  
+  .page-curl-corner{
+    position:absolute; bottom:0; right:0; width:36px; height:36px;
+    background:linear-gradient(135deg, transparent 50%, #f0dec5 51%, #fffdfa 100%);
+    border-radius:0 0 14px 0; box-shadow:-3px -3px 6px rgba(0,0,0,0.08);
+    transition:width 0.3s cubic-bezier(0.2,0.8,0.2,1), height 0.3s cubic-bezier(0.2,0.8,0.2,1);
+    z-index:12; pointer-events:none;
+  }
+  .page-curl-corner::before{
+    content:''; position:absolute; bottom:0; right:0; width:0; height:0;
+    border-style:solid; border-width:0 0 28px 28px;
+    border-color:transparent transparent #e6cfb3 transparent;
+    transition:border-width 0.3s ease;
+  }
+  .rright:hover .page-curl-corner{
+    width:52px; height:52px;
+  }
+  .rright:hover .page-curl-corner::before{
+    border-width:0 0 42px 42px;
+  }
+  .rright:hover{
+    transform:rotateY(-6deg) translateZ(4px);
+    box-shadow:inset 15px 0 25px rgba(0,0,0,0.04), -12px 10px 24px rgba(107, 58, 82, 0.12);
+  }
+  .rright:hover::before{
+    content: attr(data-hint); position:absolute; bottom:14px; right:48px;
+    font-size:12px; font-weight:700; color:var(--rose-deep); background:rgba(255,255,255,0.9);
+    padding:3px 10px; border-radius:12px; border:1px solid rgba(214,59,122,0.25);
+    box-shadow:0 2px 6px rgba(0,0,0,0.08); z-index:15; pointer-events:none;
+  }
+  .rright::after{
+    content:''; position:absolute; top:12px; bottom:12px; right:12px; left:12px;
+    border:1px dashed rgba(214,59,122,0.2); border-radius:6px; pointer-events:none;
+  }
+  .rright .quote{font-size:clamp(15px,2.1vw,19px); line-height:1.7; color:var(--ink); font-style:italic; z-index:2}
+  .rright .sign{margin-top:18px; text-align:right; color:var(--rose-deep); font-weight:800; font-size:16px; z-index:2}
+  .rright .cover-title{font-size:clamp(24px,3.4vw,32px); font-weight:800; color:var(--rose-deep); text-align:center; z-index:2}
+  .rright .cover-sub{margin-top:12px; text-align:center; color:var(--ink-soft); font-size:15px; z-index:2}
+  
+  /* Bìa trước (Front Cover) */
+  .rright.is-frontcover{
+    background:linear-gradient(145deg, #8a244c 0%, #631434 60%, #4a0c24 100%);
+    color:#fff; box-shadow:inset 0 0 30px rgba(0,0,0,0.5);
+  }
+  .rright.is-frontcover .cover-title{color:#ffe08a; text-shadow:0 2px 8px rgba(0,0,0,0.5);}
+  .rright.is-frontcover .cover-sub{color:#ffd2e2;}
+  
+  /* Bìa sau (Back Cover) */
+  .rright.is-backcover{
+    background:linear-gradient(145deg, #8a244c 0%, #631434 60%, #4a0c24 100%);
+    color:#fff; box-shadow:inset 0 0 30px rgba(0,0,0,0.5);
+  }
+  .rright.is-backcover .cover-title{
+    color:#ffe08a; text-shadow:0 2px 8px rgba(0,0,0,0.5); font-size:clamp(22px,3vw,30px);
+  }
+  .rright.is-backcover .cover-sub{
+    color:#ffd2e2; font-size:14px; line-height:1.6;
+  }
+  .backcover-badge{
+    margin:12px auto 6px; width:64px; height:64px; border-radius:50%;
+    background:linear-gradient(135deg, #ffd700, #ffa502); display:flex; align-items:center; justify-content:center;
+    font-size:32px; box-shadow:0 4px 15px rgba(0,0,0,0.3); border:2.5px solid #fff;
+  }
+  .close-book-action-btn{
+    margin-top:14px; background:linear-gradient(135deg, #ffd700, #ffa502); color:#4a0c24;
+    border:2px solid #fff; border-radius:20px; padding:8px 20px; font-family:'Baloo 2', cursive;
+    font-weight:800; font-size:14px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3);
+    transition:transform 0.15s ease; align-self:center;
+  }
+  .close-book-action-btn:hover{transform:scale(1.06);}
+
+  /* Lightbox for zooming photos */
+  #lightbox{
+    position:fixed; inset:0; background:rgba(107,58,82,0.85); backdrop-filter:blur(6px);
+    z-index:100; display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  #lightbox.active{display:flex;}
+  #lightboxImg{max-width:90vw; max-height:80vh; border-radius:18px; border:4px solid #fff; box-shadow:0 15px 35px rgba(0,0,0,0.3);}
+
+  /* hide world while reading */
+  body.reading #world, body.reading #stage, body.reading #girl, body.reading #dog,
+  body.reading #party, body.reading #giftBook{ display:none !important }
+
+  /* ===== Hand-drawn sky ===== */
+  #sky{position:fixed; inset:0; z-index:3; pointer-events:none}
+  #sun{position:absolute; top:24px; left:36px; width:74px; filter:drop-shadow(2px 3px 0 rgba(122,74,99,.14))}
+  #sun svg{width:100%; height:auto; animation:spin 34s linear infinite; transform-origin:50% 50%}
+  .cloud{position:absolute; filter:drop-shadow(2px 4px 0 rgba(122,74,99,.10)); animation:drift 16s ease-in-out infinite}
+  .cloud svg{width:100%; height:auto; display:block}
+
+  @keyframes bob{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+  @keyframes roadDash{from{background-position:0 0}to{background-position:-100px 0}}
+  @keyframes sceneryLoop{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes hillsDrift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes cityDrift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(26px,-10px)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes balloonFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-16px) rotate(2deg)}}
+  
+  /* Hand-drawn Rainbow & Hot Air Balloon */
+  #rainbow{
+    position:absolute; top:28px; right:8%; width:160px; height:80px; opacity:0.45;
+    pointer-events:none; z-index:3;
+  }
+  #balloon{
+    position:absolute; top:75px; left:22%; font-size:32px; opacity:0.8;
+    animation:balloonFloat 6s ease-in-out infinite; pointer-events:none; z-index:3;
+    filter:drop-shadow(2px 4px 0 rgba(122,74,99,0.1));
+  }
+  
+  /* Walking dynamics (Nhún bước đi tự nhiên, duyên dáng và thanh thoát) */
+  @keyframes girlStep{
+    0%   { transform: translateY(0px) rotate(-0.4deg); }
+    25%  { transform: translateY(-4px) rotate(-0.1deg); }
+    50%  { transform: translateY(-7px) rotate(0.2deg); }
+    75%  { transform: translateY(-3px) rotate(0.4deg); }
+    100% { transform: translateY(0px) rotate(-0.4deg); }
+  }
+  @keyframes dogTrot{
+    0%   { transform: translateY(0px) rotate(0deg); }
+    50%  { transform: translateY(-5px) rotate(-1.5deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+  }
+  @keyframes dogHop{0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-28px) rotate(-12deg) scale(1.1)}}
+  @keyframes girlCheer{0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-22px) scale(1.06)}}
+
+  /* hide HUD while reading book to prevent overlapping on mobile */
+  body.reading #world, body.reading #stage, body.reading #girl, body.reading #dog,
+  body.reading #party, body.reading #giftBook{ display:none !important }
+  body.reading .nav{ display:none !important; }
+
+  /* ===== Responsive Breakpoints (Mobile & Tablet Optimization) ===== */
+  @media (max-width: 680px) {
+    #stage{padding-top:36px; padding-left:14px; padding-right:14px;}
+    #emoji{font-size:38px; margin-bottom:2px;}
+    #label{font-size:11px; margin-bottom:4px;}
+    #title{font-size:clamp(18px, 4.5vw, 24px); margin-bottom:6px;}
+    #desc{font-size:13.5px; line-height:1.45; max-width:92vw;}
+    .year-badge{font-size:12px; padding:3px 12px; margin-bottom:6px;}
+    
+    /* 3D Polaroid & Album on Mobile */
+    #stageIllustration{margin-top:8px;}
+    .milestone-polaroid{max-width:160px; padding:6px 6px 16px 6px;}
+    .milestone-polaroid img{height:95px;}
+    .milestone-polaroid-caption{font-size:11px; margin-top:4px;}
+    
+    #album{grid-template-columns:repeat(3,1fr); gap:6px; max-width:320px; margin-top:8px;}
+    .photo{font-size:10px; padding:3px;}
+    .photo::before{font-size:11px; top:-4px;}
+    
+    /* Road & Characters */
+    #road{height:105px;}
+    #scenery{bottom:95px; font-size:24px; gap:40px;}
+    #citySkyline{bottom:102px; height:90px; opacity:0.35;}
+    #distantHills{bottom:100px; height:65px;}
+    #girl{height:195px; bottom:95px; left:16%;}
+    #girl.grad{height:225px;}
+    #dog{height:80px; bottom:95px; left:6%;}
+    #giftBook{bottom:165px; font-size:42px;}
+    
+    #party{width:92vw;}
+    #arch{height:330px; bottom:110px;}
+    #crowd{height:200px; bottom:100px;}
+    #archText{bottom:322px; font-size:13.5px; padding:4px 14px;}
+    #campusBuilding{width:290px; height:190px; bottom:110px;}
+    
+    #sun{width:50px; top:12px; left:12px;}
+    #rainbow{width:110px; height:55px; top:16px; right:4%;}
+    #balloon{top:45px; left:18%; font-size:24px;}
+    
+    #dots{top:12px; gap:6px;}
+    #dots .dot{width:8px; height:8px;}
+    #music{top:10px; right:10px; padding:6px 12px; font-size:12px;}
+    
+    .nav{bottom:16px; gap:8px;}
+    .btn-primary{font-size:14.5px; padding:10px 20px;}
+    .btn-ghost{font-size:13.5px; padding:8px 15px;}
+    
+    /* ===== 3D Book on Mobile Screen (Thiết kế thẻ sách dọc hoàn hảo) ===== */
+    #bookView{padding:14px;}
+    #bookView h2{font-size:20px; margin-bottom:10px;}
+    .book-3d-wrapper{width:92vw; height:76vh; max-height:560px;}
+    .rbook-hardcover{inset:-4px -6px -6px -4px; border-radius:14px;}
+    .rbook-spine{left:-10px; width:14px;}
+    .rbook-pages-stack{right:-4px; width:6px;}
+    
+    .rbook{
+      flex-direction:column; border-radius:10px;
+      box-shadow:inset 0 0 20px rgba(107, 58, 82, 0.06);
+    }
+    .rbook::before{display:none;}
+    
+    .rleft{
+      flex:0 0 78px; padding:8px 14px; flex-direction:row; gap:12px;
+      border-right:none; border-bottom:2px dashed rgba(214,59,122,0.2);
+      box-shadow:none; justify-content:flex-start;
+    }
+    .rleft .avatar{width:50px; height:50px; font-size:26px; border-width:2.5px; flex-shrink:0;}
+    .rleft .pname{font-size:15px; text-align:left; line-height:1.2;}
+    .rleft .pnum{font-size:11.5px; text-align:left; margin-top:2px;}
+    .rleft:hover::before{display:none;}
+    
+    .rright{
+      flex:1; padding:20px 16px; justify-content:space-between;
+      overflow-y:auto; -webkit-overflow-scrolling:touch; box-shadow:none;
+    }
+    .rright .quote{font-size:15px; line-height:1.6; color:var(--ink);}
+    .rright .sign{margin-top:12px; font-size:14px; font-weight:800; color:var(--rose-deep);}
+    .rright .cover-title{font-size:21px; line-height:1.3;}
+    .rright .cover-sub{font-size:13.5px; margin-top:8px; line-height:1.5;}
+    
+    .page-curl-corner{display:none;} /* Ẩn góc quăn trên màn hình nhỏ để chữ thoáng */
+    .close-book-action-btn{
+      margin-top:14px; font-size:14px; padding:8px 20px; align-self:center;
+    }
+  }
+
+  @media (max-width: 380px) {
+    #stage{padding-top:28px;}
+    #title{font-size:17px;}
+    #desc{font-size:12.5px;}
+    .milestone-polaroid{max-width:140px;}
+    .milestone-polaroid img{height:80px;}
+    #album{max-width:280px; gap:4px;}
+    .btn-primary{padding:8px 16px; font-size:13.5px;}
+    .btn-ghost{padding:8px 12px; font-size:12.5px;}
+    .book-3d-wrapper{height:80vh;}
+    .rright .quote{font-size:13.5px;}
+  }
+</style>
+</head>
+<body>
+<canvas id="petals" class="fx"></canvas>
+<canvas id="interactiveCanvas" class="fx"></canvas>
+<canvas id="confetti" class="fx"></canvas>
+<canvas id="petalWipe" class="fx" style="z-index:200; display:none;"></canvas>
+
+<div id="sky">
+  <div id="sun"><svg viewBox="0 0 90 90"><g stroke="#7a4a63" stroke-width="3.2" stroke-linecap="round"><line x1="45" y1="4" x2="45" y2="16"/><line x1="45" y1="74" x2="45" y2="86"/><line x1="4" y1="45" x2="16" y2="45"/><line x1="74" y1="45" x2="86" y2="45"/><line x1="15" y1="15" x2="24" y2="24"/><line x1="66" y1="66" x2="75" y2="75"/><line x1="75" y1="15" x2="66" y2="24"/><line x1="24" y1="66" x2="15" y2="75"/></g><circle cx="45" cy="45" r="18" fill="#ffe08a" stroke="#7a4a63" stroke-width="3.2"/></svg></div>
+  <div id="rainbow"><svg viewBox="0 0 160 80"><path d="M 10 75 A 70 70 0 0 1 150 75" fill="none" stroke="#ffb3c6" stroke-width="6" stroke-linecap="round"/><path d="M 18 75 A 62 62 0 0 1 142 75" fill="none" stroke="#ffe08a" stroke-width="6" stroke-linecap="round"/><path d="M 26 75 A 54 54 0 0 1 134 75" fill="none" stroke="#bbf2f6" stroke-width="6" stroke-linecap="round"/></svg></div>
+  <div id="balloon">🎈</div>
+  <div class="cloud" style="top:13%; left:5%; width:150px; animation-delay:0s"><svg viewBox="0 0 130 70"><path d="M35 60 C15 60 10 38 28 34 C26 16 52 10 58 26 C66 12 92 16 90 34 C112 32 116 58 96 60 Z" fill="#fff" stroke="#7a4a63" stroke-width="3" stroke-linejoin="round"/></svg></div>
+  <div class="cloud" style="top:16%; right:6%; width:120px; animation-delay:2.5s"><svg viewBox="0 0 130 70"><path d="M35 60 C15 60 10 38 28 34 C26 16 52 10 58 26 C66 12 92 16 90 34 C112 32 116 58 96 60 Z" fill="#fff" stroke="#7a4a63" stroke-width="3" stroke-linejoin="round"/></svg></div>
+  <div class="cloud" style="top:31%; left:13%; width:96px; animation-delay:4s"><svg viewBox="0 0 130 70"><path d="M35 60 C15 60 10 38 28 34 C26 16 52 10 58 26 C66 12 92 16 90 34 C112 32 116 58 96 60 Z" fill="#fff" stroke="#7a4a63" stroke-width="3" stroke-linejoin="round"/></svg></div>
+</div>
+
+<div id="dots"></div>
+<button id="music" class="btn">🎵 Bật nhạc</button>
+
+<div id="world">
+  <div id="citySkyline"></div>
+  <div id="distantHills"></div>
+  <div id="scenery"></div>
+  <div id="road"></div>
+</div>
+
+<div id="party">
+  <div id="campusBuilding">
+    <div class="campus-windows">
+      <div class="c-win"></div><div class="c-win"></div><div class="c-win"></div><div class="c-win"></div><div class="c-win"></div>
+      <div class="c-win"></div><div class="c-win"></div><div class="c-win"></div><div class="c-win"></div><div class="c-win"></div>
+    </div>
+  </div>
+  <div id="arch"><img src="images/arch.png" alt=""></div>
+  <div id="archText">Happy Graduation! 🎓</div>
+  <div id="crowd"><img id="crowdImg" src="images/crowd1.png" alt=""></div>
+</div>
+
+<div id="dog" title="Nhấn vào cún để vui đùa! 🐶"><img id="dogImg" src="images/dog1.png" alt=""></div>
+<div id="girl" title="Nhấn vào cô gái để cổ vũ! 🌸"><img id="girlImg" src="images/girl1.png" alt=""></div>
+<div id="giftBook" title="Bấm để mở sổ tay lời chúc 📖">📕</div>
+
+<div id="stage">
+  <div id="label"></div>
+  <div id="badge" class="year-badge" style="display:none"></div>
+  <div id="emoji"></div>
+  <h1 id="title"></h1>
+  <p id="desc"></p>
+  <div id="stageIllustration"></div>
+  <div id="album"></div>
+</div>
+
+<div id="bookView">
+  <h2 id="bookTitle">Sổ tay lời chúc 💕</h2>
+  <div class="book-3d-wrapper" id="book3dWrapper">
+    <!-- 3D Hardcover Outer Shell & Leather Spine (Gáy sách da) -->
+    <div class="rbook-hardcover">
+      <div class="rbook-spine"></div>
+      <div class="rbook-pages-stack"></div>
+    </div>
+    
+    <!-- Opened Book Interior -->
+    <div class="rbook" id="rbookInner">
+      <div class="rleft">
+        <div class="avatar" id="pAvatar">🌸</div>
+        <div class="pname" id="pName"></div>
+        <div class="pnum" id="pNum"></div>
+      </div>
+      <div class="rright" id="rRight"></div>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox" onclick="this.classList.remove('active')">
+  <img id="lightboxImg" src="" alt="Ảnh kỷ niệm">
+</div>
+
+<div class="nav">
+  <button id="prevBtn" class="btn btn-ghost">← Quay lại</button>
+  <button id="nextBtn" class="btn btn-primary">Bắt đầu ✧</button>
+</div>
+
+<script>
+/* ================= NỘI DUNG CÓ THỂ CHỈNH SỬA ================= */
+const CONFIG = {
+  friendName: "Nguyễn Ngọc Hà",
+  major: "Tài chính ngân hàng",
+  milestones: [
+    { emoji:"🎒", year:"Năm nhất", title:"Ngày đầu bước vào đại học", desc:"Cô sinh viên Tài chính ngân hàng năm nhất rụt rè, háo hức với giảng đường mới và những người bạn mới." },
+    { emoji:"📚", year:"Những năm tháng", title:"Thanh xuân trên giảng đường", desc:"Bao đêm ôn thi, bao lần chạy deadline, bao kỷ niệm bên bạn bè — tất cả đã tạo nên một hành trình tuyệt vời." },
+    { emoji:"🎓", year:"Ngày tốt nghiệp", title:"Khoảnh khắc vinh quang", desc:"Hôm nay, Ngọc Hà chính thức trở thành Cử nhân Tài chính ngân hàng. Chúc mừng cậu! 🎉" }
+  ],
+  showAlbum: true,
+  photos: [ "photos/1.jpg", "photos/2.jpg", "photos/3.jpg", "photos/4.jpg", "photos/5.jpg", "photos/6.jpg" ],
+  messages: [
+    { name:"Người bạn thân", emoji:"💞", text:"Chúc mừng Hà đã tốt nghiệp xuất sắc! Tớ tự hào về cậu lắm. Cảm ơn vì đã luôn ở bên tớ suốt những năm tháng đại học." },
+    { name:"Lớp trưởng NEU", emoji:"🌟", text:"Hành trình Tài chính ngân hàng mới đang chờ phía trước, cứ tự tin tỏa sáng nhé. Chúc cậu thành công rực rỡ!" },
+    { name:"Bạn cùng bàn", emoji:"📚", text:"Nhớ những ngày cùng nhau thức khuya ôn thi, chia nhau từng cốc trà sữa ghê. Giờ tụi mình đã làm được rồi đó!" },
+    { name:"Hội bạn thân cưng xỉu", emoji:"🌸", text:"Chúc tân cử nhân xinh đẹp của tụi mình luôn rạng rỡ, hạnh phúc và sớm đạt được mọi ước mơ nhé. Love you!" }
+  ]
+};
+/* =============================================================== */
+
+const $ = id => document.getElementById(id);
+const world=$('world'), girl=$('girl'), girlImg=$('girlImg'), dog=$('dog'), dogImg=$('dogImg');
+const party=$('party'), crowdImg=$('crowdImg'), gift=$('giftBook'), stage=$('stage'), album=$('album');
+const nextBtn=$('nextBtn'), prevBtn=$('prevBtn'), lightbox=$('lightbox'), lightboxImg=$('lightboxImg');
+
+/* Sound synthesizer engine */
+let actx = null;
+function initAudio(){ if(!actx) actx = new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==='suspended') actx.resume(); }
+
+function playBeep(freq, type='sine', duration=0.15, gain=0.1){
+  try {
+    initAudio();
+    const osc = actx.createOscillator();
+    const g = actx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, actx.currentTime);
+    g.gain.setValueAtTime(gain, actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + duration);
+    osc.connect(g); g.connect(actx.destination);
+    osc.start(); osc.stop(actx.currentTime + duration);
+  } catch(e){}
+}
+
+function playBarkSound(){
+  try {
+    initAudio();
+    playBeep(480, 'triangle', 0.08, 0.15);
+    setTimeout(() => playBeep(380, 'sine', 0.12, 0.12), 90);
+  } catch(e){}
+}
+
+function playPageSound(){
+  try {
+    initAudio();
+    playBeep(800, 'triangle', 0.06, 0.05);
+  } catch(e){}
+}
+
+/* Hoán đổi khung hình liên tục */
+function frameCycler(imgEl, frames, ms){ 
+  let t=null, f=0; 
+  return on=>{ 
+    if(on){ 
+      if(t) return; 
+      t=setInterval(()=>{ f=(f+1)%frames.length; imgEl.src=frames[f]; }, ms); 
+    } else { 
+      if(t){ clearInterval(t); t=null; } 
+      f=0; imgEl.src=frames[0]; 
+    } 
+  }; 
+}
+const dogRun    = frameCycler(dogImg,   ['images/dog1.png','images/dog2.png','images/dog3.png'], 110);
+const girlRun   = frameCycler(girlImg,  ['images/girl1.png','images/girl2.png','images/girl3.png','images/girl4.png','images/girl5.png','images/girl6.png'], 110);
+const gownRun   = frameCycler(girlImg,  ['images/gown1.png','images/gown2.png','images/gown3.png'], 150);
+const crowdClap = frameCycler(crowdImg, ['images/crowd1.png','images/crowd2.png','images/crowd3.png'], 700);
+
+/* Hand-drawn Vector Flowers (Hoa cỏ vẽ tay phong cách nét vẽ đồng bộ với nhân vật) */
+const svgFlowers = [
+  // Hoa anh đào hồng
+  `<svg viewBox="0 0 40 40" width="34" height="34"><g stroke="#7a4a63" stroke-width="2.2" stroke-linejoin="round"><path d="M20 20 C14 10 26 10 20 20 Z" fill="#ffb3c6"/><path d="M20 20 C30 14 30 26 20 20 Z" fill="#ffc2da"/><path d="M20 20 C26 30 14 30 20 20 Z" fill="#ffb3c6"/><path d="M20 20 C10 26 10 14 20 20 Z" fill="#ffc2da"/><circle cx="20" cy="20" r="3.5" fill="#ffe08a"/></g></svg>`,
+  // Cành lá xanh dịu
+  `<svg viewBox="0 0 36 40" width="30" height="34"><g stroke="#7a4a63" stroke-width="2.2" stroke-linecap="round"><path d="M18 36 Q18 20 24 8" fill="none"/><path d="M20 24 Q28 20 26 14 Q19 18 20 24 Z" fill="#bcf0c0"/><path d="M18 18 Q10 14 12 8 Q19 12 18 18 Z" fill="#a4e4a9"/></g></svg>`,
+  // Hoa cúc vàng tươi
+  `<svg viewBox="0 0 40 40" width="32" height="32"><g stroke="#7a4a63" stroke-width="2.2"><circle cx="20" cy="20" r="14" fill="#fff9db"/><circle cx="20" cy="20" r="6" fill="#ffd43b"/></g></svg>`,
+  // Bụi hoa tulip hồng
+  `<svg viewBox="0 0 36 40" width="30" height="34"><g stroke="#7a4a63" stroke-width="2.2" stroke-linejoin="round"><path d="M18 38 L18 22" fill="none" stroke-linecap="round"/><path d="M10 22 C10 10 18 16 18 16 C18 16 26 10 26 22 C26 30 10 30 10 22 Z" fill="#ff85a2"/><path d="M18 22 Q26 28 26 34" fill="none" stroke-linecap="round"/></g></svg>`,
+  // Cụm hoa baby tím pastel
+  `<svg viewBox="0 0 36 38" width="30" height="32"><g stroke="#7a4a63" stroke-width="2" stroke-linecap="round"><path d="M18 36 L18 16" fill="none"/><circle cx="12" cy="12" r="4.5" fill="#e5dbff"/><circle cx="24" cy="10" r="4.5" fill="#d0bfff"/><circle cx="18" cy="6" r="4" fill="#f3d9fa"/></g></svg>`
+];
+
+const flowerTrackHTML = Array.from({length:28},()=> `<span class="flower-item">${svgFlowers[Math.floor(Math.random()*svgFlowers.length)]}</span>`).join(' ');
+$('scenery').innerHTML = `
+  <div class="scenery-track">${flowerTrackHTML}</div>
+  <div class="scenery-track">${flowerTrackHTML}</div>
+`;
+
+/* Dynamic City Skyline Generator */
+const bHeights = [65, 95, 120, 80, 110, 130, 75, 100, 125, 85, 115, 90];
+const bWidths  = [36, 45, 55, 40, 50, 48, 38, 52, 44, 42, 54, 46];
+const skylineHTML = bHeights.map((h, i) => `<div class="building" style="height:${h}px; width:${bWidths[i]}px;"></div>`).join('');
+const citySkyline = $('citySkyline');
+if(citySkyline){
+  citySkyline.innerHTML = `
+    <div class="skyline-track">${skylineHTML}</div>
+    <div class="skyline-track">${skylineHTML}</div>
+  `;
+}
+
+const stops = CONFIG.milestones.map(m=>({type:'milestone',...m}));
+if(CONFIG.showAlbum) stops.push({type:'album'});
+const N = stops.length;
+
+const pages = [{cover:true, emoji:'🎓', title:'Sổ tay lời chúc',
+    sub:'Dành tặng '+CONFIG.friendName+' — lật từng trang để đọc nhé ❤'}]
+  .concat(CONFIG.messages.map(m=>({name:m.name, emoji:m.emoji||'💌', text:m.text})))
+  .concat([
+    {closing:true, emoji:'🎉', title:'Chúc bạn luôn hạnh phúc!', sub:'Chặng đường mới đang chờ bạn phía trước 🌸'}
+  ]);
+
+const dotsN = 1 + N + 2;
+const dotsEl=$('dots');
+for(let i=0;i<dotsN;i++){ const d=document.createElement('div'); d.className='dot'; dotsEl.appendChild(d); }
+const dotEls=[...dotsEl.children];
+function setDot(i){ dotEls.forEach((d,k)=>d.classList.toggle('on',k===i)); }
+
+let phase='intro', si=0, pageIndex=0;
+function fadeStage(fn){ stage.classList.add('fade'); setTimeout(()=>{ fn(); stage.classList.remove('fade'); },320); }
+
+/* Character click micro-interactions */
+function showPopTag(targetEl, text, color='#d63b7a'){
+  const tag = document.createElement('div');
+  tag.className = 'pop-tag';
+  tag.textContent = text;
+  tag.style.color = color;
+  const rect = targetEl.getBoundingClientRect();
+  tag.style.left = (rect.left + rect.width/2 - 25) + 'px';
+  tag.style.top = (rect.top - 10) + 'px';
+  document.body.appendChild(tag);
+  setTimeout(() => tag.remove(), 1200);
+}
+
+dog.addEventListener('click', (e) => {
+  e.stopPropagation();
+  dog.classList.remove('jump');
+  void dog.offsetWidth;
+  dog.classList.add('jump');
+  playBarkSound();
+  showPopTag(dog, ['Gâu gâu! 🐶🐾', 'Woof! 💖', 'Gâu! Chúc mừng chị Hà! ✨'][Math.floor(Math.random()*3)]);
+  createSparkles(e.clientX || (dog.offsetLeft + 40), e.clientY || dog.offsetTop, 8);
+});
+
+girl.addEventListener('click', (e) => {
+  e.stopPropagation();
+  girl.classList.remove('cheer');
+  void girl.offsetWidth;
+  girl.classList.add('cheer');
+  playBeep(650, 'sine', 0.2, 0.15);
+  showPopTag(girl, ['Tốt nghiệp rồi! 🎓✨', 'Yeahh! 🌸', 'Tân cử nhân Hà 💖'][Math.floor(Math.random()*3)]);
+  createSparkles(e.clientX || (girl.offsetLeft + 60), e.clientY || girl.offsetTop, 10);
+});
+
+gift.addEventListener('click', () => {
+  if(phase==='handover') enterBook();
+});
+
+function setMilestone(s, index=0){
+  album.classList.remove('on'); album.innerHTML='';
+  $('label').textContent='Happy Graduation';
+  $('badge').style.display='inline-block'; $('badge').textContent=s.year;
+  $('emoji').style.display='block'; $('emoji').textContent=s.emoji;
+  $('title').textContent=s.title; $('desc').textContent=s.desc;
+  
+  const illustEl = $('stageIllustration');
+  if(illustEl){
+    illustEl.classList.remove('show');
+    illustEl.innerHTML = '';
+    // Lấy ảnh tương ứng từ album photos hoặc icon minh họa
+    const photoSrc = (CONFIG.photos && CONFIG.photos[index]) ? CONFIG.photos[index] : null;
+    const photoImgHTML = photoSrc 
+      ? `<img src="${photoSrc}" onerror="this.onerror=null; this.src='images/girl1.png';" alt="${s.title}">` 
+      : `<div style="height:120px; display:flex; align-items:center; justify-content:center; font-size:44px; background:#fff0f6; border-radius:8px;">${s.emoji}</div>`;
+    
+    illustEl.innerHTML = `
+      <div class="milestone-polaroid" onclick="zoomPhoto('${photoSrc || 'images/girl1.png'}')" title="Chạm để phóng to xem kỷ niệm ✨">
+        ${photoImgHTML}
+        <div class="milestone-polaroid-caption">${s.year} • ${CONFIG.friendName} 💕</div>
+      </div>
+    `;
+    void illustEl.offsetWidth;
+    illustEl.classList.add('show');
+  }
+}
+
+function setAlbum(){
+  const illustEl = $('stageIllustration');
+  if(illustEl){ illustEl.classList.remove('show'); illustEl.innerHTML=''; }
+  
+  $('label').textContent='Kỷ niệm'; $('badge').style.display='none';
+  $('emoji').style.display='block'; $('emoji').textContent='📸';
+  $('title').textContent='Album kỷ niệm'; $('desc').textContent='Những khoảnh khắc không thể nào quên của thanh xuân.';
+  
+  if (!CONFIG.photos || CONFIG.photos.length === 0) {
+    album.innerHTML = Array.from({length: 6}, (_, i) => `
+      <div class="photo" title="Chạm để phóng to">
+        <div style="font-size:24px; margin-bottom:4px;">🌸</div>Ảnh ${i+1}
+      </div>
+    `).join('');
+  } else {
+    album.innerHTML = CONFIG.photos.map((p,i)=> p ? `
+      <div class="photo" onclick="zoomPhoto('${p}')" title="Chạm để phóng to 🔍">
+        <img src="${p}" onerror="this.closest('.photo').innerHTML='<div style=\\'font-size:24px;\\'>🌸</div>Ảnh '+(${i}+1)">
+      </div>
+    ` : `<div class="photo">📷<br>Ảnh ${i+1}</div>`).join('');
+  }
+  album.classList.add('on');
+}
+
+window.zoomPhoto = function(src){
+  if(!src) return;
+  lightboxImg.src = src;
+  lightbox.classList.add('active');
+  playBeep(600, 'sine', 0.1, 0.08);
+};
+
+function updateNav(){
+  prevBtn.style.display='inline-block'; nextBtn.style.display='inline-block'; prevBtn.disabled=false;
+  if(phase==='intro'){ nextBtn.textContent='Bắt đầu ✧'; prevBtn.disabled=true; }
+  else if(phase==='journey'){ nextBtn.textContent='Đi tiếp →'; prevBtn.textContent='← Quay lại'; }
+  else if(phase==='celebrate'){ nextBtn.textContent='Đi tiếp →'; prevBtn.textContent='← Quay lại'; }
+  else if(phase==='handover'){ nextBtn.textContent='Mở sách 📖'; prevBtn.textContent='← Quay lại'; }
+  else if(phase==='book'){
+    prevBtn.textContent = pageIndex===0 ? '← Cất sách' : '‹ Trang trước';
+    nextBtn.textContent = pageIndex>=pages.length-1 ? 'Đóng sách & Xem lại ↺' : 'Trang sau ›';
+  }
+}
+
+function enterIntro(){
+  phase='intro'; document.body.classList.remove('reading'); world.classList.remove('moving');
+  girl.classList.remove('grad'); gownRun(false); girl.style.opacity='1'; girl.style.left='20%'; girl.classList.remove('walkbob'); girlRun(false);
+  dog.style.left='13%'; dog.classList.remove('walkbob'); dogRun(false);
+  party.classList.remove('show'); crowdClap(false); gift.style.opacity=0;
+  $('label').textContent='Happy Graduation'; $('badge').style.display='none';
+  $('emoji').style.display='block'; $('emoji').textContent='🌸';
+  $('title').innerHTML='Chúc mừng tốt nghiệp<br>'+CONFIG.friendName+' 🎓';
+  $('desc').textContent='Cùng nhìn lại hành trình đại học tuyệt vời của cậu, và xem điều bất ngờ ở cuối con đường nhé!';
+  const illustEl = $('stageIllustration');
+  if(illustEl){ illustEl.classList.remove('show'); illustEl.innerHTML=''; }
+  album.classList.remove('on'); setDot(0); updateNav();
+}
+
+function enterJourney(i){
+  phase='journey'; si=i; document.body.classList.remove('reading'); world.classList.add('moving');
+  girl.classList.remove('grad'); gownRun(false); girl.style.opacity='1'; girlImg.src='images/girl1.png'; girl.style.left='20%'; girl.classList.add('walkbob'); girlRun(true);
+  dog.style.left='11%'; dog.classList.add('walkbob'); dogRun(true);
+  party.classList.remove('show'); crowdClap(false); gift.style.opacity=0;
+  fadeStage(()=>{ const s=stops[i]; s.type==='album' ? setAlbum() : setMilestone(s, i); });
+  setDot(1+i); updateNav();
+}
+
+function enterCelebrate(){
+  phase='celebrate'; document.body.classList.remove('reading');
+  world.classList.add('moving');
+  party.classList.add('show'); crowdClap(true);
+  gift.style.opacity=0;
+  const illustEl = $('stageIllustration');
+  if(illustEl){ illustEl.classList.remove('show'); illustEl.innerHTML=''; }
+  
+  // Cô gái mặc áo cử nhân bước từ đường tiến dần về phía đám đông
+  girl.style.opacity='1';
+  girlRun(false); girl.classList.add('grad'); girlImg.src='images/gown1.png';
+  girl.classList.add('walkbob'); gownRun(true);
+  dog.classList.add('walkbob'); dogRun(true);
+  girl.style.left='20%'; dog.style.left='11%';
+  
+  requestAnimationFrame(()=>{ 
+    const isMobile = window.innerWidth <= 680;
+    girl.style.left = isMobile ? '38%' : '44%'; 
+    dog.style.left  = isMobile ? '24%' : '34%'; 
+  });
+  
+  fadeStage(()=>{
+    album.classList.remove('on'); $('badge').style.display='none';
+    $('label').textContent='Cuối con đường'; $('emoji').style.display='none';
+    $('title').textContent='🎉 Chúc mừng tốt nghiệp! 🎉';
+    $('desc').textContent='Mọi người đang đứng đó, vỗ tay chúc mừng '+CONFIG.friendName+'!';
+  });
+  
+  // Khi tới nơi, cô gái bước hẳn vào giữa đám đông rồi từ từ mờ dần (hòa vào mọi người)
+  setTimeout(()=>{
+    dog.classList.remove('walkbob'); dogRun(false);
+    girl.style.left = window.innerWidth <= 680 ? '48%' : '53%';
+    girl.style.opacity = '0';
+    setTimeout(()=>{
+      world.classList.remove('moving');
+      girl.classList.remove('walkbob'); gownRun(false);
+    }, 1000);
+  }, 2100);
+  
+  /* Mega Confetti Cannon Blast */
+  burstCannon(window.innerWidth * 0.15, window.innerHeight * 0.7);
+  burstCannon(window.innerWidth * 0.85, window.innerHeight * 0.7);
+  setTimeout(() => burst(), 600);
+  setDot(1+N); updateNav();
+}
+
+function enterHandover(){
+  phase='handover'; document.body.classList.remove('reading'); world.classList.remove('moving');
+  party.classList.add('show'); crowdClap(true);
+  girl.classList.add('grad'); 
+  const isMobile = window.innerWidth <= 680;
+  girl.style.left = isMobile ? '48%' : '53%'; 
+  girl.style.opacity = '0';
+  girl.classList.remove('walkbob'); gownRun(false);
+  dog.style.left  = isMobile ? '24%' : '34%'; 
+  dog.classList.remove('walkbob'); dogRun(false);
+  
+  gift.style.transition='none'; gift.style.left='64%'; gift.style.bottom='210px'; gift.style.opacity='0';
+  requestAnimationFrame(()=>{ gift.style.opacity='1'; requestAnimationFrame(()=>{
+    gift.style.transition='left 1.4s cubic-bezier(.4,0,.4,1), bottom 1.4s ease';
+    gift.style.left= isMobile ? '42%' : '49%'; 
+    gift.style.bottom='205px'; }); });
+  fadeStage(()=>{
+    $('label').textContent='Khoảnh khắc đặc biệt'; $('badge').style.display='none';
+    $('emoji').style.display='block'; $('emoji').textContent='💝';
+    $('title').textContent='Một món quà nhỏ';
+    $('desc').textContent='Mọi người cùng trao tặng '+CONFIG.friendName+' quyển sách lời chúc. Bấm “Mở sách” để đọc nhé.';
+  });
+  setDot(1+N); updateNav();
+}
+
+function enterBook(){
+  phase='book'; document.body.classList.add('reading'); pageIndex=0;
+  dogRun(false); girlRun(false); crowdClap(false); $('bookView').classList.add('on'); renderPage(); setDot(dotsN-1); updateNav(); burst();
+}
+
+/* 3D Interactive Tilt on Hover & Move */
+const bookWrapper = $('book3dWrapper');
+window.addEventListener('pointermove', (e) => {
+  if(phase !== 'book' || !bookWrapper) return;
+  const xRatio = (e.clientX / window.innerWidth - 0.5) * 2;
+  const yRatio = (e.clientY / window.innerHeight - 0.5) * 2;
+  const rotY = xRatio * 6;
+  const rotX = -yRatio * 4;
+  bookWrapper.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+});
+
+window.addEventListener('pointerleave', () => {
+  if(bookWrapper) bookWrapper.style.transform = `rotateX(0deg) rotateY(0deg)`;
+});
+
+function renderPage(){
+  const p=pages[pageIndex]; const right=$('rRight');
+  playPageSound();
+  right.style.transform='rotateY(-90deg) translateZ(10px)';
+  right.style.filter='brightness(0.75)';
+  setTimeout(()=>{
+    $('pAvatar').textContent = p.emoji || '💌';
+    $('pName').textContent = (p.cover || p.closing) ? '' : p.name;
+    const totalMsgs = CONFIG.messages.length;
+    
+    if(p.cover){
+      $('pNum').textContent = 'Kỷ yếu 2026';
+      right.setAttribute('data-hint', 'Mở trang đầu ›');
+    } else if(p.closing){
+      $('pNum').textContent = 'Lời chúc tốt đẹp';
+      right.setAttribute('data-hint', 'Gấp sách & Xem lại ↺');
+    } else {
+      $('pNum').textContent = totalMsgs > 0 ? `Lời chúc ${pageIndex} / ${totalMsgs}` : 'Lời chúc';
+      right.setAttribute('data-hint', 'Lật trang sau ›');
+    }
+
+    let innerContent = '';
+    if(p.cover){ 
+      innerContent = `
+        <div class="cover-title">${p.title}</div>
+        <div class="cover-sub">${p.sub}</div>
+        <div class="page-curl-corner" title="Nhấn để mở trang đầu"></div>
+      `;
+    } else if(p.closing){
+      innerContent = `
+        <div class="cover-title">${p.title}</div>
+        <div class="cover-sub">${p.sub}</div>
+        <button class="close-book-action-btn" onclick="closeBookAndRestart()">Gấp sách & Xem lại ↺</button>
+      `;
+    } else { 
+      innerContent = `
+        <div class="quote">"${p.text}"</div>
+        <div class="sign">— ${p.name}</div>
+        <div class="page-curl-corner" title="Nhấn để lật trang tiếp"></div>
+      `;
+    }
+    
+    right.innerHTML = innerContent;
+
+    right.style.transform='rotateY(90deg) translateZ(10px)';
+    requestAnimationFrame(()=>{ 
+      right.style.transform='rotateY(0deg) translateZ(0px)'; 
+      right.style.filter='brightness(1)';
+    });
+  }, 220);
+}
+
+/* Lật trang khi bấm trực tiếp vào mặt hoặc cạnh trang sách */
+const leftPage = document.querySelector('.rleft');
+const rightPage = $('rRight');
+
+/* ===== Cherry-blossom wind-sweep transition (Cơn gió hoa anh đào chuyển cảnh phủ kín màn hình) ===== */
+const wc=$('petalWipe'), wx=wc.getContext('2d'); let ww,wh;
+function rwc(){ ww=wc.width=innerWidth; wh=wc.height=innerHeight; } rwc(); addEventListener('resize',rwc);
+let wiping=false;
+function wPetal(){ return { x:-50-Math.random()*ww*0.7, y:Math.random()*wh, s:12+Math.random()*20, vx:12+Math.random()*16, vy:-2+Math.random()*4, a:Math.random()*6.28, va:-.2+Math.random()*.4, o:.85+Math.random()*.15, c:Math.random() }; }
+function drawWP(p){ wx.save(); wx.translate(p.x,p.y); wx.rotate(p.a); wx.globalAlpha=p.o; wx.fillStyle=p.c<.4?'#ff9ec2':(p.c<.75?'#ffc1da':'#f45d99'); wx.beginPath(); wx.ellipse(0,0,p.s,p.s*.6,0,0,6.28); wx.fill(); wx.restore(); }
+function petalWipe(swap){
+  if(wiping){ swap&&swap(); return; }
+  wiping=true; wc.style.display='block'; rwc();
+  let arr=[]; const COVER=950, REVEAL=1100, T=COVER+REVEAL; let swapped=false; const t0=performance.now();
+  (function run(now){
+    const t=now-t0;
+    const spawn = t<COVER ? 28 : (t<COVER+300 ? 12 : 0);
+    for(let i=0;i<spawn;i++) arr.push(wPetal());
+    const veil = t<COVER ? Math.min(1, (t/(COVER*0.85))) : Math.max(0, 1 - ((t-COVER)/REVEAL));
+    wx.clearRect(0,0,ww,wh);
+    if(veil>0){ 
+      wx.globalAlpha = veil; 
+      const g=wx.createLinearGradient(0,0,ww,wh); 
+      g.addColorStop(0,'#ffd9e8'); g.addColorStop(.5,'#ffb3d1'); g.addColorStop(1,'#ff9ec2'); 
+      wx.fillStyle=g; wx.fillRect(0,0,ww,wh); 
+      wx.globalAlpha=1; 
+    }
+    arr.forEach(p=>{ p.x+=p.vx; p.y+=p.vy+Math.sin(p.x/60)*.8; p.a+=p.va; drawWP(p); });
+    arr=arr.filter(p=>p.x<ww+80);
+    if(!swapped && t>=COVER){ swapped=true; swap&&swap(); }
+    if(t<T) requestAnimationFrame(run);
+    else { wx.clearRect(0,0,ww,wh); wc.style.display='none'; wiping=false; }
+  })(t0);
+}
+
+function closeBookAndRestart(){
+  playBeep(420, 'sine', 0.15, 0.1);
+  petalWipe(()=>{
+    $('bookView').classList.remove('on');
+    enterIntro();
+  });
+}
+
+if(rightPage){
+  rightPage.addEventListener('click', () => {
+    if(phase !== 'book') return;
+    if(pageIndex < pages.length - 1){
+      pageIndex++;
+      renderPage();
+      updateNav();
+    } else {
+      // Đã ở trang cuối cùng, lật tiếp sẽ đóng sách và quay về từ đầu
+      closeBookAndRestart();
+    }
+  });
+}
+
+if(leftPage){
+  leftPage.addEventListener('click', () => {
+    if(phase !== 'book') return;
+    if(pageIndex > 0){
+      pageIndex--;
+      renderPage();
+      updateNav();
+    } else {
+      // Ở trang đầu bấm lùi sẽ cất sách quay về từ đầu
+      closeBookAndRestart();
+    }
+  });
+}
+
+/* Touch Swipe Support for Mobile Reading (Vuốt tay để lật trang trên điện thoại) */
+let touchStartX = 0, touchStartY = 0;
+const bookViewEl = $('bookView');
+bookViewEl.addEventListener('touchstart', (e) => {
+  if(phase !== 'book') return;
+  touchStartX = e.changedTouches[0].screenX;
+  touchStartY = e.changedTouches[0].screenY;
+}, {passive: true});
+
+bookViewEl.addEventListener('touchend', (e) => {
+  if(phase !== 'book') return;
+  const touchEndX = e.changedTouches[0].screenX;
+  const touchEndY = e.changedTouches[0].screenY;
+  const diffX = touchEndX - touchStartX;
+  const diffY = touchEndY - touchStartY;
+  
+  // Vuốt ngang nhiều hơn vuốt dọc và khoảng cách > 45px
+  if(Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 45){
+    if(diffX < 0){
+      // Vuốt sang trái ➔ Lật trang sau
+      if(pageIndex < pages.length - 1){
+        pageIndex++;
+        renderPage();
+        updateNav();
+      } else {
+        closeBookAndRestart();
+      }
+    } else {
+      // Vuốt sang phải ➔ Lật trang trước
+      if(pageIndex > 0){
+        pageIndex--;
+        renderPage();
+        updateNav();
+      } else {
+        closeBookAndRestart();
+      }
+    }
+  }
+}, {passive: true});
+
+nextBtn.addEventListener('click',()=>{
+  playBeep(520, 'sine', 0.08, 0.06);
+  if(phase==='intro') petalWipe(()=>enterJourney(0));
+  else if(phase==='journey'){ if(si<N-1) enterJourney(si+1); else petalWipe(()=>enterCelebrate()); }
+  else if(phase==='celebrate') enterHandover();
+  else if(phase==='handover') petalWipe(()=>enterBook());
+  else if(phase==='book'){ 
+    if(pageIndex < pages.length - 1){ 
+      pageIndex++; 
+      renderPage(); 
+      updateNav(); 
+    } else { 
+      closeBookAndRestart();
+    } 
+  }
+});
+
+prevBtn.addEventListener('click',()=>{
+  playBeep(440, 'sine', 0.08, 0.06);
+  if(phase==='journey'){ if(si>0) enterJourney(si-1); else petalWipe(()=>enterIntro()); }
+  else if(phase==='celebrate') petalWipe(()=>enterJourney(N-1));
+  else if(phase==='handover') enterCelebrate();
+  else if(phase==='book'){ 
+    if(pageIndex > 0){ 
+      pageIndex--; 
+      renderPage(); 
+      updateNav(); 
+    } else { 
+      closeBookAndRestart();
+    } 
+  }
+});
+
+enterIntro();
+
+/* ===== Sparkle Interactive Particle Trail ===== */
+const ic = $('interactiveCanvas'), ix = ic.getContext('2d');
+let sparkles = [];
+function resizeIC(){ ic.width = window.innerWidth; ic.height = window.innerHeight; }
+resizeIC();
+window.addEventListener('resize', resizeIC);
+
+function createSparkles(x, y, count=3){
+  for(let i=0; i<count; i++){
+    sparkles.push({
+      x: x + (Math.random()-0.5)*16,
+      y: y + (Math.random()-0.5)*16,
+      vx: (Math.random()-0.5)*2.5,
+      vy: (Math.random()-0.5)*2.5 - 0.5,
+      size: 3 + Math.random()*5,
+      alpha: 1,
+      color: ['#ff8fbb','#ffd8a8','#ffe066','#ffc2da'][Math.floor(Math.random()*4)]
+    });
+  }
+}
+
+let lastPointer = {x:0, y:0};
+window.addEventListener('pointermove', (e) => {
+  const dist = Math.hypot(e.clientX - lastPointer.x, e.clientY - lastPointer.y);
+  if(dist > 18){
+    createSparkles(e.clientX, e.clientY, 1);
+    lastPointer = {x: e.clientX, y: e.clientY};
+  }
+});
+
+(function animateSparkles(){
+  ix.clearRect(0, 0, ic.width, ic.height);
+  for(let i=sparkles.length-1; i>=0; i--){
+    const s = sparkles[i];
+    s.x += s.vx; s.y += s.vy;
+    s.alpha -= 0.025;
+    if(s.alpha <= 0){ sparkles.splice(i,1); continue; }
+    ix.save();
+    ix.globalAlpha = s.alpha;
+    ix.fillStyle = s.color;
+    ix.beginPath();
+    ix.arc(s.x, s.y, s.size, 0, Math.PI*2);
+    ix.fill();
+    ix.restore();
+  }
+  requestAnimationFrame(animateSparkles);
+})();
+
+/* ===== Falling Cherry Petals with Wind Physics ===== */
+const pc=$('petals'), px=pc.getContext('2d'); let pw,ph,petals;
+function rp(){ pw=pc.width=innerWidth; ph=pc.height=innerHeight; } rp(); addEventListener('resize',rp);
+function Petal(){ this.reset(); this.y=Math.random()*ph; }
+Petal.prototype.reset=function(){ this.x=Math.random()*pw; this.y=-20; this.s=6+Math.random()*8; this.vy=1+Math.random()*1.5; this.vx=-.6+Math.random()*1.2; this.a=Math.random()*6.28; this.va=-.05+Math.random()*.1; this.o=.55+Math.random()*.4; };
+Petal.prototype.step=function(){ this.y+=this.vy; this.x+=this.vx+Math.sin(this.y/40)*.5; this.a+=this.va; if(this.y>ph+20) this.reset(); };
+Petal.prototype.draw=function(){ px.save(); px.translate(this.x,this.y); px.rotate(this.a); px.globalAlpha=this.o; px.fillStyle='#ff9ec2'; px.beginPath(); px.ellipse(0,0,this.s,this.s*.6,0,0,6.28); px.fill(); px.restore(); };
+petals=Array.from({length:32},()=>new Petal());
+(function loop(){ px.clearRect(0,0,pw,ph); petals.forEach(p=>{p.step();p.draw();}); requestAnimationFrame(loop); })();
+
+/* ===== Confetti Cannon System ===== */
+const cc=$('confetti'), cx=cc.getContext('2d');
+function rc(){ cc.width=innerWidth; cc.height=innerHeight; } rc(); addEventListener('resize',rc);
+let conf=[];
+const cols=['#f45d99','#ff9ec2','#e6b84f','#8ad0ff','#a6e3a1','#fff'];
+
+function burst(){ 
+  for(let i=0;i<100;i++){ 
+    conf.push({
+      x:innerWidth/2, y:innerHeight*.35, 
+      vx:-6+Math.random()*12, vy:-8-Math.random()*8, 
+      g:.28, s:6+Math.random()*7, c:cols[i%cols.length], a:1, r:Math.random()*6, vr:-.3+Math.random()*.6
+    }); 
+  } 
+}
+
+function burstCannon(x, y){
+  for(let i=0; i<80; i++){
+    const angle = (x < innerWidth/2) ? (-Math.PI/3 + (Math.random()-0.5)*0.6) : (-2*Math.PI/3 + (Math.random()-0.5)*0.6);
+    const speed = 10 + Math.random()*12;
+    conf.push({
+      x: x, y: y,
+      vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+      g: 0.32, s: 7+Math.random()*8, c: cols[i%cols.length], a: 1, r: Math.random()*6, vr: -.3+Math.random()*.6
+    });
+  }
+}
+
+(function cloop(){ 
+  cx.clearRect(0,0,cc.width,cc.height); 
+  conf.forEach(p=>{ 
+    p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.a-=.008; p.r+=p.vr; 
+    cx.save(); cx.globalAlpha=Math.max(0,p.a); cx.translate(p.x,p.y); cx.rotate(p.r); cx.fillStyle=p.c; cx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6); cx.restore(); 
+  }); 
+  conf=conf.filter(p=>p.a>0 && p.y<cc.height+30); 
+  requestAnimationFrame(cloop); 
+})();
+
+/* ===== Music Melody Generator ===== */
+let playing=false, mtimer, mi=0; const mbtn=$('music');
+const melody=[523.25,587.33,659.25,783.99,659.25,587.33,523.25,440,493.88,523.25,587.33,523.25];
+
+function note(f){ 
+  initAudio();
+  const o=actx.createOscillator(), g=actx.createGain(); 
+  o.type='sine'; o.frequency.value=f; 
+  o.connect(g); g.connect(actx.destination); 
+  const t=actx.currentTime; 
+  g.gain.setValueAtTime(0,t); 
+  g.gain.linearRampToValueAtTime(.18,t+.05); 
+  g.gain.exponentialRampToValueAtTime(.001,t+.9); 
+  o.start(t); o.stop(t+.95); 
+}
+
+mbtn.addEventListener('click',()=>{ 
+  initAudio();
+  if(playing){ 
+    playing=false; clearInterval(mtimer); mbtn.textContent='🎵 Bật nhạc'; 
+  } else { 
+    playing=true; mbtn.textContent='🔇 Tắt nhạc'; 
+    note(melody[mi=0]); 
+    mtimer=setInterval(()=>{ mi=(mi+1)%melody.length; note(melody[mi]); }, 620); 
+  } 
+});
+</script>
+</body>
+</html>
