@@ -202,10 +202,10 @@
     .year-badge{font-size:11.5px; padding:3px 12px; margin-bottom:4px;}
     
     /* 3D Polaroid & Album on Mobile */
-    #stageIllustration{margin-top:8px;}
-    .milestone-polaroid{max-width:145px; padding:5px 5px 12px 5px;}
-    .milestone-polaroid img{height:82px;}
-    .milestone-polaroid-caption{font-size:10.5px; margin-top:3px;}
+    #stageIllustration{margin-top:8px; gap:6px; max-width:94vw;}
+    .milestone-polaroid{width:98px; height:138px; padding:5px 5px 10px 5px; border-width:2px;}
+    .milestone-polaroid::before{width:32px; height:12px; top:-6px;}
+    .milestone-polaroid-caption{font-size:10px; margin-top:3px;}
     
     #album{grid-template-columns:repeat(3,1fr); gap:5px; max-width:300px; margin-top:8px;}
     .photo{font-size:10px; padding:3px;}
@@ -287,68 +287,127 @@
     .rright .quote{font-size:13px;}
   }
   
-  /* Floating 3D Milestone Polaroid Frame (Khung ảnh 3D bay vào ở mỗi phân đoạn) */
+  /* Floating 3D Triple Milestone Polaroid Frames (3 khung ảnh bay vào đồng thời, chứa toàn bộ người) */
   #stageIllustration{
-    margin-top:16px; display:none; pointer-events:auto;
-    perspective:1000px; animation:polaroidFlyIn 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+    margin-top:10px; display:none; pointer-events:auto;
+    perspective:1200px; justify-content:center; align-items:center;
+    gap:14px; flex-wrap:nowrap; max-width:96vw;
   }
-  #stageIllustration.show{display:flex; justify-content:center;}
+  #stageIllustration.show{display:flex;}
+  
   .milestone-polaroid{
-    background:#fff; padding:10px 10px 24px 10px; border:3px solid var(--ink-line);
-    border-radius:14px 18px 12px 16px; box-shadow:0 15px 30px rgba(122,74,99,0.2), var(--sticker);
-    transform:rotate(-3deg); transition:transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    max-width:210px; position:relative; cursor:pointer;
+    background:#fff; padding:8px 8px 16px 8px; border:2.5px solid var(--ink-line);
+    border-radius:14px 16px 14px 16px; box-shadow:0 12px 28px rgba(122,74,99,0.18), var(--sticker);
+    transition:transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, opacity 0.4s ease;
+    width:155px; height:200px; display:flex; flex-direction:column; align-items:center;
+    position:relative; cursor:pointer; transform-style:preserve-3d;
+    animation:polaroidFlyIn 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
   }
+  .milestone-polaroid:nth-child(1){ transform:rotate(-5deg) translateY(4px); }
+  .milestone-polaroid:nth-child(2){ transform:rotate(1deg) translateY(-4px); z-index:2; }
+  .milestone-polaroid:nth-child(3){ transform:rotate(5deg) translateY(4px); }
+  
   .milestone-polaroid:hover{
-    transform:scale(1.08) rotate(1deg) translateY(-6px);
-    box-shadow:0 22px 36px rgba(122,74,99,0.28), 6px 8px 0 rgba(122,74,99,.24);
+    transform:scale(1.12) rotate(0deg) translateY(-10px) translateZ(30px) !important;
+    box-shadow:0 24px 44px rgba(122,74,99,0.32), 6px 8px 0 rgba(122,74,99,.25);
+    z-index:20 !important;
   }
+  
+  /* Băng dính washi tape */
   .milestone-polaroid::before{
-    content:''; position:absolute; top:-10px; left:50%; transform:translateX(-50%);
-    width:50px; height:18px; background:rgba(255,224,138,0.7);
-    border:1px dashed rgba(122,74,99,0.3); border-radius:2px; box-shadow:0 2px 4px rgba(0,0,0,0.06);
+    content:''; position:absolute; top:-8px; left:50%; transform:translateX(-50%);
+    width:46px; height:16px; background:rgba(255,224,138,0.85);
+    border:1.2px dashed rgba(122,74,99,0.35); border-radius:2px; box-shadow:0 2px 4px rgba(0,0,0,0.06);
+    z-index:5;
+  }
+  
+  /* Khung chứa ảnh toàn vẹn không bị cắt người */
+  .milestone-polaroid .polaroid-img-wrap{
+    width:100%; flex:1; background:#fdf7fa; border-radius:8px;
+    border:1.2px solid rgba(122,74,99,0.15); overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
   }
   .milestone-polaroid img{
-    width:100%; height:130px; object-fit:cover; border-radius:8px;
-    border:1.5px solid rgba(122,74,99,0.15); display:block;
+    width:100%; height:100%; object-fit:contain; display:block;
+    transition:opacity 0.4s ease, transform 0.4s ease;
   }
   .milestone-polaroid-caption{
-    margin-top:8px; font-family:'Baloo 2', cursive; font-size:13px; font-weight:700;
-    color:var(--rose-deep); text-align:center;
+    margin-top:6px; font-family:'Baloo 2', cursive; font-size:12px; font-weight:700;
+    color:var(--rose-deep); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    max-width:100%;
   }
   @keyframes polaroidFlyIn{
-    0%{ transform:translateY(40px) scale(0.7) rotate(12deg); opacity:0; }
-    100%{ transform:translateY(0) scale(1) rotate(-3deg); opacity:1; }
+    0%{ transform:translateY(50px) scale(0.6) rotate(14deg); opacity:0; }
+    100%{ opacity:1; }
   }
 
-  /* ===== 3D Dynamic Photo Album Gallery ===== */
-  #album{display:none; grid-template-columns:repeat(3,1fr); gap:14px; max-width:540px; margin-top:14px; pointer-events:auto; perspective:1200px;}
-  #album.on{display:grid}
-  .photo{
-    aspect-ratio:1/1; background:#fff; border:3px solid var(--ink-line);
-    border-radius:14px 18px 14px 18px/18px 14px 18px 14px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--ink-soft); font-size:13px;
-    text-align:center; padding:6px; overflow:hidden; box-shadow:0 12px 24px rgba(122,74,99,0.15), var(--sticker);
-    transition:transform .3s cubic-bezier(0.2,0.8,0.2,1), box-shadow .3s ease; cursor:pointer; position:relative;
-    transform-style:preserve-3d;
+  /* ===== 3D Coverflow Carousel Album (Triển lãm ảnh kỷ niệm sang trọng) ===== */
+  #album{
+    display:none; width:min(640px, 94vw); margin-top:14px;
+    position:relative; pointer-events:auto;
   }
-  .photo:nth-child(1){transform:rotate(-3deg) translateZ(10px);}
-  .photo:nth-child(2){transform:rotate(2deg) translateZ(15px);}
-  .photo:nth-child(3){transform:rotate(-2deg) translateZ(5px);}
-  .photo:nth-child(4){transform:rotate(3deg) translateZ(12px);}
-  .photo:nth-child(5){transform:rotate(-1deg) translateZ(8px);}
-  .photo:nth-child(6){transform:rotate(2.5deg) translateZ(14px);}
+  #album.on{display:flex; flex-direction:column; align-items:center;}
+  
+  .album-carousel-wrap{
+    width:100%; display:flex; align-items:center; justify-content:center;
+    position:relative; gap:12px;
+  }
+  
+  .album-track{
+    display:flex; gap:16px; overflow-x:auto; padding:12px 16px 20px;
+    scroll-snap-type:x mandatory; scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch; width:100%; max-width:580px;
+  }
+  .album-track::-webkit-scrollbar{height:6px;}
+  .album-track::-webkit-scrollbar-track{background:rgba(214,59,122,0.08); border-radius:10px;}
+  .album-track::-webkit-scrollbar-thumb{background:var(--rose); border-radius:10px;}
+  
+  .photo{
+    flex:0 0 160px; height:205px; background:#fff; border:3px solid var(--ink-line);
+    border-radius:16px; scroll-snap-align:center;
+    display:flex; flex-direction:column; align-items:center; padding:8px 8px 14px 8px;
+    box-shadow:0 12px 24px rgba(122,74,99,0.18), var(--sticker);
+    transition:transform .3s cubic-bezier(0.2,0.8,0.2,1), box-shadow .3s ease;
+    cursor:pointer; position:relative;
+  }
+  .photo:nth-child(even){ transform:rotate(1.5deg); }
+  .photo:nth-child(odd){ transform:rotate(-1.5deg); }
   
   .photo:hover{
-    transform:scale(1.14) rotate(0deg) translateZ(30px) translateY(-8px) !important;
-    box-shadow:0 24px 40px rgba(122,74,99,0.32), 6px 8px 0 rgba(122,74,99,.25);
-    z-index:20;
+    transform:scale(1.08) rotate(0deg) translateY(-8px) !important;
+    box-shadow:0 22px 38px rgba(122,74,99,0.3), 5px 7px 0 rgba(122,74,99,.24);
+    z-index:10;
   }
   .photo::before{
-    content:'📌'; position:absolute; top:-2px; left:50%; transform:translateX(-50%);
+    content:'📌'; position:absolute; top:-8px; left:50%; transform:translateX(-50%);
     font-size:14px; z-index:5; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.2));
   }
-  .photo img{width:100%; height:100%; object-fit:cover; border-radius:8px;}
+  
+  .photo .photo-img-container{
+    width:100%; flex:1; background:#fef8fb; border-radius:10px;
+    border:1.2px solid rgba(122,74,99,0.15); overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .photo img{
+    width:100%; height:100%; object-fit:contain; display:block;
+  }
+  .photo .photo-caption{
+    margin-top:6px; font-family:'Baloo 2', cursive; font-size:12px; font-weight:700;
+    color:var(--rose-deep); text-align:center;
+  }
+  
+  .album-controls{
+    display:flex; gap:10px; margin-top:6px;
+  }
+  .album-nav-arrow{
+    background:#fff; border:2px solid var(--ink-line); color:var(--rose-deep);
+    width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:14px; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .album-nav-arrow:hover{transform:scale(1.1); background:#ffeef5;}
+  .album-nav-arrow:active{transform:scale(0.95);}
 
   /* ===== HUD ===== */
   .btn{cursor:pointer; font-weight:700; color:var(--ink); border:3px solid var(--ink-line);
@@ -812,7 +871,23 @@ const CONFIG = {
     { emoji:"🎓", year:"Ngày tốt nghiệp", title:"Khoảnh khắc vinh quang", desc:"Hôm nay, Ngọc Hà chính thức trở thành Cử nhân Tài chính ngân hàng. Chúc mừng cậu! 🎉" }
   ],
   showAlbum: true,
-  photos: [ "photos/1.jpg", "photos/2.jpg", "photos/3.jpg", "photos/4.jpg", "photos/5.jpg", "photos/6.jpg" ],
+  photos: [
+    "photos/Ha_1.jpg",
+    "photos/Ha_2.jpg",
+    "photos/Ha_3.jpg",
+    "photos/Ha_4.jpg",
+    "photos/Ha_5.jpg",
+    "photos/Ha_6.jpg",
+    "photos/Ha_7.jpg",
+    "photos/Ha_8.jpg",
+    "photos/Ha_9.jpg",
+    "photos/Ha_10.jpg",
+    "photos/Ha_11.png",
+    "photos/Ha_12.jpg",
+    "photos/Ha_13.jpg",
+    "photos/Ha_14.jpg",
+    "photos/Ha_15.jpg"
+  ],
   messages: [
     { name:"Người bạn thân", emoji:"💞", text:"Chúc mừng Hà đã tốt nghiệp xuất sắc! Tớ tự hào về cậu lắm. Cảm ơn vì đã luôn ở bên tớ suốt những năm tháng đại học." },
     { name:"Lớp trưởng NEU", emoji:"🌟", text:"Hành trình Tài chính ngân hàng mới đang chờ phía trước, cứ tự tin tỏa sáng nhé. Chúc cậu thành công rực rỡ!" },
@@ -1001,57 +1076,123 @@ gift.addEventListener('click', () => {
   if(phase==='handover') enterBook();
 });
 
-function setMilestone(s, index=0){
+let milestonePhotoTimer = null;
+
+function setMilestone(s, milestoneIndex=0){
   album.classList.remove('on'); album.innerHTML='';
+  if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
+  
   $('label').textContent='Happy Graduation';
   $('badge').style.display='inline-block'; $('badge').textContent=s.year;
   $('emoji').style.display='block'; $('emoji').textContent=s.emoji;
   $('title').textContent=s.title; $('desc').textContent=s.desc;
   
   const illustEl = $('stageIllustration');
-  if(illustEl){
-    illustEl.classList.remove('show');
-    illustEl.innerHTML = '';
-    // Lấy ảnh tương ứng từ album photos hoặc icon minh họa
-    const photoSrc = (CONFIG.photos && CONFIG.photos[index]) ? CONFIG.photos[index] : null;
-    const photoImgHTML = photoSrc 
-      ? `<img src="${photoSrc}" onerror="this.onerror=null; this.src='images/girl1.png';" alt="${s.title}">` 
-      : `<div style="height:120px; display:flex; align-items:center; justify-content:center; font-size:44px; background:#fff0f6; border-radius:8px;">${s.emoji}</div>`;
-    
-    illustEl.innerHTML = `
-      <div class="milestone-polaroid" onclick="zoomPhoto('${photoSrc || 'images/girl1.png'}')" title="Chạm để phóng to xem kỷ niệm ✨">
-        ${photoImgHTML}
-        <div class="milestone-polaroid-caption">${s.year} • ${CONFIG.friendName} 💕</div>
+  if(!illustEl) return;
+  
+  illustEl.classList.remove('show');
+  illustEl.innerHTML = '';
+  
+  const allPhotos = (CONFIG.photos && CONFIG.photos.length > 0) ? CONFIG.photos : ['images/girl1.png'];
+  
+  // Chọn 3 ảnh khởi tạo
+  let currentIndices = [
+    (milestoneIndex * 3) % allPhotos.length,
+    (milestoneIndex * 3 + 1) % allPhotos.length,
+    (milestoneIndex * 3 + 2) % allPhotos.length
+  ];
+  
+  const labels = ['Kỷ niệm ✨', `${s.year} 💕`, 'Thanh xuân 🌸'];
+  
+  illustEl.innerHTML = currentIndices.map((pIdx, i) => {
+    const src = allPhotos[pIdx];
+    return `
+      <div class="milestone-polaroid" id="polaroidCard_${i}" onclick="zoomPhoto(this.querySelector('img').src)" title="Chạm để phóng to xem trọn vẹn ✨">
+        <div class="polaroid-img-wrap">
+          <img id="polaroidImg_${i}" src="${src}" alt="Ảnh kỷ niệm">
+        </div>
+        <div class="milestone-polaroid-caption" id="polaroidCaption_${i}">${labels[i]}</div>
       </div>
     `;
-    void illustEl.offsetWidth;
-    illustEl.classList.add('show');
+  }).join('');
+  
+  void illustEl.offsetWidth;
+  illustEl.classList.add('show');
+  
+  // Tự động đổi ngẫu nhiên 1 trong 3 ảnh cứ sau 3 giây
+  if(allPhotos.length > 3){
+    milestonePhotoTimer = setInterval(() => {
+      if(phase !== 'journey' && phase !== 'intro') {
+        clearInterval(milestonePhotoTimer);
+        milestonePhotoTimer = null;
+        return;
+      }
+      
+      // Chọn ngẫu nhiên 1 trong 3 thẻ để đổi ảnh
+      const cardSlot = Math.floor(Math.random() * 3);
+      const imgEl = $(`polaroidImg_${cardSlot}`);
+      if(!imgEl) return;
+      
+      // Chọn ảnh ngẫu nhiên khác với các ảnh đang hiện
+      let newPhotoIdx = Math.floor(Math.random() * allPhotos.length);
+      let attempts = 0;
+      while(currentIndices.includes(newPhotoIdx) && attempts < 10){
+        newPhotoIdx = Math.floor(Math.random() * allPhotos.length);
+        attempts++;
+      }
+      currentIndices[cardSlot] = newPhotoIdx;
+      const nextSrc = allPhotos[newPhotoIdx];
+      
+      // Hiệu ứng mờ dần đổi ảnh mượt mà
+      imgEl.style.opacity = '0';
+      setTimeout(() => {
+        imgEl.src = nextSrc;
+        imgEl.style.opacity = '1';
+      }, 350);
+    }, 3000);
   }
 }
 
 function setAlbum(){
   const illustEl = $('stageIllustration');
   if(illustEl){ illustEl.classList.remove('show'); illustEl.innerHTML=''; }
+  if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   
-  $('label').textContent='Kỷ niệm'; $('badge').style.display='none';
+  $('label').textContent='Kỷ niệm thanh xuân'; $('badge').style.display='none';
   $('emoji').style.display='block'; $('emoji').textContent='📸';
-  $('title').textContent='Album kỷ niệm'; $('desc').textContent='Những khoảnh khắc không thể nào quên của thanh xuân.';
+  $('title').textContent='Album kỷ niệm'; $('desc').textContent='Vuốt hoặc bấm để xem những khoảnh khắc đáng yêu của Ngọc Hà 💕';
   
-  if (!CONFIG.photos || CONFIG.photos.length === 0) {
-    album.innerHTML = Array.from({length: 6}, (_, i) => `
-      <div class="photo" title="Chạm để phóng to">
-        <div style="font-size:24px; margin-bottom:4px;">🌸</div>Ảnh ${i+1}
+  const allPhotos = (CONFIG.photos && CONFIG.photos.length > 0) 
+    ? CONFIG.photos 
+    : Array.from({length: 6}, (_, i) => `photos/Ha_${i+1}.jpg`);
+  
+  const photosCardsHTML = allPhotos.map((p, i) => `
+    <div class="photo" onclick="zoomPhoto('${p}')" title="Chạm để phóng to xem chi tiết ✨">
+      <div class="photo-img-container">
+        <img src="${p}" onerror="this.src='images/girl1.png'" alt="Ảnh kỷ niệm ${i+1}">
       </div>
-    `).join('');
-  } else {
-    album.innerHTML = CONFIG.photos.map((p,i)=> p ? `
-      <div class="photo" onclick="zoomPhoto('${p}')" title="Chạm để phóng to 🔍">
-        <img src="${p}" onerror="this.closest('.photo').innerHTML='<div style=\\'font-size:24px;\\'>🌸</div>Ảnh '+(${i}+1)">
+      <div class="photo-caption">Ảnh #${i+1} 🌸</div>
+    </div>
+  `).join('');
+  
+  album.innerHTML = `
+    <div class="album-carousel-wrap">
+      <div class="album-track" id="albumTrack">
+        ${photosCardsHTML}
       </div>
-    ` : `<div class="photo">📷<br>Ảnh ${i+1}</div>`).join('');
-  }
+    </div>
+    <div class="album-controls">
+      <button class="album-nav-arrow" onclick="scrollAlbum(-200)" title="Ảnh trước">‹</button>
+      <button class="album-nav-arrow" onclick="scrollAlbum(200)" title="Ảnh sau">›</button>
+    </div>
+  `;
   album.classList.add('on');
 }
+
+window.scrollAlbum = function(amount){
+  const track = $('albumTrack');
+  if(track){ track.scrollBy({ left: amount, behavior: 'smooth' }); }
+};
 
 window.zoomPhoto = function(src){
   if(!src) return;
@@ -1073,6 +1214,7 @@ function updateNav(){
 }
 
 function enterIntro(){
+  if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   phase='intro'; document.body.classList.remove('reading'); world.classList.remove('moving');
   girl.classList.remove('grad'); gownRun(false); girl.style.opacity='1'; girl.style.left='20%'; girl.classList.remove('walkbob'); girlRun(false);
   dog.style.left='13%'; dog.classList.remove('walkbob'); dogRun(false);
@@ -1096,6 +1238,7 @@ function enterJourney(i){
 }
 
 function enterCelebrate(){
+  if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   phase='celebrate'; document.body.classList.remove('reading');
   world.classList.add('moving');
   party.classList.add('show'); crowdClap(true);
@@ -1199,7 +1342,12 @@ function renderPage(){
   right.style.transform='rotateY(-90deg) translateZ(10px)';
   right.style.filter='brightness(0.75)';
   setTimeout(()=>{
-    $('pAvatar').textContent = p.emoji || '💌';
+    if(p.cover || p.closing){
+      $('pAvatar').innerHTML = p.emoji || '🌸';
+    } else {
+      // Hiển thị ảnh chân dung của Ngọc Hà làm Avatar kèm icon
+      $('pAvatar').innerHTML = `<img src="photos/Ha_1.jpg" onerror="this.onerror=null; this.parentElement.textContent='🌸'" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+    }
     $('pName').textContent = (p.cover || p.closing) ? '' : p.name;
     const totalMsgs = CONFIG.messages.length;
     
