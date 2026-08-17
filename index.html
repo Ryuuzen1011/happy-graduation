@@ -207,7 +207,7 @@
     .sky-airplane{width:56px; height:40px;}
     .plane-tow-rope{width:24px; margin-left:-4px; margin-right:-2px;}
     .plane-banner-body{gap:6px; padding:6px 8px; border-radius:12px;}
-    .banner-tail{right:-16px; width:16px; height:22px;}
+    .banner-tail{left:-16px; width:16px; height:22px;}
     .milestone-polaroid{width:82px; height:116px; padding:4px; border-width:2px; border-radius:8px;}
     .milestone-polaroid::before{font-size:10px; top:-6px;}
     
@@ -291,11 +291,11 @@
     .rright .quote{font-size:13px;}
   }
   
-  /* ===== Airplane Sky Banner Trailer (Máy bay kéo Banner 3 khung ảnh) ===== */
+  /* ===== Airplane Sky Banner Trailer (Máy bay kéo Banner 3 khung ảnh căn giữa hoàn hảo) ===== */
   #stageIllustration{
     margin-top:14px; display:none; pointer-events:auto;
     perspective:1400px; justify-content:center; align-items:center;
-    width:100%; max-width:96vw;
+    width:100%;
   }
   #stageIllustration.show{display:flex;}
   
@@ -305,24 +305,24 @@
     transform-style:preserve-3d;
   }
   
-  /* Chiếc máy bay cánh quạt vintage màu hồng đào rực rỡ */
+  /* Chiếc máy bay cánh quạt hướng mũi bay về phía trước (Bên phải) */
   .sky-airplane{
-    width:105px; height:70px; flex-shrink:0; position:relative; z-index:10;
-    filter:drop-shadow(0 10px 18px rgba(122,74,99,0.28));
+    width:100px; height:68px; flex-shrink:0; position:relative; z-index:10;
+    filter:drop-shadow(0 10px 18px rgba(122,74,99,0.25));
     animation:planeHover 2.6s ease-in-out infinite;
     transform-origin:center;
   }
   .sky-airplane svg{width:100%; height:100%; display:block;}
   .plane-propeller{animation:spinPropeller 0.12s linear infinite; transform-origin:82px 28px;}
   
-  /* Dây cáp kéo banner */
+  /* Dây cáp kéo nối đuôi máy bay vào đầu dải banner */
   .plane-tow-rope{
-    width:48px; height:20px; position:relative; margin-left:-8px; margin-right:-4px;
+    width:46px; height:20px; position:relative; margin-left:-6px; margin-right:-6px;
     z-index:8; flex-shrink:0;
   }
   .plane-tow-rope svg{width:100%; height:100%; overflow:visible;}
   
-  /* Dải Banner lụa chứa 3 khung ảnh */
+  /* Dải Banner lụa chứa 3 khung ảnh căn giữa chính xác */
   .plane-banner-body{
     display:flex; align-items:center; gap:14px; padding:10px 14px;
     background:rgba(255, 255, 255, 0.95);
@@ -334,9 +334,9 @@
     backdrop-filter:blur(6px);
   }
   
-  /* Đuôi ruy băng bay phấp phới */
+  /* Đuôi ruy băng bay phấp phới ở cuối dải banner */
   .banner-tail{
-    position:absolute; right:-22px; top:50%; transform:translateY(-50%);
+    position:absolute; left:-22px; top:50%; transform:translateY(-50%) rotate(180deg);
     width:24px; height:32px;
   }
   
@@ -1178,15 +1178,31 @@ function setMilestone(s, milestoneIndex=0){
   
   illustEl.innerHTML = `
     <div class="sky-plane-banner-wrap">
-      <!-- Chiếc máy bay cánh quạt vẽ tay -->
+      <!-- Dải Banner bồng bềnh chứa 3 khung ảnh (ở phía sau) -->
+      <div class="plane-banner-body">
+        <!-- Đuôi ruy băng bay phấp phới ở đuôi banner -->
+        <svg class="banner-tail" viewBox="0 0 24 32">
+          <path d="M0 4 L18 0 L10 16 L20 32 L0 26 Z" fill="#ffb8d4" stroke="#7a4a63" stroke-width="2"/>
+        </svg>
+        ${polaroidCardsHTML}
+      </div>
+
+      <!-- Dây cáp kéo -->
+      <div class="plane-tow-rope">
+        <svg viewBox="0 0 46 20">
+          <path d="M0 10 Q23 17 46 10" fill="none" stroke="#7a4a63" stroke-width="2.2" stroke-dasharray="3 3"/>
+        </svg>
+      </div>
+
+      <!-- Chiếc máy bay cánh quạt vintage bay phía trước dẫn đầu -->
       <div class="sky-airplane">
         <svg viewBox="0 0 100 65">
-          <!-- Cánh quạt quay tít phía trước -->
+          <!-- Cánh quạt quay tít phía trước bên phải -->
           <g class="plane-propeller">
             <ellipse cx="82" cy="28" rx="3.5" ry="18" fill="#ffe08a" stroke="#7a4a63" stroke-width="2"/>
             <circle cx="82" cy="28" r="4.5" fill="#f45d99" stroke="#7a4a63" stroke-width="2"/>
           </g>
-          <!-- Thân máy bay -->
+          <!-- Thân máy bay hướng về phía trước bên phải -->
           <path d="M12 28 C25 24 55 18 82 24 C86 25 88 28 84 32 C68 44 32 42 12 36 Z" fill="#ffb8d4" stroke="#7a4a63" stroke-width="2.5" stroke-linejoin="round"/>
           <!-- Buồng lái kính tròn -->
           <path d="M52 20 C54 13 66 14 70 21 Z" fill="#e0f4ff" stroke="#7a4a63" stroke-width="2"/>
@@ -1196,22 +1212,6 @@ function setMilestone(s, milestoneIndex=0){
           <path d="M12 28 L4 10 L16 10 L22 28 Z" fill="#ff6584" stroke="#7a4a63" stroke-width="2.5" stroke-linejoin="round"/>
           <!-- Họa tiết trái tim trên thân -->
           <text x="36" y="36" font-size="11" fill="#7a4a63">💖</text>
-        </svg>
-      </div>
-
-      <!-- Dây cáp kéo -->
-      <div class="plane-tow-rope">
-        <svg viewBox="0 0 42 18">
-          <path d="M0 9 Q21 16 42 9" fill="none" stroke="#7a4a63" stroke-width="2.2" stroke-dasharray="3 3"/>
-        </svg>
-      </div>
-
-      <!-- Dải Banner bồng bềnh chứa 3 khung ảnh -->
-      <div class="plane-banner-body">
-        ${polaroidCardsHTML}
-        <!-- Đuôi ruy băng bay phấp phới -->
-        <svg class="banner-tail" viewBox="0 0 24 32">
-          <path d="M0 4 L18 0 L10 16 L20 32 L0 26 Z" fill="#ffb8d4" stroke="#7a4a63" stroke-width="2"/>
         </svg>
       </div>
     </div>
