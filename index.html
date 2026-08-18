@@ -6,7 +6,7 @@
 <title>Chúc mừng tốt nghiệp — Nguyễn Ngọc Hà! 🎓</title>
 <script src="photos_bundle.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@600;700;800;900&family=Quicksand:wght@500;600;700&display=swap');
   :root{ 
     --rose:#f45d99; --rose-deep:#d63b7a; --ink:#6b3a52; --ink-soft:#9b6f83;
     --ink-line:#7a4a63; --sticker:3px 4px 0 rgba(122,74,99,.22); 
@@ -14,13 +14,13 @@
   *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent;}
   html,body{height:100%; width:100%; overflow:hidden;}
   body{ 
-    font-family:'Quicksand','Segoe UI',system-ui,-apple-system,'Noto Sans',sans-serif; color:var(--ink);
+    font-family:'Quicksand','Nunito','Segoe UI',system-ui,-apple-system,'Noto Sans',sans-serif; color:var(--ink);
     background:
       radial-gradient(circle at 20% 24%, rgba(255,255,255,.55) 0 2px, transparent 3px) 0 0/28px 28px,
       linear-gradient(180deg,#fff9f4 0%,#ffeef6 46%,#ffe1ee 100%);
     user-select: none; -webkit-user-select: none;
   }
-  h1,#title,#bookView h2,.btn{ font-family:'Baloo 2','Quicksand','Segoe UI',sans-serif; }
+  h1,#title,#bookView h2,.btn,.passcode-btn,.passcode-title{ font-family:'Nunito','Baloo 2','Quicksand',sans-serif; font-weight:800; }
   canvas.fx{position:fixed; inset:0; width:100%; height:100%; pointer-events:none}
   #petals{z-index:2}
   #interactiveCanvas{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:40}
@@ -46,14 +46,15 @@
     animation:cardPopIn 0.5s cubic-bezier(0.18, 0.9, 0.32, 1.2);
   }
   .passcode-icon{font-size:44px; margin-bottom:8px; animation:lockBounce 2.4s ease-in-out infinite;}
-  .passcode-title{font-size:22px; font-weight:800; color:var(--rose-deep); margin-bottom:6px;}
-  .passcode-desc{font-size:13.5px; color:var(--ink-soft); line-height:1.45; margin-bottom:20px;}
+  .passcode-title{font-size:22px; font-weight:900; color:var(--rose-deep); margin-bottom:6px;}
+  .passcode-desc{font-size:14px; color:var(--ink-soft); line-height:1.5; margin-bottom:20px; font-weight:600;}
   
   .passcode-input-wrap{
     display:flex; gap:12px; justify-content:center; margin-bottom:14px;
   }
   .pin-digit{
     width:52px; height:58px; font-size:26px; font-weight:800; text-align:center;
+    font-family:'Nunito','Quicksand',sans-serif;
     border:2.5px solid var(--ink-line); border-radius:14px; color:var(--rose-deep);
     background:#fff8fc; outline:none; transition:all 0.2s ease;
     box-shadow:inset 0 2px 4px rgba(0,0,0,0.04);
@@ -63,14 +64,15 @@
     box-shadow:0 0 0 4px rgba(244,93,153,0.2);
   }
   .passcode-hint{
-    font-size:12.5px; color:var(--ink-soft); margin-bottom:20px;
+    font-size:13px; color:var(--ink-soft); margin-bottom:20px; font-weight:600;
     background:rgba(255,224,138,0.4); padding:6px 14px; border-radius:12px;
     border:1.2px dashed rgba(122,74,99,0.3);
   }
   .passcode-btn{
-    width:100%; background:#ff8fbb; color:#fff; font-size:17px; font-weight:800;
+    width:100%; background:#ff8fbb; color:#fff; font-size:17.5px; font-weight:900;
     padding:12px 20px; border:3px solid var(--ink-line); border-radius:16px;
     cursor:pointer; box-shadow:var(--sticker); transition:all 0.15s ease;
+    letter-spacing:0.5px; text-shadow:0 1.5px 0 rgba(122,74,99,.28);
   }
   .passcode-btn:hover{transform:translate(-1px,-2px); box-shadow:5px 7px 0 rgba(122,74,99,.22);}
   .passcode-btn:active{transform:translate(2px,3px); box-shadow:1px 1px 0 rgba(122,74,99,.22);}
