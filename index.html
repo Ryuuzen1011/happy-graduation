@@ -1220,12 +1220,12 @@ function initPasscodeGate() {
 
       unlockBtn.textContent = 'Thành công! ✨';
       gate.classList.add('unlocked');
-      setTimeout(() => {
-        gate.style.display = 'none';
-        enterIntro();
-      }, 400);
+      gate.style.display = 'none';
+      
+      // Khởi động sân khấu trang đầu tiên
+      enterIntro();
 
-      // Giải mã và nạp trước toàn bộ ảnh
+      // Giải mã toàn bộ ảnh ở nền
       try {
         const derivedKey = await deriveKeyFromPasscode(code);
         activeCryptoKey = derivedKey;
