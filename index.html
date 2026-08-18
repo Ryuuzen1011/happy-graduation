@@ -1144,20 +1144,13 @@ gift.addEventListener('click', () => {
   if(phase==='handover') enterBook();
 });
 
-async function getDecryptedPhotoUrl(path) {
-  if (DECRYPTED_BLOBS[path]) return DECRYPTED_BLOBS[path];
-  if (activeCryptoKey) {
-    try {
-      return await decryptEncFile(path, activeCryptoKey);
-    } catch(e){}
-  }
-  return 'images/girl1.png';
-}
+let milestonePhotoTimer = null;
 
 function setMilestone(s, milestoneIndex=0){
   album.classList.remove('on'); album.innerHTML='';
   if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   
+  // Khôi phục đầy đủ tiêu đề, huy hiệu năm học, emoji và nội dung hành trình
   $('label').textContent='Hành trình đại học';
   $('badge').style.display='inline-block'; $('badge').textContent=s.year;
   $('emoji').style.display='block'; $('emoji').textContent=s.emoji;
@@ -1231,7 +1224,7 @@ function setMilestone(s, milestoneIndex=0){
       </div>
     </div>
   `;
-
+  
   void illustEl.offsetWidth;
   illustEl.classList.add('show');
   
@@ -1244,10 +1237,12 @@ function setMilestone(s, milestoneIndex=0){
         return;
       }
       
+      // Chọn ngẫu nhiên 1 trong 3 thẻ để đổi ảnh
       const cardSlot = Math.floor(Math.random() * 3);
       const imgEl = $(`polaroidImg_${cardSlot}`);
       if(!imgEl) return;
       
+      // Chọn ảnh ngẫu nhiên khác với các ảnh đang hiện
       let newPhotoIdx = Math.floor(Math.random() * allPhotos.length);
       let attempts = 0;
       while(currentIndices.includes(newPhotoIdx) && attempts < 10){
@@ -1257,6 +1252,7 @@ function setMilestone(s, milestoneIndex=0){
       currentIndices[cardSlot] = newPhotoIdx;
       const nextSrc = allPhotos[newPhotoIdx];
       
+      // Hiệu ứng mờ dần đổi ảnh mượt mà
       imgEl.style.opacity = '0';
       setTimeout(() => {
         imgEl.src = nextSrc;
@@ -1277,12 +1273,12 @@ function setAlbum(){
   
   const allPhotos = (CONFIG.photos && CONFIG.photos.length > 0) 
     ? CONFIG.photos 
-    : [];
+    : Array.from({length: 6}, (_, i) => `photos/Ha_${i+1}.jpg`);
   
   const photosCardsHTML = allPhotos.map((p, i) => `
     <div class="photo" onclick="zoomPhoto('${p}')" title="Chạm để phóng to xem chi tiết ✨">
       <div class="photo-img-container">
-        <img id="albumImg_${i}" src="${p}" onerror="this.src='images/girl1.png'" alt="Ảnh kỷ niệm ${i+1}">
+        <img src="${p}" onerror="this.src='images/girl1.png'" alt="Ảnh kỷ niệm ${i+1}">
       </div>
     </div>
   `).join('');
@@ -1513,6 +1509,7 @@ function renderPage(){
     if(p.cover || p.closing){
       $('pAvatar').innerHTML = p.emoji || '🌸';
     } else {
+      // Hiển thị ảnh chân dung của Ngọc Hà làm Avatar kèm icon
       $('pAvatar').innerHTML = `<img src="photos/Ha_1.jpg" onerror="this.onerror=null; this.parentElement.textContent='🌸'" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
     }
     $('pName').textContent = (p.cover || p.closing) ? '' : p.name;
