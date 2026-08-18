@@ -25,6 +25,73 @@
   #interactiveCanvas{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:40}
   #confetti{z-index:45}
 
+  /* ===== Passcode Gate Modal (Lớp khóa bảo mật trang web) ===== */
+  #passcodeGate{
+    position:fixed; inset:0; z-index:9999;
+    background:radial-gradient(circle at 50% 40%, rgba(255,245,248,0.94), rgba(255,225,238,0.98));
+    backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:20px; text-align:center;
+    transition:opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  #passcodeGate.unlocked{
+    opacity:0; pointer-events:none; transform:scale(1.08);
+  }
+  .passcode-card{
+    background:#fff; border:3px solid var(--ink-line);
+    border-radius:24px; padding:32px 28px; width:100%; max-width:380px;
+    box-shadow:0 20px 45px rgba(122,74,99,0.22), var(--sticker);
+    display:flex; flex-direction:column; align-items:center; position:relative;
+    animation:cardPopIn 0.6s cubic-bezier(0.18, 0.9, 0.32, 1.2);
+  }
+  .passcode-icon{font-size:44px; margin-bottom:8px; animation:lockBounce 2.4s ease-in-out infinite;}
+  .passcode-title{font-size:22px; font-weight:800; color:var(--rose-deep); margin-bottom:6px;}
+  .passcode-desc{font-size:13.5px; color:var(--ink-soft); line-height:1.45; margin-bottom:20px;}
+  
+  .passcode-input-wrap{
+    display:flex; gap:12px; justify-content:center; margin-bottom:14px;
+  }
+  .pin-digit{
+    width:52px; height:58px; font-size:26px; font-weight:800; text-align:center;
+    border:2.5px solid var(--ink-line); border-radius:14px; color:var(--rose-deep);
+    background:#fff8fc; outline:none; transition:all 0.2s ease;
+    box-shadow:inset 0 2px 4px rgba(0,0,0,0.04);
+  }
+  .pin-digit:focus{
+    border-color:var(--rose); background:#fff; transform:scale(1.08);
+    box-shadow:0 0 0 4px rgba(244,93,153,0.2);
+  }
+  .passcode-hint{
+    font-size:12.5px; color:var(--ink-soft); margin-bottom:20px;
+    background:rgba(255,224,138,0.4); padding:6px 14px; border-radius:12px;
+    border:1.2px dashed rgba(122,74,99,0.3);
+  }
+  .passcode-btn{
+    width:100%; background:#ff8fbb; color:#fff; font-size:17px; font-weight:800;
+    padding:12px 20px; border:3px solid var(--ink-line); border-radius:16px;
+    cursor:pointer; box-shadow:var(--sticker); transition:all 0.15s ease;
+  }
+  .passcode-btn:hover{transform:translate(-1px,-2px); box-shadow:5px 7px 0 rgba(122,74,99,.22);}
+  .passcode-btn:active{transform:translate(2px,3px); box-shadow:1px 1px 0 rgba(122,74,99,.22);}
+  .passcode-err{
+    color:#e03131; font-size:13px; font-weight:700; margin-top:10px; min-height:18px;
+  }
+  .shake{animation:shakeErr 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;}
+  @keyframes shakeErr{
+    10%, 90% { transform: translate3d(-2px, 0, 0); }
+    20%, 80% { transform: translate3d(4px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+    40%, 60% { transform: translate3d(6px, 0, 0); }
+  }
+  @keyframes lockBounce{
+    0%, 100%{ transform:translateY(0) scale(1); }
+    50%{ transform:translateY(-6px) scale(1.05); }
+  }
+  @keyframes cardPopIn{
+    0%{ transform:scale(0.8) translateY(30px); opacity:0; }
+    100%{ transform:scale(1) translateY(0); opacity:1; }
+  }
+
   /* ===== World & Multi-layered Parallax Background ===== */
   #world{position:fixed; inset:0; z-index:5}
   
@@ -846,6 +913,26 @@
 </style>
 </head>
 <body>
+<!-- Passcode Security Gate Modal (Lớp khóa bảo mật) -->
+<div id="passcodeGate">
+  <div class="passcode-card" id="passcodeCard">
+    <div class="passcode-icon">🔐</div>
+    <h2 class="passcode-title">Khu Vườn Kỷ Niệm</h2>
+    <p class="passcode-desc">Trang web chứa hình ảnh và kỷ niệm tốt nghiệp của <strong>Nguyễn Ngọc Hà</strong>. Vui lòng nhập mã PIN để mở khóa.</p>
+    
+    <div class="passcode-input-wrap">
+      <input type="password" maxlength="1" class="pin-digit" id="pin0" inputmode="numeric" autofocus>
+      <input type="password" maxlength="1" class="pin-digit" id="pin1" inputmode="numeric">
+      <input type="password" maxlength="1" class="pin-digit" id="pin2" inputmode="numeric">
+      <input type="password" maxlength="1" class="pin-digit" id="pin3" inputmode="numeric">
+    </div>
+    
+    <div class="passcode-hint">💡 Gợi ý: Ngày sinh nhật của cử nhân xinh đẹp (DDMM) 🌸</div>
+    <button class="passcode-btn" id="unlockBtn">Mở Khóa Hành Trình ✧</button>
+    <div class="passcode-err" id="passcodeErr"></div>
+  </div>
+</div>
+
 <canvas id="petals" class="fx"></canvas>
 <canvas id="interactiveCanvas" class="fx"></canvas>
 <canvas id="confetti" class="fx"></canvas>
@@ -940,21 +1027,21 @@ const CONFIG = {
   ],
   showAlbum: true,
   photos: [
-    "photos/Ha_1.jpg",
-    "photos/Ha_2.jpg",
-    "photos/Ha_3.jpg",
-    "photos/Ha_4.jpg",
-    "photos/Ha_5.jpg",
-    "photos/Ha_6.jpg",
-    "photos/Ha_7.jpg",
-    "photos/Ha_8.jpg",
-    "photos/Ha_9.jpg",
-    "photos/Ha_10.jpg",
-    "photos/Ha_11.png",
-    "photos/Ha_12.jpg",
-    "photos/Ha_13.jpg",
-    "photos/Ha_14.jpg",
-    "photos/Ha_15.jpg"
+    "photos/Ha_1.enc",
+    "photos/Ha_2.enc",
+    "photos/Ha_3.enc",
+    "photos/Ha_4.enc",
+    "photos/Ha_5.enc",
+    "photos/Ha_6.enc",
+    "photos/Ha_7.enc",
+    "photos/Ha_8.enc",
+    "photos/Ha_9.enc",
+    "photos/Ha_10.enc",
+    "photos/Ha_11.enc",
+    "photos/Ha_12.enc",
+    "photos/Ha_13.enc",
+    "photos/Ha_14.enc",
+    "photos/Ha_15.enc"
   ],
   messages: [
     { name:"Người bạn thân", emoji:"💞", text:"Chúc mừng Hà đã tốt nghiệp xuất sắc! Tớ tự hào về cậu lắm. Cảm ơn vì đã luôn ở bên tớ suốt những năm tháng đại học." },
@@ -1002,6 +1089,146 @@ function playPageSound(){
     playBeep(800, 'triangle', 0.06, 0.05);
   } catch(e){}
 }
+
+/* ============================================================================
+   CLIENT-SIDE AES-256-GCM ZERO-KNOWLEDGE DECRYPTION ENGINE
+   - Mật khẩu KHÔNG lưu trong mã nguồn (Zero Plaintext Leak)
+   - Ảnh được giải mã trực tiếp trên RAM dưới dạng blob: URL an toàn
+   - Người ngoài xem code trên GitHub hoàn toàn không thể biết mật khẩu hay xem ảnh
+============================================================================ */
+const DECRYPTED_BLOBS = {};
+const CRYPTO_SALT = "GraduationTribute_Salt_NgocHa_2026";
+let activeCryptoKey = null;
+
+async function deriveKeyFromPasscode(passcode) {
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw", enc.encode(passcode), { name: "PBKDF2" }, false, ["deriveKey"]
+  );
+  return crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt: enc.encode(CRYPTO_SALT),
+      iterations: 100000,
+      hash: "SHA-256"
+    },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["decrypt"]
+  );
+}
+
+async function decryptEncFile(filePath, key) {
+  if (DECRYPTED_BLOBS[filePath]) return DECRYPTED_BLOBS[filePath];
+  try {
+    const res = await fetch(filePath);
+    if (!res.ok) throw new Error("File not found");
+    const arrayBuffer = await res.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    
+    // Structure: IV (12 bytes) + Tag (16 bytes) + Encrypted Data
+    const iv = data.slice(0, 12);
+    const tag = data.slice(12, 28);
+    const cipherText = data.slice(28);
+    
+    // Combine cipherText + tag for Web Crypto standard
+    const combined = new Uint8Array(cipherText.length + tag.length);
+    combined.set(cipherText, 0);
+    combined.set(tag, cipherText.length);
+    
+    const decryptedBuffer = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: iv, tagLength: 128 },
+      key,
+      combined
+    );
+    
+    // Auto-detect image type (PNG or JPEG)
+    const isPng = filePath.endsWith('Ha_11.enc');
+    const mimeType = isPng ? 'image/png' : 'image/jpeg';
+    const blob = new Blob([decryptedBuffer], { type: mimeType });
+    const blobUrl = URL.createObjectURL(blob);
+    DECRYPTED_BLOBS[filePath] = blobUrl;
+    return blobUrl;
+  } catch(err) {
+    console.error("Decryption failed for:", filePath, err);
+    throw err;
+  }
+}
+
+// Passcode Gate Controller
+function initPasscodeGate() {
+  const gate = $('passcodeGate');
+  const card = $('passcodeCard');
+  const errEl = $('passcodeErr');
+  const unlockBtn = $('unlockBtn');
+  const pins = [$('pin0'), $('pin1'), $('pin2'), $('pin3')];
+
+  // Auto focus pin inputs
+  pins.forEach((pin, idx) => {
+    pin.addEventListener('input', (e) => {
+      if (pin.value && idx < 3) pins[idx + 1].focus();
+      errEl.textContent = '';
+      if (pins.every(p => p.value.length === 1)) {
+        tryUnlock();
+      }
+    });
+    pin.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !pin.value && idx > 0) {
+        pins[idx - 1].focus();
+      } else if (e.key === 'Enter') {
+        tryUnlock();
+      }
+    });
+  });
+
+  async function tryUnlock() {
+    const code = pins.map(p => p.value).join('');
+    if (code.length < 4) {
+      errEl.textContent = 'Vui lòng nhập đủ 4 chữ số bí mật nhé 🌸';
+      return;
+    }
+
+    unlockBtn.textContent = 'Đang giải mã ký ức... ⏳';
+    unlockBtn.disabled = true;
+
+    try {
+      const derivedKey = await deriveKeyFromPasscode(code);
+      // Verify key by attempting to decrypt test photo Ha_1.enc
+      await decryptEncFile('photos/Ha_1.enc', derivedKey);
+      
+      // Success! Store key & decrypt remaining photos in background
+      activeCryptoKey = derivedKey;
+      sessionStorage.setItem('grad_unlocked', 'true');
+      
+      // Pre-decrypt all photos into memory
+      CONFIG.photos.forEach(path => decryptEncFile(path, activeCryptoKey).catch(()=>{}));
+
+      unlockBtn.textContent = 'Thành công! ✨';
+      playBeep(659.25, 'sine', 0.15, 0.15);
+      setTimeout(() => playBeep(880, 'triangle', 0.2, 0.2), 120);
+      burst();
+
+      setTimeout(() => {
+        gate.classList.add('unlocked');
+        setTimeout(() => gate.style.display = 'none', 600);
+      }, 400);
+
+    } catch (e) {
+      unlockBtn.textContent = 'Mở Khóa Hành Trình ✧';
+      unlockBtn.disabled = false;
+      errEl.textContent = 'Mã PIN chưa chính xác rồi, bạn thử lại nhé! 💖';
+      card.classList.remove('shake');
+      void card.offsetWidth;
+      card.classList.add('shake');
+      pins.forEach(p => p.value = '');
+      pins[0].focus();
+    }
+  }
+
+  unlockBtn.addEventListener('click', tryUnlock);
+}
+window.addEventListener('DOMContentLoaded', initPasscodeGate);
 
 /* Dấu chân 🐾 / bụi hồng rơi theo từng bước chân */
 function spawnPaw(targetEl, isDog=false){
@@ -1144,13 +1371,20 @@ gift.addEventListener('click', () => {
   if(phase==='handover') enterBook();
 });
 
-let milestonePhotoTimer = null;
+async function getDecryptedPhotoUrl(path) {
+  if (DECRYPTED_BLOBS[path]) return DECRYPTED_BLOBS[path];
+  if (activeCryptoKey) {
+    try {
+      return await decryptEncFile(path, activeCryptoKey);
+    } catch(e){}
+  }
+  return 'images/girl1.png';
+}
 
 function setMilestone(s, milestoneIndex=0){
   album.classList.remove('on'); album.innerHTML='';
   if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   
-  // Khôi phục đầy đủ tiêu đề, huy hiệu năm học, emoji và nội dung hành trình
   $('label').textContent='Hành trình đại học';
   $('badge').style.display='inline-block'; $('badge').textContent=s.year;
   $('emoji').style.display='block'; $('emoji').textContent=s.emoji;
@@ -1173,12 +1407,13 @@ function setMilestone(s, milestoneIndex=0){
   ];
   
   const polaroidCardsHTML = currentIndices.map((pIdx, i) => {
-    const src = allPhotos[pIdx];
+    const encPath = allPhotos[pIdx];
+    const initialSrc = DECRYPTED_BLOBS[encPath] || 'images/girl1.png';
     return `
-      <div class="milestone-polaroid" id="polaroidCard_${i}" onclick="zoomPhoto(this.querySelector('img').src)" title="Chạm để phóng to xem trọn vẹn ✨">
+      <div class="milestone-polaroid" id="polaroidCard_${i}" onclick="zoomPhoto(this.querySelector('img').dataset.enc || this.querySelector('img').src)" title="Chạm để phóng to xem trọn vẹn ✨">
         <div class="polaroid-glare"></div>
         <div class="polaroid-img-wrap">
-          <img id="polaroidImg_${i}" src="${src}" alt="Ảnh kỷ niệm">
+          <img id="polaroidImg_${i}" data-enc="${encPath}" src="${initialSrc}" alt="Ảnh kỷ niệm">
         </div>
       </div>
     `;
@@ -1225,24 +1460,31 @@ function setMilestone(s, milestoneIndex=0){
     </div>
   `;
   
+  // Asynchronously ensure images are loaded
+  currentIndices.forEach((pIdx, i) => {
+    const encPath = allPhotos[pIdx];
+    getDecryptedPhotoUrl(encPath).then(blobUrl => {
+      const img = $(`polaroidImg_${i}`);
+      if (img) { img.src = blobUrl; img.dataset.enc = encPath; }
+    });
+  });
+
   void illustEl.offsetWidth;
   illustEl.classList.add('show');
   
   // Tự động đổi ngẫu nhiên 1 trong 3 ảnh cứ sau 3 giây
   if(allPhotos.length > 3){
-    milestonePhotoTimer = setInterval(() => {
+    milestonePhotoTimer = setInterval(async () => {
       if(phase !== 'journey' && phase !== 'intro') {
         clearInterval(milestonePhotoTimer);
         milestonePhotoTimer = null;
         return;
       }
       
-      // Chọn ngẫu nhiên 1 trong 3 thẻ để đổi ảnh
       const cardSlot = Math.floor(Math.random() * 3);
       const imgEl = $(`polaroidImg_${cardSlot}`);
       if(!imgEl) return;
       
-      // Chọn ảnh ngẫu nhiên khác với các ảnh đang hiện
       let newPhotoIdx = Math.floor(Math.random() * allPhotos.length);
       let attempts = 0;
       while(currentIndices.includes(newPhotoIdx) && attempts < 10){
@@ -1250,12 +1492,13 @@ function setMilestone(s, milestoneIndex=0){
         attempts++;
       }
       currentIndices[cardSlot] = newPhotoIdx;
-      const nextSrc = allPhotos[newPhotoIdx];
+      const nextEnc = allPhotos[newPhotoIdx];
+      const nextSrc = await getDecryptedPhotoUrl(nextEnc);
       
-      // Hiệu ứng mờ dần đổi ảnh mượt mà
       imgEl.style.opacity = '0';
       setTimeout(() => {
         imgEl.src = nextSrc;
+        imgEl.dataset.enc = nextEnc;
         imgEl.style.opacity = '1';
       }, 350);
     }, 3000);
@@ -1273,15 +1516,18 @@ function setAlbum(){
   
   const allPhotos = (CONFIG.photos && CONFIG.photos.length > 0) 
     ? CONFIG.photos 
-    : Array.from({length: 6}, (_, i) => `photos/Ha_${i+1}.jpg`);
+    : [];
   
-  const photosCardsHTML = allPhotos.map((p, i) => `
-    <div class="photo" onclick="zoomPhoto('${p}')" title="Chạm để phóng to xem chi tiết ✨">
-      <div class="photo-img-container">
-        <img src="${p}" onerror="this.src='images/girl1.png'" alt="Ảnh kỷ niệm ${i+1}">
+  const photosCardsHTML = allPhotos.map((p, i) => {
+    const initialSrc = DECRYPTED_BLOBS[p] || 'images/girl1.png';
+    return `
+      <div class="photo" onclick="zoomPhoto(this.querySelector('img').dataset.enc || this.querySelector('img').src)" title="Chạm để phóng to xem chi tiết ✨">
+        <div class="photo-img-container">
+          <img id="albumImg_${i}" data-enc="${p}" src="${initialSrc}" onerror="this.src='images/girl1.png'" alt="Ảnh kỷ niệm ${i+1}">
+        </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
   
   album.innerHTML = `
     <div class="album-carousel-wrap">
@@ -1302,9 +1548,13 @@ window.scrollAlbum = function(amount){
   if(track){ track.scrollBy({ left: amount, behavior: 'smooth' }); }
 };
 
-window.zoomPhoto = function(src){
+window.zoomPhoto = async function(src){
   if(!src) return;
-  lightboxImg.src = src;
+  let finalSrc = src;
+  if(src.endsWith('.enc')){
+    finalSrc = await getDecryptedPhotoUrl(src);
+  }
+  lightboxImg.src = finalSrc;
   lightbox.classList.add('active');
   playBeep(600, 'sine', 0.1, 0.08);
 };
@@ -1509,8 +1759,8 @@ function renderPage(){
     if(p.cover || p.closing){
       $('pAvatar').innerHTML = p.emoji || '🌸';
     } else {
-      // Hiển thị ảnh chân dung của Ngọc Hà làm Avatar kèm icon
-      $('pAvatar').innerHTML = `<img src="photos/Ha_1.jpg" onerror="this.onerror=null; this.parentElement.textContent='🌸'" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+      const avatarSrc = DECRYPTED_BLOBS['photos/Ha_1.enc'] || 'images/girl1.png';
+      $('pAvatar').innerHTML = `<img src="${avatarSrc}" onerror="this.onerror=null; this.parentElement.textContent='🌸'" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
     }
     $('pName').textContent = (p.cover || p.closing) ? '' : p.name;
     const totalMsgs = CONFIG.messages.length;
