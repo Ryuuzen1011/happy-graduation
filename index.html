@@ -1220,9 +1220,12 @@ function initPasscodeGate() {
 
       unlockBtn.textContent = 'Thành công! ✨';
       gate.classList.add('unlocked');
-      setTimeout(() => gate.style.display = 'none', 600);
+      setTimeout(() => {
+        gate.style.display = 'none';
+        enterIntro();
+      }, 400);
 
-      // Giải mã ngầm ở nền
+      // Giải mã và nạp trước toàn bộ ảnh
       try {
         const derivedKey = await deriveKeyFromPasscode(code);
         activeCryptoKey = derivedKey;
@@ -1232,7 +1235,7 @@ function initPasscodeGate() {
         setTimeout(() => playBeep(880, 'triangle', 0.2, 0.2), 120);
         burst();
       } catch(cryptoErr) {
-        console.warn("Background decryption note:", cryptoErr);
+        console.warn("Decryption note:", cryptoErr);
       }
 
     } catch (e) {
@@ -1564,6 +1567,15 @@ function setAlbum(){
       <button class="album-nav-arrow" onclick="scrollAlbum(200)" title="Ảnh sau">›</button>
     </div>
   `;
+  
+  // Tải và hiển thị toàn bộ ảnh đã giải mã vào Album Carousel
+  allPhotos.forEach((encPath, i) => {
+    getDecryptedPhotoUrl(encPath).then(blobUrl => {
+      const img = $(`albumImg_${i}`);
+      if(img) { img.src = blobUrl; img.dataset.enc = encPath; }
+    });
+  });
+
   album.classList.add('on');
 }
 
