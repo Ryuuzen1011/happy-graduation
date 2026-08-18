@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Chúc mừng tốt nghiệp — Nguyễn Ngọc Hà 🎓</title>
+<title>Chúc mừng tốt nghiệp — Nguyễn Ngọc Hà! 🎓</title>
 <script src="photos_bundle.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap');
@@ -553,13 +553,61 @@
   .btn:active{transform:translate(2px,3px); box-shadow:1px 1px 0 rgba(122,74,99,.22)}
   .btn-primary{background:#ff8fbb; color:#fff; font-size:17px; padding:12px 28px;
     text-shadow:0 1.5px 0 rgba(122,74,99,.28)}
-  .btn-ghost{background:#fff; color:var(--rose-deep); font-size:15px; padding:10px 22px}
-  .btn-ghost:disabled{opacity:.4; cursor:default}
-  .btn-ghost:disabled:hover{transform:none; box-shadow:var(--sticker)}
   .nav{position:fixed; bottom:28px; left:50%; transform:translateX(-50%); z-index:30; display:flex; gap:12px; width:max-content}
   
-  #music{position:fixed; top:14px; right:14px; z-index:50; background:#fff;
-    color:var(--rose-deep); padding:8px 14px; font-size:13px}
+  /* ===== Cute Pastel Volume & Music HUD ===== */
+  .audio-hud{
+    position:fixed; top:14px; right:14px; z-index:50;
+    display:flex; align-items:center; background:#fff;
+    border:2.5px solid var(--ink-line); border-radius:24px;
+    padding:4px 10px 4px 6px; box-shadow:var(--sticker);
+    transition:all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    user-select:none; -webkit-user-select:none;
+  }
+  .audio-hud:hover{
+    box-shadow:4px 6px 0 rgba(122,74,99,.22);
+    transform:translateY(-1px);
+  }
+  .audio-toggle-btn{
+    background:none; border:none; outline:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border-radius:50%;
+    font-size:17px; color:var(--rose-deep);
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .audio-toggle-btn:hover{
+    background:#fff0f6; transform:scale(1.12);
+  }
+  .audio-toggle-btn:active{
+    transform:scale(0.92);
+  }
+  .volume-slider-wrap{
+    display:flex; align-items:center; width:74px; margin-left:4px;
+    transition:width 0.25s ease;
+  }
+  .volume-slider{
+    -webkit-appearance:none; appearance:none;
+    width:100%; height:6px; border-radius:3px;
+    background:linear-gradient(to right, #ff8fbb 0%, #ff8fbb 70%, #fbd5e5 70%, #fbd5e5 100%);
+    outline:none; cursor:pointer; border:1px solid rgba(122,74,99,0.25);
+  }
+  .volume-slider::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:15px; height:15px; border-radius:50%;
+    background:#fff; border:2px solid var(--rose-deep);
+    box-shadow:0 2px 4px rgba(122,74,99,0.3);
+    cursor:pointer; transition:transform 0.15s ease;
+  }
+  .volume-slider::-webkit-slider-thumb:hover{
+    transform:scale(1.25); background:#fff0f6;
+  }
+  .volume-slider::-moz-range-thumb{
+    width:15px; height:15px; border-radius:50%;
+    background:#fff; border:2px solid var(--rose-deep);
+    box-shadow:0 2px 4px rgba(122,74,99,0.3);
+    cursor:pointer; transition:transform 0.15s ease;
+  }
+
   #dots{position:fixed; top:16px; left:50%; transform:translateX(-50%); z-index:50; display:flex; gap:8px}
   #dots .dot{width:10px; height:10px; border-radius:50%; background:#fff; border:2px solid var(--ink-line); transition:transform .2s ease, background .2s ease}
   #dots .dot.on{background:var(--rose); transform:scale(1.3)}
@@ -919,7 +967,7 @@
   <div class="passcode-card" id="passcodeCard">
     <div class="passcode-icon">🔐</div>
     <h2 class="passcode-title">Khu Vườn Kỷ Niệm</h2>
-    <p class="passcode-desc">Trang web chứa hình ảnh và kỷ niệm tốt nghiệp của <strong>Nguyễn Ngọc Hà</strong>. Vui lòng nhập mã PIN để mở khóa.</p>
+    <p class="passcode-desc">Chỉ là một trang web, một món quà từ đáy lòng của tớ. Nơi đây chứa những hình ảnh và kỷ niệm tốt nghiệp của tân cử nhân - <strong>Nguyễn Ngọc Hà</strong>. Hãy nhập mã số để khám phá nhé.</p>
     
     <div class="passcode-input-wrap">
       <input type="text" maxlength="1" class="pin-digit" id="pin0" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autofocus>
@@ -928,7 +976,7 @@
       <input type="text" maxlength="1" class="pin-digit" id="pin3" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
     </div>
     
-    <div class="passcode-hint">💡 Gợi ý: Ngày sinh nhật của cử nhân xinh đẹp (DDMM) 🌸</div>
+    <div class="passcode-hint">💡 Gợi ý: Ngày sinh nhật của tân cử nhân xinh đẹp nhất trong mắt người tạo ra nơi này. (DDMM) 🌸</div>
     <button class="passcode-btn" id="unlockBtn">Mở Khóa Hành Trình ✧</button>
     <div class="passcode-err" id="passcodeErr"></div>
   </div>
@@ -949,7 +997,16 @@
 </div>
 
 <div id="dots"></div>
-<button id="music" class="btn">🎵 Bật nhạc</button>
+
+<!-- Cute Pastel Volume & Music HUD -->
+<div class="audio-hud" id="audioHud" title="Điều chỉnh âm lượng & bật/tắt nhạc">
+  <button class="audio-toggle-btn" id="audioToggleBtn" title="Bật/Tắt âm thanh">🔊</button>
+  <div class="volume-slider-wrap">
+    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="0.7" title="Âm lượng">
+  </div>
+</div>
+
+<audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
 
 <div id="world">
   <div id="citySkyline"></div>
@@ -1023,8 +1080,8 @@ const CONFIG = {
   major: "Tài chính ngân hàng",
   milestones: [
     { emoji:"🎒", year:"Năm nhất", title:"Ngày đầu bước vào đại học", desc:"Cô sinh viên Tài chính ngân hàng năm nhất rụt rè, háo hức với giảng đường mới và những người bạn mới." },
-    { emoji:"📚", year:"Những năm tháng", title:"Thanh xuân trên giảng đường", desc:"Bao đêm ôn thi, bao lần chạy deadline, bao kỷ niệm bên bạn bè — tất cả đã tạo nên một hành trình tuyệt vời." },
-    { emoji:"🎓", year:"Ngày tốt nghiệp", title:"Khoảnh khắc vinh quang", desc:"Hôm nay, Ngọc Hà chính thức trở thành Cử nhân Tài chính ngân hàng. Chúc mừng cậu! 🎉" }
+    { emoji:"📚", year:"Những năm tháng đại học", title:"Thanh xuân trên giảng đường", desc:"Bao đêm ôn thi, bao lần chạy deadline, bao kỷ niệm bên bạn bè — tất cả đã tạo nên một hành trình tuyệt vời. Thật tiếc khi không thể góp mặt cùng cậu trong tất cả những khoảnh khắc đó, nhưng cũng rất vui khi biết cậu đã có những kỉ niệm đẹp. " },
+    { emoji:"🎓", year:"Ngày tốt nghiệp", title:"Khoảnh khắc đã ngóng chờ bấy lâu", desc:"Hôm nay, cậu đã chính thức tốt nghiệp mái trường đại học, trở thành một Tân cử nhân Tài chính ngân hàng đầy mạnh mẽ, sẵn sàng để tiến tiếp. Chúc mừng Hà nhé! 🎉" }
   ],
   showAlbum: true,
   photos: [
@@ -1042,7 +1099,11 @@ const CONFIG = {
     "photos/Ha_12.jpg",
     "photos/Ha_13.jpg",
     "photos/Ha_14.jpg",
-    "photos/Ha_15.jpg"
+    "photos/Ha_15.jpg",
+    "photos/Ha_16.jpg",
+    "photos/Ha_17.jpg",
+    "photos/Ha_18.jpg",
+    "photos/Ha_19.jpg"
   ],
   messages: [
     { name:"Người bạn thân", emoji:"💞", text:"Chúc mừng Hà đã tốt nghiệp xuất sắc! Tớ tự hào về cậu lắm. Cảm ơn vì đã luôn ở bên tớ suốt những năm tháng đại học." },
@@ -1246,14 +1307,15 @@ function initPasscodeGate() {
         enterIntro();
       }, 350);
 
+      playBackgroundMusic();
       playBeep(659.25, 'sine', 0.15, 0.15);
       setTimeout(() => playBeep(880, 'triangle', 0.2, 0.2), 120);
       burst();
 
     } catch (e) {
-      unlockBtn.textContent = 'Mở Khóa Hành Trình ✧';
+      unlockBtn.textContent = 'Sẵn sàng khám phá ✧';
       unlockBtn.disabled = false;
-      errEl.textContent = 'Mã PIN chưa chính xác rồi, bạn thử lại nhé! 💖';
+      errEl.textContent = 'Mã PIN chưa chính xác rồi, thử lại nhé! 💖';
       card.classList.remove('shake');
       void card.offsetWidth;
       card.classList.add('shake');
@@ -1355,11 +1417,11 @@ const stops = CONFIG.milestones.map(m=>({type:'milestone',...m}));
 if(CONFIG.showAlbum) stops.push({type:'album'});
 const N = stops.length;
 
-const pages = [{cover:true, emoji:'🎓', title:'Sổ tay lời chúc',
-    sub:'Dành tặng '+CONFIG.friendName+' — lật từng trang để đọc nhé ❤'}]
+const pages = [{cover:true, emoji:'🎓', title:'Món quà đặc biệt',
+    sub:'Dành tặng '+CONFIG.friendName+' — một người bạn đặc biệt của tác giả nơi này. Tớ đã cố gắng thu thập nhiều nhất có thể, nhớ lật từng trang để đọc nhé ❤'}]
   .concat(CONFIG.messages.map(m=>({name:m.name, emoji:m.emoji||'💌', text:m.text})))
   .concat([
-    {closing:true, emoji:'🎉', title:'Chúc bạn luôn hạnh phúc!', sub:'Chặng đường mới đang chờ bạn phía trước 🌸'}
+    {closing:true, emoji:'🎉', title:'Đôi lời cuối', sub:'Mặc dù đã không thể góp mặt, góp sức nhiều trong những kỉ niệm thời đại học của cậu, nhưng tớ vẫn luôn nghĩ đến cậu. Mong rằng sau khi quyển sách này đóng lại thì cậu sẽ giữ gìn cẩn thận, thỉnh thoảng nhớ mở ra xem lại nhé. Hãy viết tiếp chương truyện mới, trên một chặng đường mới đầy bất ngờ đang chờ cậu phía trước nhé! 🌸'}
   ]);
 
 const dotsN = 1 + N + 2;
@@ -1400,7 +1462,7 @@ girl.addEventListener('click', (e) => {
   void girl.offsetWidth;
   girl.classList.add('cheer');
   playBeep(650, 'sine', 0.2, 0.15);
-  showPopTag(girl, ['Tốt nghiệp rồi! 🎓✨', 'Yeahh! 🌸', 'Tân cử nhân Hà 💖'][Math.floor(Math.random()*3)]);
+  showPopTag(girl, ['Tốt nghiệp rồi! 🎓✨', 'Yeahh! 🌸', 'Tránh đường cho Tân cử nhân! 💖'][Math.floor(Math.random()*3)]);
   createSparkles(e.clientX || (girl.offsetLeft + 60), e.clientY || girl.offsetTop, 10);
 });
 
@@ -1531,9 +1593,9 @@ function setAlbum(){
   if(illustEl){ illustEl.classList.remove('show'); illustEl.innerHTML=''; }
   if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   
-  $('label').textContent='Kỷ niệm thanh xuân'; $('badge').style.display='none';
+  $('label').textContent='Những khung hình kỉ niệm'; $('badge').style.display='none';
   $('emoji').style.display='block'; $('emoji').textContent='📸';
-  $('title').textContent='Album kỷ niệm'; $('desc').textContent='Vuốt hoặc bấm để xem những khoảnh khắc đáng yêu của Ngọc Hà 💕';
+  $('title').textContent='Album kỷ niệm'; $('desc').textContent='Vuốt hoặc bấm để xem những khung hình vô cùng xinh đẹp, đáng yêu của cậu nhé! 💕';
   
   const allPhotos = (CONFIG.photos && CONFIG.photos.length > 0) 
     ? CONFIG.photos 
@@ -1596,8 +1658,8 @@ function enterIntro(){
   party.classList.remove('show'); crowdClap(false); gift.style.opacity=0;
   $('label').textContent='Happy Graduation'; $('badge').style.display='none';
   $('emoji').style.display='block'; $('emoji').textContent='🌸';
-  $('title').innerHTML='Chúc mừng tốt nghiệp<br>'+CONFIG.friendName+' 🎓';
-  $('desc').textContent='Cùng nhìn lại hành trình đại học tuyệt vời của cậu, và xem điều bất ngờ ở cuối con đường nhé!';
+  $('title').innerHTML='Con đường kỉ niệm của<br>'+CONFIG.friendName+' 🎓';
+  $('desc').textContent='Cùng nhìn lại một hành trình đại học tuyệt vời đầy màu sắc của cậu, và xem điều bất ngờ ở cuối con đường nhé!';
   const illustEl = $('stageIllustration');
   if(illustEl){ illustEl.classList.remove('show'); illustEl.innerHTML=''; }
   album.classList.remove('on'); setDot(0); updateNav();
@@ -1638,7 +1700,7 @@ function enterCelebrate(){
     album.classList.remove('on'); $('badge').style.display='none';
     $('label').textContent='Cuối con đường'; $('emoji').style.display='none';
     $('title').textContent='🎉 Chúc mừng tốt nghiệp! 🎉';
-    $('desc').textContent='Mọi người đang đứng đó, vỗ tay chúc mừng '+CONFIG.friendName+'!';
+    $('desc').textContent='Mọi người đều có mặt, ngóng chờ để chúc mừng cậu!';
   });
   
   // Khi tới nơi, cô gái bước hẳn vào giữa đám đông rồi từ từ mờ dần (hòa vào mọi người)
@@ -1683,10 +1745,10 @@ function enterHandover(){
     gift.style.left= isMobile ? '42%' : '49%'; 
     gift.style.bottom='205px'; }); });
   fadeStage(()=>{
-    $('label').textContent='Khoảnh khắc đặc biệt'; $('badge').style.display='none';
+    $('label').textContent='Chương đặc biệt'; $('badge').style.display='none';
     $('emoji').style.display='block'; $('emoji').textContent='💝';
-    $('title').textContent='Một món quà nhỏ';
-    $('desc').textContent='Mọi người cùng trao tặng '+CONFIG.friendName+' quyển sách lời chúc. Bấm “Mở sách” để đọc nhé.';
+    $('title').textContent='Một bất ngờ nhỏ';
+    $('desc').textContent='Mọi người có một món quà đặc biệt dành tặng cậu. Bấm “Mở sách” để đọc nhé.';
   });
   setDot(1+N); updateNav();
 }
@@ -2070,32 +2132,91 @@ function burstCannon(x, y){
   requestAnimationFrame(cloop); 
 })();
 
-/* ===== Music Melody Generator ===== */
-let playing=false, mtimer, mi=0; const mbtn=$('music');
-const melody=[523.25,587.33,659.25,783.99,659.25,587.33,523.25,440,493.88,523.25,587.33,523.25];
+/* ===== Background Music & Volume Controller ===== */
+const bgAudio = $('bgMusic');
+const audioToggleBtn = $('audioToggleBtn');
+const volumeSlider = $('volumeSlider');
+let isMusicPlaying = false;
+let lastVolume = 0.7;
 
-function note(f){ 
-  initAudio();
-  const o=actx.createOscillator(), g=actx.createGain(); 
-  o.type='sine'; o.frequency.value=f; 
-  o.connect(g); g.connect(actx.destination); 
-  const t=actx.currentTime; 
-  g.gain.setValueAtTime(0,t); 
-  g.gain.linearRampToValueAtTime(.18,t+.05); 
-  g.gain.exponentialRampToValueAtTime(.001,t+.9); 
-  o.start(t); o.stop(t+.95); 
+function updateVolumeUI(val){
+  if(!volumeSlider) return;
+  const pct = Math.round(val * 100);
+  volumeSlider.style.background = `linear-gradient(to right, #ff8fbb 0%, #ff8fbb ${pct}%, #fbd5e5 ${pct}%, #fbd5e5 100%)`;
+  if(audioToggleBtn){
+    if(val === 0 || !isMusicPlaying){
+      audioToggleBtn.textContent = '🔇';
+      audioToggleBtn.title = 'Bật âm thanh';
+    } else if(val < 0.4){
+      audioToggleBtn.textContent = '🔉';
+      audioToggleBtn.title = 'Tắt tiếng';
+    } else {
+      audioToggleBtn.textContent = '🔊';
+      audioToggleBtn.title = 'Tắt tiếng';
+    }
+  }
 }
 
-mbtn.addEventListener('click',()=>{ 
-  initAudio();
-  if(playing){ 
-    playing=false; clearInterval(mtimer); mbtn.textContent='🎵 Bật nhạc'; 
-  } else { 
-    playing=true; mbtn.textContent='🔇 Tắt nhạc'; 
-    note(melody[mi=0]); 
-    mtimer=setInterval(()=>{ mi=(mi+1)%melody.length; note(melody[mi]); }, 620); 
-  } 
-});
+function playBackgroundMusic(){
+  if(!bgAudio) return;
+  if(bgAudio.volume === 0 && lastVolume > 0){
+    bgAudio.volume = lastVolume;
+    if(volumeSlider) volumeSlider.value = lastVolume;
+  }
+  bgAudio.play().then(() => {
+    isMusicPlaying = true;
+    updateVolumeUI(bgAudio.volume);
+  }).catch(() => {
+    isMusicPlaying = false;
+    updateVolumeUI(0);
+  });
+}
+
+function pauseBackgroundMusic(){
+  if(!bgAudio) return;
+  bgAudio.pause();
+  isMusicPlaying = false;
+  updateVolumeUI(0);
+}
+
+if(volumeSlider){
+  // Khởi tạo mức âm lượng mặc định 70%
+  if(bgAudio) bgAudio.volume = 0.7;
+  updateVolumeUI(0.7);
+  
+  volumeSlider.addEventListener('input', (e) => {
+    const val = parseFloat(e.target.value);
+    if(bgAudio){
+      bgAudio.volume = val;
+      if(val > 0) lastVolume = val;
+    }
+    if(val > 0 && !isMusicPlaying){
+      playBackgroundMusic();
+    } else {
+      updateVolumeUI(val);
+    }
+  });
+}
+
+if(audioToggleBtn){
+  audioToggleBtn.addEventListener('click', () => {
+    if(!bgAudio) return;
+    if(isMusicPlaying && bgAudio.volume > 0){
+      // Tắt tiếng / Mute
+      lastVolume = bgAudio.volume || 0.7;
+      bgAudio.volume = 0;
+      if(volumeSlider) volumeSlider.value = 0;
+      updateVolumeUI(0);
+    } else {
+      // Bật lại tiếng / Unmute
+      const restoreVol = (lastVolume > 0) ? lastVolume : 0.7;
+      bgAudio.volume = restoreVol;
+      if(volumeSlider) volumeSlider.value = restoreVol;
+      playBackgroundMusic();
+      updateVolumeUI(restoreVol);
+    }
+  });
+}
 </script>
 </body>
 </html>
