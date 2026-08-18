@@ -921,10 +921,10 @@
     <p class="passcode-desc">Trang web chứa hình ảnh và kỷ niệm tốt nghiệp của <strong>Nguyễn Ngọc Hà</strong>. Vui lòng nhập mã PIN để mở khóa.</p>
     
     <div class="passcode-input-wrap">
-      <input type="password" maxlength="1" class="pin-digit" id="pin0" inputmode="numeric" autofocus>
-      <input type="password" maxlength="1" class="pin-digit" id="pin1" inputmode="numeric">
-      <input type="password" maxlength="1" class="pin-digit" id="pin2" inputmode="numeric">
-      <input type="password" maxlength="1" class="pin-digit" id="pin3" inputmode="numeric">
+      <input type="text" maxlength="1" class="pin-digit" id="pin0" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autofocus>
+      <input type="text" maxlength="1" class="pin-digit" id="pin1" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+      <input type="text" maxlength="1" class="pin-digit" id="pin2" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+      <input type="text" maxlength="1" class="pin-digit" id="pin3" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
     </div>
     
     <div class="passcode-hint">💡 Gợi ý: Ngày sinh nhật của cử nhân xinh đẹp (DDMM) 🌸</div>
@@ -1159,17 +1159,30 @@ async function decryptEncFile(filePath, key) {
 // Passcode Gate Controller
 function initPasscodeGate() {
   const gate = $('passcodeGate');
+  if(!gate) return;
   const card = $('passcodeCard');
   const errEl = $('passcodeErr');
   const unlockBtn = $('unlockBtn');
   const pins = [$('pin0'), $('pin1'), $('pin2'), $('pin3')];
 
-  // Auto focus pin inputs
+  // Auto focus pin inputs & Paste handler
   pins.forEach((pin, idx) => {
+    if(!pin) return;
     pin.addEventListener('input', (e) => {
       if (pin.value && idx < 3) pins[idx + 1].focus();
       errEl.textContent = '';
       if (pins.every(p => p.value.length === 1)) {
+        tryUnlock();
+      }
+    });
+    pin.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasteData = (e.clipboardData || window.clipboardData).getData('text').trim();
+      if (pasteData.length === 4) {
+        pasteData.split('').forEach((char, i) => {
+          if (pins[i]) pins[i].value = char;
+        });
+        pins[3].focus();
         tryUnlock();
       }
     });
@@ -1182,6 +1195,13 @@ function initPasscodeGate() {
     });
   });
 
+  // Hashing SHA-256 (Zero plaintext leak)
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str + CRYPTO_SALT));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  const TARGET_HASH = "8a2ee3daecbf318eb5f22511475c88b209e7c5b62b1bb92361dc81f2113ea499";
+
   async function tryUnlock() {
     const code = pins.map(p => p.value).join('');
     if (code.length < 4) {
@@ -1193,10 +1213,17 @@ function initPasscodeGate() {
     unlockBtn.disabled = true;
 
     try {
+      // 1. Kiểm tra xác thực mã bí mật
+      const hash = await sha256(code);
       const derivedKey = await deriveKeyFromPasscode(code);
-      // Verify key by attempting to decrypt test photo Ha_1.enc
-      await decryptEncFile('photos/Ha_1.enc', derivedKey);
       
+      // Thử giải mã test file
+      await decryptEncFile('photos/Ha_1.enc', derivedKey).catch(()=>{});
+      
+      if (hash !== TARGET_HASH) {
+        throw new Error("Invalid passcode");
+      }
+
       // Success! Store key & decrypt remaining photos in background
       activeCryptoKey = derivedKey;
       sessionStorage.setItem('grad_unlocked', 'true');
@@ -1212,9 +1239,10 @@ function initPasscodeGate() {
       setTimeout(() => {
         gate.classList.add('unlocked');
         setTimeout(() => gate.style.display = 'none', 600);
-      }, 400);
+      }, 350);
 
     } catch (e) {
+      console.warn("Unlock failed:", e);
       unlockBtn.textContent = 'Mở Khóa Hành Trình ✧';
       unlockBtn.disabled = false;
       errEl.textContent = 'Mã PIN chưa chính xác rồi, bạn thử lại nhé! 💖';
@@ -1226,9 +1254,11 @@ function initPasscodeGate() {
     }
   }
 
-  unlockBtn.addEventListener('click', tryUnlock);
+  if(unlockBtn) unlockBtn.addEventListener('click', tryUnlock);
 }
-window.addEventListener('DOMContentLoaded', initPasscodeGate);
+
+// Khởi chạy ngay lập tức
+initPasscodeGate();
 
 /* Dấu chân 🐾 / bụi hồng rơi theo từng bước chân */
 function spawnPaw(targetEl, isDog=false){
