@@ -1218,22 +1218,22 @@ function initPasscodeGate() {
         throw new Error("Invalid passcode");
       }
 
-      const derivedKey = await deriveKeyFromPasscode(code);
-      activeCryptoKey = derivedKey;
-      sessionStorage.setItem('grad_unlocked', 'true');
-      
-      // Pre-decrypt all photos into memory
-      CONFIG.photos.forEach(path => decryptEncFile(path, activeCryptoKey).catch(()=>{}));
-
       unlockBtn.textContent = 'Thành công! ✨';
-      playBeep(659.25, 'sine', 0.15, 0.15);
-      setTimeout(() => playBeep(880, 'triangle', 0.2, 0.2), 120);
-      burst();
+      gate.classList.add('unlocked');
+      setTimeout(() => gate.style.display = 'none', 600);
 
-      setTimeout(() => {
-        gate.classList.add('unlocked');
-        setTimeout(() => gate.style.display = 'none', 600);
-      }, 350);
+      // Giải mã ngầm ở nền
+      try {
+        const derivedKey = await deriveKeyFromPasscode(code);
+        activeCryptoKey = derivedKey;
+        sessionStorage.setItem('grad_unlocked', 'true');
+        CONFIG.photos.forEach(path => decryptEncFile(path, activeCryptoKey).catch(()=>{}));
+        playBeep(659.25, 'sine', 0.15, 0.15);
+        setTimeout(() => playBeep(880, 'triangle', 0.2, 0.2), 120);
+        burst();
+      } catch(cryptoErr) {
+        console.warn("Background decryption note:", cryptoErr);
+      }
 
     } catch (e) {
       console.warn("Unlock failed:", e);
