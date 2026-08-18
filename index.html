@@ -1200,7 +1200,7 @@ function initPasscodeGate() {
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str + CRYPTO_SALT));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
-  const TARGET_HASH = "8a2ee3daecbf318eb5f22511475c88b209e7c5b62b1bb92361dc81f2113ea499";
+  const TARGET_HASH = "6deb29f4d42127296898f5273ee930b80a3996fac14eee8786448ebb725a1045";
 
   async function tryUnlock() {
     const code = pins.map(p => p.value).join('');
@@ -1215,15 +1215,11 @@ function initPasscodeGate() {
     try {
       // 1. Kiểm tra xác thực mã bí mật
       const hash = await sha256(code);
-      const derivedKey = await deriveKeyFromPasscode(code);
-      
-      // Thử giải mã test file
-      await decryptEncFile('photos/Ha_1.enc', derivedKey).catch(()=>{});
-      
       if (hash !== TARGET_HASH) {
         throw new Error("Invalid passcode");
       }
 
+      const derivedKey = await deriveKeyFromPasscode(code);
       // Success! Store key & decrypt remaining photos in background
       activeCryptoKey = derivedKey;
       sessionStorage.setItem('grad_unlocked', 'true');
