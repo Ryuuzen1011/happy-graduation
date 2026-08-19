@@ -2229,19 +2229,28 @@ nextBtn.addEventListener('click',()=>{
   
   if(phase==='intro'){
     isTransitioning = true;
-    petalWipe(()=>{ enterJourney(0); isTransitioning = false; });
+    petalWipe(()=>{ 
+      enterJourney(0); 
+      setTimeout(() => { isTransitioning = false; }, 300);
+    });
   } else if(phase==='journey'){
     if(si < N - 1){
       enterJourney(si + 1);
     } else {
       isTransitioning = true;
-      petalWipe(()=>{ enterCelebrate(); isTransitioning = false; });
+      petalWipe(()=>{ 
+        enterCelebrate(); 
+        setTimeout(() => { isTransitioning = false; }, 300);
+      });
     }
   } else if(phase==='celebrate'){
     enterHandover();
   } else if(phase==='handover'){
     isTransitioning = true;
-    petalWipe(()=>{ enterBook(); isTransitioning = false; });
+    petalWipe(()=>{ 
+      enterBook(); 
+      setTimeout(() => { isTransitioning = false; }, 300);
+    });
   } else if(phase==='book'){ 
     if(pageIndex < pages.length - 1){ 
       pageIndex++; 
@@ -2262,11 +2271,17 @@ prevBtn.addEventListener('click',()=>{
       enterJourney(si - 1);
     } else {
       isTransitioning = true;
-      petalWipe(()=>{ enterIntro(); isTransitioning = false; });
+      petalWipe(()=>{ 
+        enterIntro(); 
+        setTimeout(() => { isTransitioning = false; }, 300);
+      });
     }
   } else if(phase==='celebrate'){
     isTransitioning = true;
-    petalWipe(()=>{ enterJourney(N - 1); isTransitioning = false; });
+    petalWipe(()=>{ 
+      enterJourney(N - 1); 
+      setTimeout(() => { isTransitioning = false; }, 300);
+    });
   } else if(phase==='handover'){
     enterCelebrate();
   } else if(phase==='book'){ 
