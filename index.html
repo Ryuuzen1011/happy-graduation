@@ -861,115 +861,157 @@
   body.reading #party, body.reading #giftBook{ display:none !important }
   body.reading .nav{ display:none !important; }
 
-  /* ===== Responsive Breakpoints (Mobile & Tablet Optimization) ===== */
+  /* ===== Responsive Breakpoints (Mobile & Tablet Dynamic Optimization) ===== */
   @media (max-width: 680px) {
     /* Đưa mây lên cao không chạm vùng chữ */
-    .cloud:nth-child(4){top:2% !important; left:2% !important; width:85px !important; opacity:0.5;}
+    .cloud:nth-child(4){top:2% !important; left:2% !important; width:80px !important; opacity:0.4;}
     .cloud:nth-child(5){display:none !important;}
-    .cloud:nth-child(6){top:4% !important; right:2% !important; width:80px !important; opacity:0.45;}
-    #sun{width:42px; top:8px; left:8px;}
-    #rainbow{width:85px; height:42px; top:8px; right:2%; opacity:0.3;}
+    .cloud:nth-child(6){top:3% !important; right:2% !important; width:75px !important; opacity:0.35;}
+    #sun{width:38px; top:8px; left:8px;}
+    #rainbow{width:75px; height:38px; top:6px; right:60px; opacity:0.25;}
     #balloon{display:none;}
     
-    #stage{padding-top:40px; padding-left:12px; padding-right:12px;}
+    #stage{padding-top:36px; padding-left:8px; padding-right:8px; width:100%;}
     #stageCardWrap{
-      padding:10px 14px 12px; border-radius:18px;
-      background:rgba(255, 245, 248, 0.88);
-      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-      border:2px solid rgba(255, 255, 255, 0.95);
-      box-shadow:0 8px 20px rgba(214, 59, 122, 0.12);
-      max-width:92vw;
+      padding:6px 10px 8px; border-radius:16px;
+      background:rgba(255, 245, 248, 0.9);
+      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      border:1.5px solid rgba(255, 255, 255, 0.95);
+      box-shadow:0 8px 24px rgba(214, 59, 122, 0.14);
+      max-width:96vw;
     }
-    #emoji{font-size:32px; margin-bottom:2px;}
-    #label{font-size:10.5px; margin-bottom:2px;}
-    #title{font-size:clamp(16.5px, 4.4vw, 20.5px); line-height:1.28; margin-bottom:4px;}
-    #desc{font-size:12.8px; line-height:1.45;}
-    .year-badge{font-size:11px; padding:2px 10px; margin-bottom:3px;}
+    #emoji{font-size:26px; margin-bottom:1px;}
+    #label{font-size:10px; margin-bottom:1px;}
+    #title{font-size:clamp(15px, 4.2vw, 19px); line-height:1.25; margin-bottom:2px;}
+    #desc{font-size:12px; line-height:1.4; max-width:90vw;}
+    .year-badge{font-size:10.5px; padding:2px 8px; margin-bottom:2px;}
     
-    /* 3D Polaroid & Album on Mobile */
-    #stageIllustration{margin-top:8px;}
-    .milestone-polaroid{max-width:145px; padding:5px 5px 12px 5px;}
-    .milestone-polaroid img{height:80px;}
-    .milestone-polaroid-caption{font-size:10.5px; margin-top:3px;}
+    /* ✈️ Chiếc máy bay & Dải Banner ảnh Polaroid tự động Scale vừa vặn Mobile */
+    #stageIllustration{
+      margin-top:6px; width:100%; display:flex; justify-content:center;
+      transform-origin:top center;
+    }
+    .sky-plane-banner-wrap{
+      transform:scale(0.72);
+      transform-origin:top center;
+      margin-bottom:-45px;
+    }
+    .plane-banner-body{
+      gap:8px; padding:6px 8px; border-radius:14px;
+    }
+    .milestone-polaroid{
+      width:115px; height:155px; padding:4px; border-radius:10px;
+    }
+    .milestone-polaroid img{
+      height:100%; width:100%; object-fit:cover;
+    }
+    .sky-airplane-leader{
+      right:-82px; top:-20px;
+    }
+    .sky-airplane{
+      width:75px; height:50px;
+    }
+    .plane-tow-rope{
+      width:30px; height:18px;
+    }
     
-    #album{grid-template-columns:repeat(3,1fr); gap:5px; max-width:290px; margin-top:8px;}
-    .photo{font-size:9.5px; padding:3px;}
-    .photo::before{font-size:10px; top:-3px;}
+    /* 📸 3D Coverflow Album trên Mobile */
+    #album{width:96vw; margin-top:6px;}
+    .album-track{
+      padding:8px 12px 14px; gap:12px; max-width:100%;
+    }
+    .photo{
+      flex:0 0 125px; height:168px; padding:5px; border-radius:12px;
+    }
+    .photo::before{font-size:11px; top:-6px;}
+    .album-nav-arrow{width:28px; height:28px; font-size:12px;}
     
-    /* Road & Characters */
-    #road{height:105px;}
-    #scenery{bottom:95px; font-size:24px; gap:40px;}
-    #citySkyline{bottom:102px; height:90px; opacity:0.35;}
-    #distantHills{bottom:100px; height:65px;}
-    #girl{height:190px; bottom:95px; left:16%;}
-    #girl.grad{height:220px;}
-    #dog{height:76px; bottom:95px; left:6%;}
-    #giftBook{bottom:165px; font-size:40px;}
+    /* Road & Characters Dynamic Fit */
+    #road{height:96px;}
+    #scenery{bottom:88px; font-size:20px;}
+    .scenery-track{gap:32px; padding-right:32px;}
+    #citySkyline{bottom:92px; height:75px; opacity:0.3;}
+    #distantHills{bottom:90px; height:55px;}
     
-    #party{width:92vw;}
-    #arch{height:320px; bottom:110px;}
-    #crowd{height:195px; bottom:100px;}
-    #archText{bottom:315px; font-size:13px; padding:4px 12px;}
-    #campusBuilding{width:280px; height:180px; bottom:110px;}
+    #girl{height:clamp(165px, 25vh, 195px); bottom:86px; left:22%;}
+    #girl.grad{height:clamp(190px, 28vh, 225px);}
+    #dog{height:clamp(65px, 10vh, 78px); bottom:86px; left:4%;}
+    #giftBook{bottom:150px; font-size:36px;}
     
-    #dots{top:10px; gap:5px;}
-    #dots .dot{width:7px; height:7px;}
-    #music{top:8px; right:8px; padding:5px 10px; font-size:11.5px;}
+    #party{width:95vw;}
+    #arch{height:280px; bottom:96px;}
+    #crowd{height:175px; bottom:88px;}
+    #archText{bottom:275px; font-size:12px; padding:3px 10px;}
+    #campusBuilding{width:240px; height:150px; bottom:96px;}
     
-    .nav{bottom:14px; gap:8px;}
-    .btn-primary{font-size:14px; padding:9px 18px;}
-    .btn-ghost{font-size:13px; padding:7px 14px;}
+    #dots{top:8px; gap:4px;}
+    #dots .dot{width:6px; height:6px;}
+    
+    .audio-hud{
+      top:6px; right:6px; padding:2px 6px 2px 4px; border-radius:20px;
+    }
+    .audio-toggle-btn{width:26px; height:26px; font-size:14px;}
+    .volume-slider-wrap{width:52px; margin-left:2px;}
+    .volume-slider{height:4px;}
+    .volume-slider::-webkit-slider-thumb{width:12px; height:12px;}
+    
+    .nav{bottom:12px; gap:8px;}
+    .btn-primary{font-size:14px; padding:8px 18px;}
+    .btn-ghost{font-size:12.5px; padding:6px 14px;}
     
     /* ===== 3D Book on Mobile Screen ===== */
-    #bookView{padding:12px;}
-    #bookView h2{font-size:19px; margin-bottom:8px;}
-    .book-3d-wrapper{width:92vw; height:75vh; max-height:550px;}
-    .rbook-hardcover{inset:-4px -6px -6px -4px; border-radius:14px;}
-    .rbook-spine{left:-10px; width:14px;}
-    .rbook-pages-stack{right:-4px; width:6px;}
+    #bookView{padding:8px;}
+    #bookView h2{font-size:17px; margin-bottom:6px;}
+    .book-3d-wrapper{width:95vw; height:76vh; max-height:520px;}
+    .rbook-hardcover{inset:-3px -5px -5px -3px; border-radius:12px;}
+    .rbook-spine{left:-8px; width:12px;}
+    .rbook-pages-stack{right:-3px; width:5px;}
     
     .rbook{
-      flex-direction:column; border-radius:10px;
-      box-shadow:inset 0 0 20px rgba(107, 58, 82, 0.06);
+      flex-direction:column; border-radius:8px;
     }
     .rbook::before{display:none;}
     
     .rleft{
-      flex:0 0 72px; padding:6px 12px; flex-direction:row; gap:10px;
+      flex:0 0 62px; padding:4px 10px; flex-direction:row; gap:8px;
       border-right:none; border-bottom:2px dashed rgba(214,59,122,0.2);
       box-shadow:none; justify-content:flex-start;
     }
-    .rleft .avatar{width:46px; height:46px; font-size:22px; border-width:2px; flex-shrink:0;}
-    .rleft .pname{font-size:14.5px; text-align:left; line-height:1.2;}
-    .rleft .pnum{font-size:11px; text-align:left; margin-top:2px;}
+    .rleft .avatar{width:40px; height:40px; font-size:19px; border-width:2px; flex-shrink:0;}
+    .rleft .pname{font-size:13.5px; text-align:left; line-height:1.2;}
+    .rleft .pnum{font-size:10.5px; text-align:left; margin-top:1px;}
     .rleft:hover::before{display:none;}
     
     .rright{
-      flex:1; padding:16px 14px; justify-content:space-between;
+      flex:1; padding:14px 12px; justify-content:space-between;
       overflow-y:auto; -webkit-overflow-scrolling:touch; box-shadow:none;
     }
-    .rright .quote{font-size:14px; line-height:1.6; color:var(--ink);}
-    .rright .sign{margin-top:10px; font-size:13.5px; font-weight:800; color:var(--rose-deep);}
-    .rright .cover-title{font-size:19px; line-height:1.3;}
-    .rright .cover-sub{font-size:13px; margin-top:6px; line-height:1.5;}
+    .rright .quote{font-size:13px; line-height:1.55; color:var(--ink);}
+    .rright .sign{margin-top:8px; font-size:12.5px; font-weight:800; color:var(--rose-deep);}
+    .rright .cover-title{font-size:17px; line-height:1.3;}
+    .rright .cover-sub{font-size:12px; margin-top:4px; line-height:1.45;}
     
     .page-curl-corner{display:none;}
     .close-book-action-btn{
-      margin-top:10px; font-size:13px; padding:6px 16px; align-self:center;
+      margin-top:8px; font-size:12.5px; padding:5px 14px; align-self:center;
     }
   }
 
   @media (max-width: 380px) {
-    #stage{padding-top:34px;}
-    #title{font-size:16px;}
-    #desc{font-size:12px;}
-    .milestone-polaroid{max-width:130px;}
-    .milestone-polaroid img{height:72px;}
-    #album{max-width:250px; gap:3px;}
-    .btn-primary{padding:7px 14px; font-size:13px;}
-    .btn-ghost{padding:7px 10px; font-size:12px;}
-    .book-3d-wrapper{height:78vh;}
-    .rright .quote{font-size:13px;}
+    #stage{padding-top:28px;}
+    #title{font-size:14.5px;}
+    #desc{font-size:11px;}
+    .sky-plane-banner-wrap{
+      transform:scale(0.62);
+      margin-bottom:-65px;
+    }
+    .milestone-polaroid{width:100px; height:135px;}
+    #album{width:98vw;}
+    .photo{flex:0 0 110px; height:150px;}
+    .btn-primary{padding:6px 14px; font-size:12.5px;}
+    .btn-ghost{padding:6px 10px; font-size:11.5px;}
+    .book-3d-wrapper{height:76vh;}
+    .rright .quote{font-size:12px;}
   }
 </style>
 </head>
@@ -1665,8 +1707,10 @@ function updateNav(){
 function enterIntro(){
   if(milestonePhotoTimer){ clearInterval(milestonePhotoTimer); milestonePhotoTimer = null; }
   phase='intro'; document.body.classList.remove('reading'); world.classList.remove('moving');
-  girl.classList.remove('grad'); gownRun(false); girl.style.opacity='1'; girl.style.left='20%'; girl.classList.remove('walkbob'); girlRun(false);
-  dog.style.left='13%'; dog.classList.remove('walkbob'); dogRun(false);
+  const isMobile = window.innerWidth <= 680;
+  girl.classList.remove('grad'); gownRun(false); girl.style.opacity='1'; 
+  girl.style.left = isMobile ? '22%' : '20%'; girl.classList.remove('walkbob'); girlRun(false);
+  dog.style.left = isMobile ? '4%' : '13%'; dog.classList.remove('walkbob'); dogRun(false);
   party.classList.remove('show'); crowdClap(false); gift.style.opacity=0;
   $('label').textContent='Happy Graduation'; $('badge').style.display='none';
   $('emoji').style.display='block'; $('emoji').textContent='🌸';
@@ -1679,8 +1723,10 @@ function enterIntro(){
 
 function enterJourney(i){
   phase='journey'; si=i; document.body.classList.remove('reading'); world.classList.add('moving');
-  girl.classList.remove('grad'); gownRun(false); girl.style.opacity='1'; girlImg.src='images/girl1.png'; girl.style.left='20%'; girl.classList.add('walkbob'); girlRun(true);
-  dog.style.left='11%'; dog.classList.add('walkbob'); dogRun(true);
+  const isMobile = window.innerWidth <= 680;
+  girl.classList.remove('grad'); gownRun(false); girl.style.opacity='1'; girlImg.src='images/girl1.png'; 
+  girl.style.left = isMobile ? '22%' : '20%'; girl.classList.add('walkbob'); girlRun(true);
+  dog.style.left = isMobile ? '4%' : '11%'; dog.classList.add('walkbob'); dogRun(true);
   party.classList.remove('show'); crowdClap(false); gift.style.opacity=0;
   fadeStage(()=>{ const s=stops[i]; s.type==='album' ? setAlbum() : setMilestone(s, i); });
   setDot(1+i); updateNav();
@@ -2042,6 +2088,33 @@ prevBtn.addEventListener('click',()=>{
     } 
   }
 });
+
+/* ===== Dynamic Viewport Auto-Resize Controller for Mobile ===== */
+function handleAutoViewportResize() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+  
+  // Tự động căn chỉnh vị trí cô gái và cún theo màn hình hiện tại
+  if (typeof phase !== 'undefined') {
+    const isMobile = window.innerWidth <= 680;
+    if (phase === 'intro') {
+      if (girl) girl.style.left = isMobile ? '22%' : '20%';
+      if (dog) dog.style.left = isMobile ? '4%' : '13%';
+    } else if (phase === 'journey') {
+      if (girl) girl.style.left = isMobile ? '22%' : '20%';
+      if (dog) dog.style.left = isMobile ? '4%' : '11%';
+    } else if (phase === 'celebrate' || phase === 'handover') {
+      if (girl) girl.style.left = isMobile ? '48%' : '53%';
+      if (dog) dog.style.left = isMobile ? '20%' : '34%';
+    }
+  }
+}
+window.addEventListener('resize', handleAutoViewportResize);
+window.addEventListener('orientationchange', () => setTimeout(handleAutoViewportResize, 150));
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', handleAutoViewportResize);
+}
+handleAutoViewportResize();
 
 enterIntro();
 
