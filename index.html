@@ -1403,24 +1403,29 @@ function spawnPaw(targetEl, isDog=false){
   setTimeout(() => el.remove(), 950);
 }
 
-/* Hoán đổi khung hình liên tục và kích hoạt hiệu ứng bước chân */
+/* Hoán đổi khung hình liên tục và kích hoạt hiệu ứng bước chân (Robust Multi-frame Animation) */
 function frameCycler(imgEl, frames, ms, isDog=false){ 
   let t=null, f=0; 
+  // Preload frames
+  frames.forEach(src => { const i = new Image(); i.src = src; });
+  
   return on=>{ 
+    if(t){ clearInterval(t); t=null; } // Luôn dọn dẹp timer cũ trước
     if(on){ 
-      if(t) return; 
+      f=0;
       t=setInterval(()=>{ 
         f=(f+1)%frames.length; 
-        imgEl.src=frames[f];
-        // Cún 3 frame: rơi dấu chân ở frame 0 và frame 2
-        // Người 6 frame: rơi bụi hồng ở frame 0 và frame 3
-        if(isDog ? (f === 0 || f === 2) : (f === 0 || f === 3)) {
-          spawnPaw(imgEl.parentElement, isDog);
-        }
+        if(imgEl) imgEl.src=frames[f];
+        
+        try {
+          if(imgEl && imgEl.parentElement && (isDog ? (f === 0 || f === 2) : (f === 0 || f === 3))) {
+            spawnPaw(imgEl.parentElement, isDog);
+          }
+        } catch(err){}
       }, ms); 
     } else { 
-      if(t){ clearInterval(t); t=null; } 
-      f=0; imgEl.src=frames[0]; 
+      f=0; 
+      if(imgEl) imgEl.src=frames[0]; 
     } 
   }; 
 }
